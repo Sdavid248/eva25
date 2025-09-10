@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #020024;
+    background: linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(6, 6, 86, 1) 31%, rgba(49, 49, 112, 1) 64%, rgba(64, 134, 148, 1) 88%);
+}
+/*nav */
+.nav_menu {
+    background-color: #000000;
+    box-shadow: 0 2px 8px rgb(255, 255, 255);
+    padding: 20px 40px;
+    color: #fefefe;
+}
+
+.nav_links {
+    list-style: none; /* elimina las viñetas */
+    display: flex;
+    justify-content: center; 
+    gap: 40px; /* espacio entre elementos */
+    margin: 0;
+    padding: 0;
+}
+
+.nav_links li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+
+.acerca-section {
+    max-width: 800px;
+    margin: 80px auto;
+    padding: 40px;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.acerca-section h1, .acerca-section h2 {
+    color: #157c98;
+    margin-bottom: 15px;
+}
+
+.acerca-section p {
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
