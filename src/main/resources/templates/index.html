@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E.V.A</title>
-    <link rel="shortcut icon" href="/images/favicon.jpg" type="image/x-icon">
+    <link rel="shortcut icon" th:href="@{/images/favicon.jpg}" href="/images/favicon.jpg" type="image/x-icon">
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/estilos.css">
 </head>
@@ -22,7 +22,7 @@
             </ul>
 
             <div class="nav__menu">
-                <img src="/images/menu.png" alt="menu" class="nav__img">
+                <img th:src="@{/images/menu.png}" src="/images/menu.png" alt="menu" class="nav__img">
             </div>
         </nav> 
 
@@ -40,19 +40,19 @@
 
             <div  class="about__main">
                 <article class="about__icons">
-                    <img src="/images/leftarrow.svg" class="about__icon" alt="Flecha izquierda">
+                    <img th:src="@{/images/leftarrow.svg}" src="/images/leftarrow.svg" class="about__icon" alt="Flecha izquierda">
                     <h3 class="about__title">csslayouts xd </h3>
                     <p class="about__paragraph">miau</p>
                 </article>   
                 
                 <article class="about__icons">
-                    <img src="/images/rightarrow.svg" class="about__icon" alt="Flecha derecha">
+                    <img th:src="@{/images/rightarrow.svg}" src="/images/rightarrow.svg" class="about__icon" alt="Flecha derecha">
                     <h3 class="about__title">csslayouts xd </h3>
                     <p class="about__paragraph">miau</p>
                 </article>  
 
                 <article class="about__icons">
-                    <img src="/images/leftarrow.svg" class="about__icon" alt="Flecha izquierda">
+                    <img th:src="@{/images/leftarrow.svg}" src="/images/leftarrow.svg" class="about__icon" alt="Flecha izquierda">
                     <h3 class="about__title">csslayouts xd </h3>
                     <p class="about__paragraph">miau</p>
                 </article>  
@@ -68,7 +68,7 @@
                 </div>
 
                 <figure class="knowledge__picture">
-                    <img src="/images/ima2.jpg" class="knowledge__img" alt="Informativa">
+                    <img th:src="@{/images/ima2.jpg}" src="/images/ima2.jpg" class="knowledge__img" alt="Informativa">
                 </figure>
             </div>
         </section>
@@ -115,7 +115,7 @@
         </section>
     <section class="testimony">
     <div class="testimony__container container">
-        <img src="/images/arrow.svg" class="testimony__arrow" id="before">
+        <img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="testimony__arrow" id="before">
 
         <!-- Testimonio 1 -->
         <section class="testimony__body testimony__body--show" data-id="1">
@@ -124,7 +124,7 @@
                 <p class="testimony__review">bla bla bla vla</p>
             </div>
             <figure class="testimony__picture">
-                <img src="/images/ima4.jpg" class="testimony__img">
+                <img th:src="@{/images/ima4.jpg}" src="/images/ima4.jpg" class="testimony__img">
             </figure>
         </section>
 
@@ -135,7 +135,7 @@
                 <p class="testimony__review">bla bla bla vla2</p>
             </div>
             <figure class="testimony__picture">
-                <img src="/images/ima5.jpg" class="testimony__img">
+                <img th:src="@{/images/ima5.jpg}" src="/images/ima5.jpg" class="testimony__img">
             </figure>
         </section>
 
@@ -146,7 +146,7 @@
                 <p class="testimony__review">bla bla bla vla3</p>
             </div>
                 <figure class="testimony__picture">
-                    <img src="/images/ima2.jpg" class="testimony__img">
+                    <img th:src="@{/images/ima2.jpg}" src="/images/ima2.jpg" class="testimony__img">
                 </figure>
             </section>
 
@@ -156,11 +156,11 @@
                 <p class="testimony__review">bla bla bla vla3</p>
             </div>
                 <figure class="testimony__picture">
-                    <img src="/images/ima1.jpg" class="testimony__img">
+                    <img th:src="@{/images/ima1.jpg}" src="/images/ima1.jpg" class="testimony__img">
                 </figure>
             </section>
 
-                <img src="/images/rightarrow.svg" class="testimony__arrow" id="next">
+                <img th:src="@{/images/rightarrow.svg}" src="/images/rightarrow.svg" class="testimony__arrow" id="next">
             </div>
         </section> 
         
@@ -175,7 +175,7 @@
             <div class="questions__answer">
                 <h3 class="questions__title">¿Qué es CSS?
                     <span class="questions__arrow">
-                        <img src="/images/arrow.svg" class="questions__img">
+                        <img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="questions__img">
                     </span>
                 </h3>
 
@@ -194,7 +194,7 @@
             <div class="questions__answer">
                 <h3 class="questions__title">¿Qué aprendere en este curso?
                     <span class="questions__arrow">
-                        <img src="/images/arrow.svg" class="questions__img">
+                        <img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="questions__img">
                     </span>
                 </h3>
 
@@ -213,7 +213,7 @@
             <div class="questions__answer">
                 <h3 class="questions__title">¿Qué es CSS?
                     <span class="questions__arrow">
-                        <img src="/images/arrow.svg" class="questions__img">
+                        <img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="questions__img">
                     </span>
                 </h3>
 
@@ -272,9 +272,9 @@
 
         <section class="footer__copy container">
             <div class="footer__social">
-                <a href="#" class="footer__icons"><img src="/images/leftarrow.svg" class="footer__img" ></a>
-                <a href="#" class="footer__icons"><img src="/images/arrow.svg" class="footer__img" ></a>
-                <a href="#" class="footer__icons"><img src="/images/menu.svg" class="footer__img" ></a>
+                <a href="#" class="footer__icons"><img th:src="@{/images/leftarrow.svg}" src="/images/leftarrow.svg" class="footer__img" ></a>
+                <a href="#" class="footer__icons"><img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="footer__img" ></a>
+                <a href="#" class="footer__icons"><img th:src="@{/images/menu.svg}" src="/images/menu.svg" class="footer__img" ></a>
             </div>
             
             <h3 class=" footer__copyright">Derechos reservados &copy; SD</h3>
