@@ -1,32 +1,34 @@
 package com.example.eva.service;
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import  com.example.eva.model.Usuario;
+import com.example.eva.model.Usuario;
 import com.example.eva.repository.UsuarioRepository;
+
 @Service
 public class UsuarioService {
-    private final UsuarioRepository UsuarioRepository;
 
-    public UsuarioService(UsuarioRepository suarioRepository) {
-        this.UsuarioRepository = suarioRepository;
+    private final UsuarioRepository usuarioRepository;
+
+    public UsuarioService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
     }
 
     public List<Usuario> listarTodos() {
-        return UsuarioRepository.findAll();
-        // TODO Auto-generated method stub         
-        
+        return usuarioRepository.findAll();
     }
 
     public void guardar(Usuario usuario) {
-        UsuarioRepository.save(usuario);
-    }
-    public void actualizar(Usuario usuario) {
-        UsuarioRepository.save(usuario);
-    }
-    public Usuario buscarid(Long id) {
-        return UsuarioRepository.findById(id).orElse(null);
+        usuarioRepository.save(usuario);
     }
 
+    public void actualizar(Usuario usuario) {
+        usuarioRepository.save(usuario);
+    }
+
+    public Usuario buscarid(Long id) {
+        return usuarioRepository.findById(id).orElse(null);
+    }
 }
