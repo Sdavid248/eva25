@@ -29,11 +29,11 @@ public class Usuario {
     private String direccion;
     @Column(name = "telefono")
     private String telefono;
-    @Column(name = "email")
-    private String email;
-
-    @Column(nullable = false)
-    private String rol;//usuario_rol,usuario
+    @Column(name = "correo")
+    private String correo;
+    @Column(name = "estado")
+    private String estado;
+    
 
     // Getters y setters
 }
