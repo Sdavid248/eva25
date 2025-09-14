@@ -5,51 +5,33 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.eva.model.Usuario;
 import com.example.eva.service.UsuarioService;
 
 @Controller
-@RequestMapping("/usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
-    public UsuarioController(UsuarioService UsuarioService) {
-        this.usuarioService = UsuarioService;
+    // Inyección de dependencias por constructor
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
-
-
-    @GetMapping("/nuevo")
-    public String mostrarFormularioNuevo(Model model) {
+    // Mostrar formulario de registro
+    @GetMapping("/registro")
+    public String mostrarFormularioRegistro(Model model) {
         model.addAttribute("usuario", new Usuario());
-        return "registro"; // Debes tener usuarios/formulario.html
+        return "registro"; // archivo registro.html en templates
     }
 
-    /**
-     * @param usuario
-     * @return
-     */
-    @PostMapping
-    public String guardarUsuario(@ModelAttribute Usuario usuario) {
+    // Guardar usuario
+    @PostMapping("/registro")
+    public String guardarUsuario(@ModelAttribute Usuario usuario, Model model) {
         usuarioService.guardar(usuario);
-        return "registro";
+        model.addAttribute("usuario", new Usuario()); // limpiar el formulario
+        model.addAttribute("mensaje", "Usuario registrado con éxito");
+        return "registro"; 
     }
-
-    /**
-     * @param registro
-     * @param model
-     * @return
-     */
-    @GetMapping("/{registro}")
-    public String mostrarFormulario(Model model) {
-
-        model.addAttribute("usuario", new Usuario());
-        return "registro"; // Debes tener usuarios/formulario.html
-    }
-
-
-
 }

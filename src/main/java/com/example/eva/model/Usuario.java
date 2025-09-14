@@ -32,5 +32,8 @@ public class Usuario {
     @Column(name = "email")
     private String email;
 
+    @Column(nullable = false)
+    private String rol;//usuario_rol,usuario
+
     // Getters y setters
 }
