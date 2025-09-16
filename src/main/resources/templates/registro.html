@@ -1,70 +1,27 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Registro de Usuario</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            background-color: #f2f2f2;
-        }
-        h2 {
-            color: #333;
-        }
-        form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #45a049;
-        }
-        .mensaje {
-            margin-top: 15px;
-            color: green;
-        }
-    </style>
 </head>
 <body>
     <h2>Formulario de Registro</h2>
     <form th:action="@{/registro}" th:object="${usuario}" method="post">
 
         <label for="documento">Documento:</label>
-        <input type="number" id="documento" th:field="*{documento}" required />
+        <input type="number" id="documento" th:field="*{documento}" required placeholder="Ingrese su documento" />
 
         <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" th:field="*{nombre}" required />
+        <input type="text" id="nombre" th:field="*{nombre}" required placeholder="Ingrese su nombre" />
 
         <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" th:field="*{direccion}" />
+        <input type="text" id="direccion" th:field="*{direccion}" placeholder="Ingrese su dirección" />
 
         <label for="telefono">Teléfono:</label>
-        <input type="text" id="telefono" th:field="*{telefono}" />
+        <input type="text" id="telefono" th:field="*{telefono}" placeholder="Ingrese su teléfono" />
 
-        <label for="correo">Correo Electrónico:</label>
-        <input type="email" id="correo" th:field="*{correo}" required />
+        <label for="correo">Correo:</label>
+        <input type="email" id="correo" th:field="*{correo}" required placeholder="ejemplo@correo.com" />
 
         <label for="estado">Estado:</label>
         <select id="estado" th:field="*{estado}" required>
@@ -73,9 +30,12 @@
             <option value="inactivo">Inactivo</option>
         </select>
 
+        <label for="contrasena">Contraseña:</label>
+        <input type="password" id="contrasena" th:field="*{contrasena}" required placeholder="Ingrese una contraseña" />
+
         <button type="submit">Registrar</button>
     </form>
 
-    <div class="mensaje" th:if="${mensaje}" th:text="${mensaje}"></div>
+    <div th:if="${mensaje}" th:text="${mensaje}"></div>
 </body>
 </html>

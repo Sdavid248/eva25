@@ -15,25 +15,33 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_user")
     private Long id;
+
     @Column(name = "documento")
     private int documento;
+
     @Column(name = "nombre")
     private String nombre;
+
     @Column(name = "direccion")
     private String direccion;
+
     @Column(name = "telefono")
     private String telefono;
-    @Column(name = "correo")
+
+    // Usaremos el correo como username/login
+    @Column(name = "correo", unique = true, nullable = false)
     private String correo;
+
     @Column(name = "estado")
     private String estado;
-    
 
-    // Getters y setters
+    // contraseña en la BD se llama "contrasena"
+    @Column(name = "contrasena", nullable = false)
+    private String contrasena;
 }

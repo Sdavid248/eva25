@@ -14,24 +14,35 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
-    // Inyección de dependencias por constructor
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 
     // Mostrar formulario de registro
     @GetMapping("/registro")
-    public String mostrarFormularioRegistro(Model model) {
+    public String mostrarRegistro(Model model) {
         model.addAttribute("usuario", new Usuario());
-        return "registro"; // archivo registro.html en templates
+        return "registro";
     }
 
-    // Guardar usuario
+    // Procesar registro
     @PostMapping("/registro")
-    public String guardarUsuario(@ModelAttribute Usuario usuario, Model model) {
+    public String registrarUsuario(@ModelAttribute Usuario usuario, Model model) {
         usuarioService.guardar(usuario);
-        model.addAttribute("usuario", new Usuario()); // limpiar el formulario
         model.addAttribute("mensaje", "Usuario registrado con éxito");
-        return "registro"; 
+        model.addAttribute("usuario", new Usuario());
+        return "registro";
+    }
+
+    // Página de inicio
+    @GetMapping("/home")
+    public String home() {
+        return "home"; // home.html
+    }
+
+    // Página de login
+    @GetMapping("/login")
+    public String login() {
+        return "login"; // login.html
     }
 }
