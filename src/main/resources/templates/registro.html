@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="/src/main/resources/static/css/registro.css">
 </head>
 <body>
     <h2>Formulario de Registro</h2>
@@ -36,6 +37,7 @@
         <button type="submit">Registrar</button>
     </form>
 
-    <div th:if="${mensaje}" th:text="${mensaje}"></div>
+    <div class="mensaje" th:if="${mensaje}" th:text="${mensaje}"></div>
+
 </body>
 </html>

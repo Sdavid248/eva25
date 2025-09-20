@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E.V.A</title>
     <link rel="shortcut icon" th:href="@{/images/favicon.jpg}" href="/images/favicon.jpg" type="image/x-icon">
-    <link rel="stylesheet" href="/css/normalize.css">
-    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/estilos.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/estilos.css">
 </head>
 <body>
     
@@ -15,14 +15,14 @@
             <h2 class="nav__title">E.V.A Entrenamiento voluntario activo</h2>
             
             <ul class="nav__link nav__link--menu">  
-                <li class="nav__items"><a href="/registro" class="nav__links">Registrate</a></li>
-                <li class="nav__items"><a href="/acercade" class="nav__links">Acerca de</a></li>
-                <li class="nav__items"><a href="/centrosdeportivos" class="nav__links">Centros deportivos</a></li>
-                <li class="nav__items"><a href="/info" class="nav__links">Info</a></li>
+                <li class="nav__items"><a href="/src/main/resources/templates/registro.html" class="nav__links">Registrate</a></li>
+                <li class="nav__items"><a href="/src/main/resources/templates/acercade.html" class="nav__links">Acerca de</a></li>
+                <li class="nav__items"><a href="/src/main/resources/templates/centrosdeportivos.html" class="nav__links">Centros deportivos</a></li>
+                <li class="nav__items"><a href="/src/main/resources/templates/info.html" class="nav__links">Info</a></li>
             </ul>
 
             <div class="nav__menu">
-                <img th:src="@{/images/menu.png}" src="/images/menu.png" alt="menu" class="nav__img">
+                <img th:src="@{/images/menu.png}" src="/src/main/resources/static/css/js/images/ima2.jpg" alt="menu" class="nav__img">
             </div>
         </nav> 
 
@@ -40,19 +40,19 @@
 
             <div  class="about__main">
                 <article class="about__icons">
-                    <img th:src="@{/images/leftarrow.svg}" src="/images/leftarrow.svg" class="about__icon" alt="Flecha izquierda">
+                    <img th:src="@{/images/leftarrow.svg}" src="/src/main/resources/static/css/js/images/leftarrow.svg" class="about__icon" alt="Flecha izquierda">
                     <h3 class="about__title">csslayouts xd </h3>
                     <p class="about__paragraph">miau</p>
                 </article>   
                 
                 <article class="about__icons">
-                    <img th:src="@{/images/rightarrow.svg}" src="/images/rightarrow.svg" class="about__icon" alt="Flecha derecha">
+                    <img th:src="@{/images/rightarrow.svg}" src="/src/main/resources/static/css/js/images/rightarrow.svg" class="about__icon" alt="Flecha derecha">
                     <h3 class="about__title">csslayouts xd </h3>
                     <p class="about__paragraph">miau</p>
                 </article>  
 
                 <article class="about__icons">
-                    <img th:src="@{/images/leftarrow.svg}" src="/images/leftarrow.svg" class="about__icon" alt="Flecha izquierda">
+                    <img th:src="@{/images/leftarrow.svg}" src="/src/main/resources/static/css/js/images/leftarrow.svg" class="about__icon" alt="Flecha izquierda">
                     <h3 class="about__title">csslayouts xd </h3>
                     <p class="about__paragraph">miau</p>
                 </article>  
@@ -68,7 +68,7 @@
                 </div>
 
                 <figure class="knowledge__picture">
-                    <img th:src="@{/images/ima2.jpg}" src="/images/ima2.jpg" class="knowledge__img" alt="Informativa">
+                    <img th:src="@{/images/ima2.jpg}" src="/src/main/resources/static/css/js/images/ima2.jpg" class="knowledge__img" alt="Informativa">
                 </figure>
             </div>
         </section>
@@ -115,7 +115,7 @@
         </section>
     <section class="testimony">
     <div class="testimony__container container">
-        <img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="testimony__arrow" id="before">
+        <img th:src="@{/images/arrow.svg}" src="/src/main/resources/static/css/js/images/ima5.jpg" class="testimony__arrow" id="before">
 
         <!-- Testimonio 1 -->
         <section class="testimony__body testimony__body--show" data-id="1">
@@ -124,7 +124,7 @@
                 <p class="testimony__review">bla bla bla vla</p>
             </div>
             <figure class="testimony__picture">
-                <img th:src="@{/images/ima4.jpg}" src="/images/ima4.jpg" class="testimony__img">
+                <img th:src="@{/images/ima4.jpg}" src="/src/main/resources/static/css/js/images/ima4.jpg" class="testimony__img">
             </figure>
         </section>
 
@@ -135,7 +135,7 @@
                 <p class="testimony__review">bla bla bla vla2</p>
             </div>
             <figure class="testimony__picture">
-                <img th:src="@{/images/ima5.jpg}" src="/images/ima5.jpg" class="testimony__img">
+                <img th:src="@{/images/ima5.jpg}" src="/src/main/resources/static/css/js/images/ima3.jpg" class="testimony__img">
             </figure>
         </section>
 
@@ -146,7 +146,7 @@
                 <p class="testimony__review">bla bla bla vla3</p>
             </div>
                 <figure class="testimony__picture">
-                    <img th:src="@{/images/ima2.jpg}" src="/images/ima2.jpg" class="testimony__img">
+                    <img th:src="@{/images/ima2.jpg}" src="/src/main/resources/static/css/js/images/ima2.jpg" class="testimony__img">
                 </figure>
             </section>
 
@@ -156,11 +156,11 @@
                 <p class="testimony__review">bla bla bla vla3</p>
             </div>
                 <figure class="testimony__picture">
-                    <img th:src="@{/images/ima1.jpg}" src="/images/ima1.jpg" class="testimony__img">
+                    <img th:src="@{/images/ima1.jpg}" src="/src/main/resources/static/css/js/images/ima1.jpg" class="testimony__img">
                 </figure>
             </section>
 
-                <img th:src="@{/images/rightarrow.svg}" src="/images/rightarrow.svg" class="testimony__arrow" id="next">
+                <img th:src="@{/images/rightarrow.svg}" src="/src/main/resources/static/css/js/images/rightarrow.svg" class="testimony__arrow" id="next">
             </div>
         </section> 
         
@@ -175,7 +175,7 @@
             <div class="questions__answer">
                 <h3 class="questions__title">¿Qué es CSS?
                     <span class="questions__arrow">
-                        <img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="questions__img">
+                        <img th:src="@{/images/arrow.svg}" src="/src/main/resources/static/css/js/images/arrow.svg" class="questions__img">
                     </span>
                 </h3>
 
@@ -194,7 +194,7 @@
             <div class="questions__answer">
                 <h3 class="questions__title">¿Qué aprendere en este curso?
                     <span class="questions__arrow">
-                        <img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="questions__img">
+                        <img th:src="@{/images/arrow.svg}" src="/src/main/resources/static/css/js/images/arrow.svg" class="questions__img">
                     </span>
                 </h3>
 
@@ -213,7 +213,7 @@
             <div class="questions__answer">
                 <h3 class="questions__title">¿Qué es CSS?
                     <span class="questions__arrow">
-                        <img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="questions__img">
+                        <img th:src="@{/images/arrow.svg}" src="/src/main/resources/static/css/js/images/arrow.svg" class="questions__img">
                     </span>
                 </h3>
 
@@ -243,20 +243,20 @@
                 <ul class="nav__link nav__link--footer"> 
                 
                 <li class="nav__items">
-                    <a href="/registro" class="nav__links">Registrate</a>
+                    <a href="/src/main/resources/templates/registro.html" class="nav__links">Registrate</a>
                 
                 </li>
                 
                 <li class="nav__items">
-                    <a href="/acercade" class="nav__links">Acerca de</a>
+                    <a href="/src/main/resources/templates/acercade.html" class="nav__links">Acerca de</a>
                 </li>
                 
                 <li class="nav__items">
-                    <a href="/centrosdeportivos" class="nav__links">Centro deportivo</a>
+                    <a href="/src/main/resources/templates/centrosdeportivos.html" class="nav__links">Centro deportivo</a>
                 </li>
                 
                 <li class="nav__items">
-                    <a href="/info" class="nav__links">Info</a>
+                    <a href="/src/main/resources/templates/info.html" class="nav__links">Info</a>
                 </li>
                 </ul> 
                     
@@ -272,17 +272,17 @@
 
         <section class="footer__copy container">
             <div class="footer__social">
-                <a href="#" class="footer__icons"><img th:src="@{/images/leftarrow.svg}" src="/images/leftarrow.svg" class="footer__img" ></a>
-                <a href="#" class="footer__icons"><img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="footer__img" ></a>
-                <a href="#" class="footer__icons"><img th:src="@{/images/menu.svg}" src="/images/menu.svg" class="footer__img" ></a>
+                <a href="#" class="footer__icons"><img th:src="@{/images/leftarrow.svg}" src="/src/main/resources/static/css/js/images/leftarrow.svg" class="footer__img" ></a>
+                <a href="#" class="footer__icons"><img th:src="@{/images/arrow.svg}" src="/src/main/resources/static/css/js/images/leftarrow.svg" class="footer__img" ></a>
+                <a href="#" class="footer__icons"><img th:src="@{/images/menu.svg}" src="/src/main/resources/static/css/js/images/arrow.svg" class="footer__img" ></a>
             </div>
             
             <h3 class=" footer__copyright">Derechos reservados &copy; SD</h3>
             
         </section>
     </footer>
-    <script src="/js/slider.js"></script>
-    <script src="/js/questions.js"></script>
+    <script src="/src/main/resources/static/css/js/slider.js"></script>
+    <script src="/src/main/resources/static/css/js/questions.js"></script>
 
 </body>
 </html>
