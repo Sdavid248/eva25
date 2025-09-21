@@ -1,13 +1,13 @@
-package com.example.eva;
+    package com.example.eva;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+    import org.springframework.boot.SpringApplication;
+    import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
-public class EvaApplication {
+    @SpringBootApplication
+    public class EvaApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(EvaApplication.class, args);
+        public static void main(String[] args) {
+            SpringApplication.run(EvaApplication.class, args);
+        }
+
     }
-
-}

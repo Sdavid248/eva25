@@ -42,6 +42,6 @@ public class Usuario {
     private String estado;
 
     // contraseña en la BD se llama "contrasena"
-    @Column(name = "contrasena", nullable = false)
+    @Column(name = "contrasena", nullable = false, length = 255)
     private String contrasena;
 }

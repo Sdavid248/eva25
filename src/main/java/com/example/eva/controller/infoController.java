@@ -8,6 +8,7 @@ public class infoController {
 
     @GetMapping("/info")
     public String mostrarInfo() {
-        return "info"; // busca info.html en templates
+        // Busca el archivo info.html en src/main/resources/templates
+        return "info";
     }
 }
