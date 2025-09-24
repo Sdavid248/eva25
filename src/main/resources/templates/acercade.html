@@ -1,42 +1,39 @@
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <title>Acerca de E.V.A</title>
-        <link rel="stylesheet" href="css/acercade.css">
-    </head>
-    <body>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acerca de</title>
+    <link rel="stylesheet" href="/css/estilos.css"> <!-- ajusta según tu carpeta -->
+</head>
+<body>
 
-        <nav class="nav_menu">
-            <ul class="nav_links">
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="acerca de.html">Acerca de</a></li>
-                <li><a href="centrosdeportivos.html">Centros deportivos</a></li>
-                <li><a href="info.html">Info</a></li>
-            </ul>
-        </nav>
+    <!-- 🔹 Menú de navegación unificado -->
+    <nav class="nav_menu">
+        <ul class="nav_links">
+            <li><a th:href="@{/}">Inicio</a></li>
+            <li><a th:href="@{/acercade}">Acerca de</a></li>
+            <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
+            <li><a th:href="@{/info}">Info</a></li>
+            <li><a th:href="@{/mapa}">Mapa</a></li>
+            <li><a th:href="@{/login}">Login</a></li>
+            <li><a th:href="@{/registro}">Registro</a></li>
+        </ul>
+    </nav>
 
-        <main class="acerca-section">
-            <h1>¿Quiénes somos?</h1>
-            <p>
-                E.V.A (Entrenamiento Voluntario Activo) es una plataforma dedicada a fomentar la participación en actividades físicas y deportivas dentro de comunidades locales. Nuestro objetivo es conectar voluntarios, entrenadores y centros deportivos para promover un estilo de vida saludable.
-            </p>
+    <!-- 🔹 Contenido original de tu página -->
+    <main>
+        <h2>Acerca de E.V.A</h2>
+        <p>
+            E.V.A (Entrenamiento Voluntario Activo) es una plataforma diseñada para conectar
+            a las personas con centros deportivos, actividades saludables y un estilo de vida activo.
+        </p>
+        <p>
+            Aquí podrás encontrar información sobre centros deportivos, actividades recomendadas,
+            y la posibilidad de registrarte para acceder a más beneficios.
+        </p>
+    </main>
 
-            <h2>Nuestra misión</h2>
-            <p>
-                Fomentar el bienestar físico, emocional y social a través de actividades deportivas accesibles para todos.
-            </p>
+</body>
+</html>
 
-            <h2>¿Por qué lo hacemos?</h2>
-            <p>
-                Creemos que el deporte tiene el poder de unir a las personas, mejorar la salud y fortalecer el tejido social.
-            </p>
-
-            <h2>¿Quiénes pueden participar?</h2>
-            <p>
-                Cualquier persona interesada en ser voluntario, recibir entrenamiento o simplemente mantenerse activa. ¡Todos son bienvenidos!
-            </p>
-        </main>
-
-    </body>
-    </html>

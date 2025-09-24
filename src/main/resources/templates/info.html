@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Información - E.V.A</title>
     <link rel="stylesheet" href="/css/info.css">
 </head>
@@ -9,10 +10,10 @@
 
     <nav class="nav_menu">
         <ul class="nav_links">
-            <li><a href="index">Inicio</a></li>
-            <li><a href="acerca de">Acerca de</a></li>
-            <li><a href="centrosdeportivos">Centros deportivos</a></li>
-            <li><a href="info">Info</a></li>
+            <li><a th:href="@{/}">Inicio</a></li>
+            <li><a th:href="@{/acercade}">Acerca de</a></li>
+            <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
+            <li><a th:href="@{/info}">Info</a></li>
         </ul>
     </nav>
 
@@ -25,7 +26,6 @@
                 Nuestra plataforma permite a los usuarios registrarse como voluntarios o entrenadores para participar en actividades físicas en centros deportivos aliados. Solo debes registrarte, elegir tu rol y comenzar a participar.
             </p>
         </section>
-
 
         <section>
             <h2>Preguntas frecuentes (FAQ)</h2>
@@ -45,3 +45,4 @@
 
 </body>
 </html>
+
