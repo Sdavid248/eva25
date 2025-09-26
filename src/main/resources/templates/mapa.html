@@ -23,13 +23,14 @@
 
     <h2>Mapa de Centros Deportivos</h2>
 
-    <!-- Aquí va tu contenido original del mapa -->
-    <div id="mapa" style="width:100%; height:400px;">
-        <!-- ejemplo: podrías incrustar Google Maps o Leaflet -->
-        <p>Aquí se mostrará el mapa interactivo.</p>
-    </div>
+    <!-- Contenedor del mapa -->
+    <div id="mapa" style="width:100%; height:400px;"></div>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMap" async defer></script>
+    <!-- Carga de Google Maps -->
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY_REAL&callback=initMap">
+    </script>
+
     <script>
         function initMap() {
             var ubicacion = { lat: 4.60971, lng: -74.08175 }; // Bogotá, ejemplo

@@ -3,20 +3,19 @@ package com.example.eva.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "usuario_rol")
-public class UsuarioRol {
+@Table(name = "rol_permiso")
+public class RolPermiso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable = false) // 🔹 corregido
-    private Usuario usuario;
-
-    @ManyToOne
-    @JoinColumn(name = "id_rol", nullable = false) // 🔹 corregido
+    @JoinColumn(name = "id_rol", nullable = false)
     private Rol rol;
+
+    @Column(name = "id_permiso", nullable = false)
+    private Long idPermiso; // si luego tienes entidad Permiso, se puede mapear
 
     // Getters y Setters
     public Long getId() {
@@ -27,14 +26,6 @@ public class UsuarioRol {
         this.id = id;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
     public Rol getRol() {
         return rol;
     }
@@ -42,5 +33,12 @@ public class UsuarioRol {
     public void setRol(Rol rol) {
         this.rol = rol;
     }
-}
 
+    public Long getIdPermiso() {
+        return idPermiso;
+    }
+
+    public void setIdPermiso(Long idPermiso) {
+        this.idPermiso = idPermiso;
+    }
+}
