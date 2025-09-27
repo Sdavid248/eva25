@@ -1,50 +1,36 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa</title>
-    <link rel="stylesheet" href="/css/estilos.css"> <!-- ajusta según tu carpeta -->
+    <title>Open Street Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+        integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
 </head>
+
 <body>
-
-    <!-- 🔹 Menú de navegación unificado -->
-    <nav class="nav_menu">
-        <ul class="nav_links">
-            <li><a th:href="@{/}">Inicio</a></li>
-            <li><a th:href="@{/acercade}">Acerca de</a></li>
-            <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
-            <li><a th:href="@{/info}">Info</a></li>
-            <li><a th:href="@{/mapa}">Mapa</a></li>
-            <li><a th:href="@{/login}">Login</a></li>
-            <li><a th:href="@{/registro}">Registro</a></li>
-        </ul>
-    </nav>
-
-    <h2>Mapa de Centros Deportivos</h2>
-
-    <!-- Contenedor del mapa -->
-    <div id="mapa" style="width:100%; height:400px;"></div>
-
-    <!-- Carga de Google Maps -->
-    <script async
-        src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY_REAL&callback=initMap">
-    </script>
+    <div id="mi_mapa" style="width: 100%; height: 500px;"></div>
 
     <script>
-        function initMap() {
-            var ubicacion = { lat: 4.60971, lng: -74.08175 }; // Bogotá, ejemplo
-            var map = new google.maps.Map(document.getElementById("mapa"), {
-                zoom: 12,
-                center: ubicacion
-            });
-            new google.maps.Marker({
-                position: ubicacion,
-                map: map,
-                title: "Centro Deportivo"
-            });
+        let map = L.map('mi_mapa').setView([19.4327, -99.1331], 16)
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.marker([19.4327, -99.1331]).addTo(map).bindPopup("Zócalo de la Ciudad de México")
+        L.marker([19.4349, -99.1313]).addTo(map).bindPopup("Templo Mayor")
+
+        map.on('click', onMapClick)
+
+        function onMapClick(e) {
+            alert("Posición: " + e.latlng)
         }
     </script>
-
 </body>
+
 </html>
