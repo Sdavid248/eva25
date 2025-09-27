@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E.V.A</title>
-    <link rel="shortcut icon" th:href="@{/images/favicon.jpg}" type="image/x-icon">
-    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+
+    <!-- favicon -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.jpg}" href="/images/favicon.jpg" type="image/x-icon">
+
+    <!-- CSS: usa Thymeleaf para resolver /static -->
+    <link rel="stylesheet" th:href="@{/css/estilos.css}" href="/css/estilos.css">
 </head>
 <body>
     
@@ -14,35 +18,35 @@
             <h2 class="nav__title">E.V.A Entrenamiento voluntario activo</h2>
             
             <ul class="nav__link nav__link--menu">  
-                <li class="nav__items"><a th:href="@{/registro}" class="nav__links">Registrate</a></li>
-                <li class="nav__items"><a th:href="@{/acercade}" class="nav__links">Acerca de</a></li>
-                <li class="nav__items"><a th:href="@{/centrosdeportivos}" class="nav__links">Centros deportivos</a></li>
-                <li class="nav__items"><a th:href="@{/info}" class="nav__links">Info</a></li>
-                <li class="nav__items"><a th:href="@{/login}" class="nav__links">Login</a></li>
-                <li class="nav__items"><a th:href="@{/mapa}" class="nav__links">Mapa</a></li>
+                <li class="nav__items"><a th:href="@{/registro}" href="/registro" class="nav__links">Registrate</a></li>
+                <li class="nav__items"><a th:href="@{/acercade}" href="/acercade" class="nav__links">Acerca de</a></li>
+                <li class="nav__items"><a th:href="@{/centrosdeportivos}" href="/centrosdeportivos" class="nav__links">Centros deportivos</a></li>
+                <li class="nav__items"><a th:href="@{/info}" href="/info" class="nav__links">Info</a></li>
+                <li class="nav__items"><a th:href="@{/login}" href="/login" class="nav__links">Login</a></li>
+                <li class="nav__items"><a th:href="@{/mapa}" href="/mapa" class="nav__links">Mapa</a></li>
             </ul>
 
             <div class="nav__menu">
-                <img th:src="@{/images/menu.svg}" alt="menu" class="nav__img">
+                <img th:src="@{/images/menu.svg}" src="/images/menu.svg" alt="menu" class="nav__img">
             </div>
         </nav> 
 
         <section class="hero__container"> 
             <h1 class="hero__title">E.V.A</h1>
             <p class="hero__paragraph">Entrenamiento voluntario activo</p>
-            <a href="@{/registro}" class="cta">Comenzar</a>
+            <a th:href="@{/registro}" href="/registro" class="cta">Comenzar</a>
         </section>
     </header>  
     
     <main>
         <section class="container about">
             <h2 class="subtitle">Qué veremos en E.V.A</h2>
-            <p class="about__paragraph">.V.A es un software diseñado para combatir el sedentarismo y promover hábitos saludables mediante el acceso a información de centros deportivos por medio de un mapa interactivo</p>
+            <p class="about__paragraph">E.V.A es un software diseñado para combatir el sedentarismo y promover hábitos saludables mediante el acceso a información de centros deportivos por medio de un mapa interactivo</p>
 
             <div class="about__main">
                 <article class="about__icons">
                     <img th:src="@{/images/leftarrow.svg}" class="about__icon" alt="Flecha izquierda">
-                    <h3 class="about__title">Localizacion</h3>
+                    <h3 class="about__title">Localización</h3>
                     <p class="about__paragraph">Encuentra centros deportivos, parques, gimnasios y escuelas deportivas en tu área mediante un mapa interactivo.</p>
                 </article>   
                 
@@ -64,107 +68,101 @@
             <div class="knowledge__container container">
                 <div class="knowledge__texts">
                     <h2 class="subtitle">Información del proyecto</h2>
-                    <p class="knowledge__paragraph">E.V.A no solo localiza centros deportivos, también facilita la inscripción en línea y el acceso a información detallada de cada lugar.Nuestro objetivo es promover hábitos saludables combatiendo el sedentarismo y ofreciendo a la comunidad una plataforma que conecta a las personas con gimnasios, escuelas deportivas y actividades físicas de acuerdo a sus intereses.</p>
-                    <a href="@{/login}" class="cta">Explora E.V.A</a>
+                    <p class="knowledge__paragraph">E.V.A no solo localiza centros deportivos, también facilita la inscripción en línea y el acceso a información detallada de cada lugar. Nuestro objetivo es promover hábitos saludables combatiendo el sedentarismo y ofreciendo a la comunidad una plataforma que conecta a las personas con gimnasios, escuelas deportivas y actividades físicas de acuerdo a sus intereses.</p>
+                    <a th:href="@{/login}" href="/login" class="cta">Explora E.V.A</a>
                 </div>
 
                 <figure class="knowledge__picture">
-                    <img th:src="@{/images/ima2.jpg}" class="knowledge__img" alt="Informativa">
+                    <img th:src="@{/images/ima2.jpg}" src="/images/ima2.jpg" class="knowledge__img" alt="Informativa">
                 </figure>
             </div>
         </section>
 
         <section class="price container"> 
-            <h2 class="subtitle">Mejora tu salud ficica y mental con nosotros.</h2>
+            <h2 class="subtitle">Mejora tu salud física y mental con nosotros.</h2>
 
             <div class="price__table">
                 <div class="price__element">
                     <p class="price__name">Problema</p>
                     <h3 class="price__price">Sedentarismo</h3>
-
                     <div class="price__items">
                         <p class="price__features">Dificultad para encontrar espacios deportivos</p>
-                        <p class="price__features">Falta de información especifica</p>
-                        <p class="price__features">Poca motivación para hacer ejercicio </p>
+                        <p class="price__features">Falta de información específica</p>
+                        <p class="price__features">Poca motivación para hacer ejercicio</p>
                     </div>
-                    <a href="" class="price__cta">Conocer más</a>
+                    <a href="#" class="price__cta">Conocer más</a>
                 </div>
 
                 <div class="price__element price__element--best">
                     <p class="price__name">Solución</p>
                     <h3 class="price__price">E.V.A</h3>
-
                     <div class="price__items">
                         <p class="price__features">Plataforma web</p>
                         <p class="price__features">Mapa interactivo de centros deportivos</p>
                         <p class="price__features">Inscripciones</p>
                     </div>
-                    <a href="" class="price__cta">empieza ahora</a>
+                    <a href="#" class="price__cta">Empieza ahora</a>
                 </div>
 
                 <div class="price__element">
                     <p class="price__name">Impacto</p>
                     <h3 class="price__price">Comunidad</h3>
-
                     <div class="price__items">
                         <p class="price__features">Promovemos los hábitos saludables</p>
-                        <p class="price__features">Conectamos usuarios con el deporte </p>
+                        <p class="price__features">Conectamos usuarios con el deporte</p>
                         <p class="price__features">Te ayudamos a darle vida a tu mente y tu cuerpo</p>
                     </div>
-                    <a href="#" class="price__cta">conoce E.V.A</a>
+                    <a href="#" class="price__cta">Conoce E.V.A</a>
                 </div>
             </div>
         </section>
 
         <section class="testimony">
             <div class="testimony__container container">
-                <img th:src="@{/images/arrow.svg}" class="testimony__arrow" id="before">
+                <img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="testimony__arrow" id="before">
 
-                <!-- Testimonio 1 -->
+                <!-- Testimonios -->
                 <section class="testimony__body testimony__body--show" data-id="1">
                     <div class="testimony__text">
                         <h2 class="subtitle">El deporte no solo fortalece tu cuerpo,<span class="testimony__course"> también tu mente.</span></h2>
                         <p class="testimony__review">Encuentra tu espacio ideal y haz del ejercicio un hábito diario.</p>
                     </div>
                     <figure class="testimony__picture">
-                        <img th:src="@{/images/ima4.jpg}" class="testimony__img">
+                        <img th:src="@{/images/ima4.jpg}" src="/images/ima4.jpg" class="testimony__img">
                     </figure>
                 </section>
 
-                <!-- Testimonio 2 -->
                 <section class="testimony__body" data-id="2">
                     <div class="testimony__text">
                         <h2 class="subtitle">Un pequeño paso hoy,<span class="testimony__course"> es un gran cambio mañana.</span></h2>
                         <p class="testimony__review">No importa dónde empieces, lo importante es dar el primer movimiento.</p>
                     </div>
                     <figure class="testimony__picture">
-                        <img th:src="@{/images/ima5.jpg}" class="testimony__img">
+                        <img th:src="@{/images/ima5.jpg}" src="/images/ima5.jpg" class="testimony__img">
                     </figure>
                 </section>
 
-                <!-- Testimonio 3 -->
                 <section class="testimony__body" data-id="3">
                     <div class="testimony__text">
                         <h2 class="subtitle">El ejercicio es la mejor medicina,<span class="testimony__course"> y no tiene efectos secundarios</span></h2>
                         <p class="testimony__review">Haz del deporte tu mejor aliado para una vida sana.</p>
                     </div>
                     <figure class="testimony__picture">
-                        <img th:src="@{/images/ima2.jpg}" class="testimony__img">
+                        <img th:src="@{/images/ima2.jpg}" src="/images/ima2.jpg" class="testimony__img">
                     </figure>
                 </section>
 
-                <!-- Testimonio 4 -->
                 <section class="testimony__body" data-id="4">
                     <div class="testimony__text">
                         <h2 class="subtitle">No se trata de ser el mejor,<span class="testimony__course"> se trata de ser constante.</span></h2>
                         <p class="testimony__review">La disciplina supera al talento cuando el talento no es constante.</p>
                     </div>
                     <figure class="testimony__picture">
-                        <img th:src="@{/images/ima1.jpg}" class="testimony__img">
+                        <img th:src="@{/images/ima1.jpg}" src="/images/ima1.jpg" class="testimony__img">
                     </figure>
                 </section>
 
-                <img th:src="@{/images/rightarrow.svg}" class="testimony__arrow" id="next">
+                <img th:src="@{/images/rightarrow.svg}" src="/images/rightarrow.svg" class="testimony__arrow" id="next">
             </div>
         </section> 
         
@@ -177,10 +175,9 @@
                     <div class="questions__answer">
                         <h3 class="questions__title">Calienta antes de entrenar
                             <span class="questions__arrow">
-                                <img th:src="@{/images/arrow.svg}" class="questions__img">
+                                <img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="questions__img">
                             </span>
                         </h3>
-
                         <p class="questions__show">Dedica al menos 5-10 minutos a un calentamiento para evitar lesiones y preparar tu cuerpo para el ejercicio.</p>
                     </div>
                 </article>
@@ -192,7 +189,6 @@
                                 <img th:src="@{/images/arrow.svg}" class="questions__img">
                             </span>
                         </h3>
-
                         <p class="questions__show">Beber agua antes, durante y después del ejercicio mejora tu rendimiento y recuperación.</p>
                     </div>
                 </article>
@@ -200,20 +196,21 @@
         </section>
     </main>
 
+
     <footer class="footer">
         <section class="footer__container container">
             <nav class="nav">
                 <ul class="nav__link nav__link--footer"> 
-                    <li class="nav__items"><a th:href="@{/registro}" class="nav__links">Registrate</a></li>
-                    <li class="nav__items"><a th:href="@{/acercade}" class="nav__links">Acerca de</a></li>
-                    <li class="nav__items"><a th:href="@{/centrosdeportivos}" class="nav__links">Centro deportivo</a></li>
-                    <li class="nav__items"><a th:href="@{/info}" class="nav__links">Info</a></li>
-                    <li class="nav__items"><a th:href="@{/login}" class="nav__links">Login</a></li>
-                    <li class="nav__items"><a th:href="@{/mapa}" class="nav__links">Mapa</a></li>
+                    <li class="nav__items"><a th:href="@{/registro}" href="/registro" class="nav__links">Registrate</a></li>
+                    <li class="nav__items"><a th:href="@{/acercade}" href="/acercade" class="nav__links">Acerca de</a></li>
+                    <li class="nav__items"><a th:href="@{/centrosdeportivos}" href="/centrosdeportivos" class="nav__links">Centro deportivo</a></li>
+                    <li class="nav__items"><a th:href="@{/info}" href="/info" class="nav__links">Info</a></li>
+                    <li class="nav__items"><a th:href="@{/login}" href="/login" class="nav__links">Login</a></li>
+                    <li class="nav__items"><a th:href="@{/mapa}" href="/mapa" class="nav__links">Mapa</a></li>
                 </ul> 
             </nav>
             <form class="footer__form">
-                <h2 class="footer__newsletter">suscribete a E.V.A</h2>
+                <h2 class="footer__newsletter">Suscríbete a E.V.A</h2>
                 <div class="footer__inputs">
                     <input type="email" placeholder="Email" class="footer__input">
                     <input type="submit" value="Registrate" class="footer__submit">
@@ -223,16 +220,18 @@
 
         <section class="footer__copy container">
             <div class="footer__social">
-                <a href="#" class="footer__icons"><img th:src="@{/images/leftarrow.svg}" class="footer__img"></a>
-                <a href="#" class="footer__icons"><img th:src="@{/images/arrow.svg}" class="footer__img"></a>
-                <a href="#" class="footer__icons"><img th:src="@{/images/menu.svg}" class="footer__img"></a>
+                <a href="#" class="footer__icons"><img th:src="@{/images/leftarrow.svg}" src="/images/leftarrow.svg" class="footer__img" ></a>
+                <a href="#" class="footer__icons"><img th:src="@{/images/arrow.svg}" src="/images/arrow.svg" class="footer__img" ></a>
+                <a href="#" class="footer__icons"><img th:src="@{/images/menu.svg}" src="/images/menu.svg" class="footer__img" ></a>
             </div>
             
-            <h3 class="footer__copyright">Derechos reservados &copy; SD</h3>
+            <h3 class=" footer__copyright">Derechos reservados &copy; SD</h3>
         </section>
     </footer>
 
-    <script th:src="@{/js/slider.js}"></script>
-    <script th:src="@{/js/questions.js}"></script>
+    <!-- JS: apuntando a /static/js -->
+    <script th:src="@{/js/slider.js}" src="/js/slider.js"></script>
+    <script th:src="@{/js/questions.js}" src="/js/questions.js"></script>
+
 </body>
 </html>
