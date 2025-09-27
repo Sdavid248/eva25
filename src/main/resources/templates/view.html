@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Usuario</title>
+</head>
+<body>
+    <h2>Detalle Usuario</h2>
+
+    <p><strong>ID:</strong> <span th:text="${usuario.idUser}"></span></p>
+    <p><strong>Documento:</strong> <span th:text="${usuario.documento}"></span></p>
+    <p><strong>Nombre:</strong> <span th:text="${usuario.nombre}"></span></p>
+    <p><strong>Correo:</strong> <span th:text="${usuario.correo}"></span></p>
+    <p><strong>Estado:</strong> <span th:text="${usuario.estado}"></span></p>
+
+    <a th:href="@{/usuarios/list}">Volver</a>
+</body>
+</html>
