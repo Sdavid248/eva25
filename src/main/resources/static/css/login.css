@@ -1,26 +1,128 @@
+/* Estilos para el navbar unificado (tu menú) */
+.nav_menu {
+    background-color: #1e1e2f; /* color oscuro */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    padding: 15px 30px;
+    font-family: Arial, sans-serif;
+}
 
+.nav_links {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
 
-/* Sobrescribir color de fondo del botón de Bootstrap */
-.btn-primary {
+.nav_links li a {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav_links li a:hover,
+.nav_links li a:focus {
     background-color: #0056b3;
-    border-color: #004080;
+    color: white;
 }
 
-/* Personalizar formulario */
-form {
-    background-color: #f9f9f9;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+/* Centrar todo el contenido principal */
+body {
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(6, 6, 86, 1) 31%, rgba(49, 49, 112, 1) 64%, rgba(64, 134, 148, 1) 88%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Cambiar color del navbar */
-.navbar {
-    background-color: #1e1e2f !important;
-}
-
-/* Centrar título */
+/* Título */
 h2 {
+    margin-top: 40px;
+    margin-bottom: 30px;
+    font-weight: 700;
+    font-size: 2.5rem;
     text-align: center;
-    margin-bottom: 1.5rem;
+    color: #03ffbc;
+    text-shadow: 2px 2px 5px rgb(245, 245, 245);
+}
+
+/* Formulario */
+form {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #333;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    max-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+/* Etiquetas */
+form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #0056b3;
+}
+
+/* Inputs */
+form input[type="email"],
+form input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 2px solid #0056b3;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+form input[type="email"]:focus,
+form input[type="password"]:focus {
+    outline: none;
+    border-color: #00c6ff;
+    box-shadow: 0 0 8px #00c6ff;
+}
+
+/* Botón */
+button[type="submit"] {
+    width: 100%;
+    background-color: #0056b3;
+    color: #fff;
+    padding: 12px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button[type="submit"]:hover,
+button[type="submit"]:focus {
+    background-color: #007bff;
+    box-shadow: 0 0 12px #007bff;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    form {
+        padding: 25px 20px;
+    }
+
+    h2 {
+        font-size: 2rem;
+        margin-top: 30px;
+    }
 }
