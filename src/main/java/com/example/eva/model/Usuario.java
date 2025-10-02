@@ -1,6 +1,7 @@
 package com.example.eva.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +20,10 @@ public class Usuario {
     @Column(nullable = false)
     private String nombre;
 
+    @NotEmpty(message = "La dirección es obligatoria")
+    @Column(nullable = false)
     private String direccion;
+
     private String telefono;
 
     @Column(unique = true, nullable = false)

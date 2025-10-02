@@ -7,5 +7,9 @@ import com.example.eva.model.Rol;
 import java.util.Optional;
 
 public interface UsuarioRolRepository extends JpaRepository<UsuarioRol, Long> {
+    // Ya existente
     Optional<UsuarioRol> findByUsuarioAndRol(Usuario usuario, Rol rol);
+
+    // 🔹 Necesario para poder eliminar en cascada desde UsuarioService
+    void deleteByUsuarioIdUser(Long idUser);
 }
