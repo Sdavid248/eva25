@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Centros Deportivos</title>
-    <link rel="stylesheet" href="/css/centrodeportivo.css"> 
+    <link rel="stylesheet" href="/css/centrodeportivo.css" />
 </head>
 <body>
 
-    <!-- 🔹 Menú de navegación unificado -->
+    <!-- Menú de navegación -->
     <nav class="nav_menu">
         <ul class="nav_links">
             <li><a th:href="@{/}">Inicio</a></li>
@@ -21,26 +21,32 @@
         </ul>
     </nav>
 
-    <!-- 🔹 Contenido original de la página -->
-    <main>
+    <!-- Contenedor principal -->
+    <main class="centros-container">
         <h2>Centros Deportivos Disponibles</h2>
         <p>
             Aquí encontrarás una lista de centros deportivos registrados en nuestra plataforma,
             con información de ubicación, horarios y servicios disponibles.
         </p>
 
-        <section class="centros__lista">
-            <article class="centro">
-                <h3>Centro Deportivo Norte</h3>
+        <section class="card-container">
+            <!-- Tarjeta 1 -->
+            <article class="card">
+                <img src="/images/centro-norte.jpg" alt="Centro Deportivo Norte" />
+                <h2>Centro Deportivo Norte</h2>
                 <p>Ubicación: Calle 123 #45-67</p>
                 <p>Horarios: Lunes a Viernes de 6:00 am a 9:00 pm</p>
             </article>
 
-            <article class="centro">
-                <h3>Centro Deportivo Sur</h3>
+            <!-- Tarjeta 2 -->
+            <article class="card">
+                <img src="/images/centro-sur.jpg" alt="Centro Deportivo Sur" />
+                <h2>Centro Deportivo Sur</h2>
                 <p>Ubicación: Carrera 89 #12-34</p>
                 <p>Horarios: Todos los días de 7:00 am a 10:00 pm</p>
             </article>
+
+            <!-- Agrega más tarjetas como quieras -->
         </section>
     </main>
 
