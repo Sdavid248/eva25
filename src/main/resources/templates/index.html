@@ -85,41 +85,58 @@
         <section class="price container"> 
             <h2 class="subtitle">Mejora tu salud física y mental con nosotros.</h2>
 
-            <div class="price__table">
-                <div class="price__element">
-                    <p class="price__name">Problema</p>
-                    <h3 class="price__price">Sedentarismo</h3>
-                    <div class="price__items">
-                        <p class="price__features">Dificultad para encontrar espacios deportivos</p>
-                        <p class="price__features">Falta de información específica</p>
-                        <p class="price__features">Poca motivación para hacer ejercicio</p>
-                    </div>
-                    <a href="#" class="price__cta">Conocer más</a>
-                </div>
+         <!-- templates/home.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>E.V.A - Plataforma Deportiva</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
 
-                <div class="price__element price__element--best">
-                    <p class="price__name">Solución</p>
-                    <h3 class="price__price">E.V.A</h3>
-                    <div class="price__items">
-                        <p class="price__features">Plataforma web</p>
-                        <p class="price__features">Mapa interactivo de centros deportivos</p>
-                        <p class="price__features">Inscripciones</p>
-                    </div>
-                    <a href="#" class="price__cta">Empieza ahora</a>
-                </div>
-
-                <div class="price__element">
-                    <p class="price__name">Impacto</p>
-                    <h3 class="price__price">Comunidad</h3>
-                    <div class="price__items">
-                        <p class="price__features">Promovemos los hábitos saludables</p>
-                        <p class="price__features">Conectamos usuarios con el deporte</p>
-                        <p class="price__features">Te ayudamos a darle vida a tu mente y tu cuerpo</p>
-                    </div>
-                    <a href="#" class="price__cta">Conoce E.V.A</a>
-                </div>
+    <section class="price__table">
+        <!-- Problema -->
+        <div class="price__element">
+            <p class="price__name">Problema</p>
+            <h3 class="price__price">Sedentarismo</h3>
+            <div class="price__items">
+                <p class="price__features">Dificultad para encontrar espacios deportivos</p>
+                <p class="price__features">Falta de información específica</p>
+                <p class="price__features">Poca motivación para hacer ejercicio</p>
             </div>
-        </section>
+            <a th:href="@{/login}" class="price__cta">Conocer más</a>
+        </div>
+
+        <!-- Solución -->
+        <div class="price__element price__element--best">
+            <p class="price__name">Solución</p>
+            <h3 class="price__price">E.V.A</h3>
+            <div class="price__items">
+                <p class="price__features">Plataforma web</p>
+                <p class="price__features">Mapa interactivo de centros deportivos</p>
+                <p class="price__features">Inscripciones</p>
+            </div>
+            <a th:href="@{/registro}" class="price__cta">Empieza ahora</a>
+        </div>
+
+        <!-- Impacto -->
+        <div class="price__element">
+            <p class="price__name">Impacto</p>
+            <h3 class="price__price">Comunidad</h3>
+            <div class="price__items">
+                <p class="price__features">Promovemos los hábitos saludables</p>
+                <p class="price__features">Conectamos usuarios con el deporte</p>
+                <p class="price__features">Te ayudamos a darle vida a tu mente y tu cuerpo</p>
+            </div>
+            <a th:href="@{/login}" class="price__cta">Conoce E.V.A</a>
+        </div>
+    </section>
+
+</body>
+</html>
+
 
         <section class="testimony">
             <div class="testimony__container container">
@@ -238,8 +255,9 @@
     </footer>
 
     <!-- JS: apuntando a /static/js -->
-    <script th:src="@{/js/slider.js}" src="/js/slider.js"></script>
-    <script th:src="@{/js/questions.js}" src="/js/questions.js"></script>
+    <script th:src="@{/js/slider.js}"></script>
+    <script th:src="@{/js/questions.js}"></script>
+
 
 </body>
 </html>

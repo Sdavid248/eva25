@@ -21,38 +21,40 @@
         </ul>
     </nav>
 
-    <h2>Formulario de Registro</h2>
-    <form th:action="@{/registro}" th:object="${usuario}" method="post">
+    <!-- 🔹 Contenedor principal -->
+    <div class="container">
+        <h2>Formulario de Registro</h2>
+        <form th:action="@{/registro}" th:object="${usuario}" method="post">
 
-        <label for="documento">Documento:</label>
-        <input type="number" id="documento" th:field="*{documento}" required placeholder="Ingrese su documento" />
+            <label for="documento">Documento:</label>
+            <input type="number" id="documento" th:field="*{documento}" required placeholder="Ingrese su documento" />
 
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" th:field="*{nombre}" required placeholder="Ingrese su nombre" />
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" th:field="*{nombre}" required placeholder="Ingrese su nombre" />
 
-        <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" th:field="*{direccion}" placeholder="Ingrese su dirección" />
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" th:field="*{direccion}" placeholder="Ingrese su dirección" />
 
-        <label for="telefono">Teléfono:</label>
-        <input type="text" id="telefono" th:field="*{telefono}" placeholder="Ingrese su teléfono" />
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" th:field="*{telefono}" placeholder="Ingrese su teléfono" />
 
-        <label for="correo">Correo:</label>
-        <input type="email" id="correo" th:field="*{correo}" required placeholder="ejemplo@correo.com" />
+            <label for="correo">Correo:</label>
+            <input type="email" id="correo" th:field="*{correo}" required placeholder="ejemplo@correo.com" />
 
-        <label for="estado">Estado:</label>
-        <select id="estado" th:field="*{estado}" required>
-            <option value="">--Seleccione--</option>
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
-        </select>
+            <label for="estado">Estado:</label>
+            <select id="estado" th:field="*{estado}" required>
+                <option value="">--Seleccione--</option>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+            </select>
 
-        <label for="contrasena">Contraseña:</label>
-        <input type="password" id="contrasena" th:field="*{contrasena}" required placeholder="Ingrese una contraseña" />
+            <label for="contrasena">Contraseña:</label>
+            <input type="password" id="contrasena" th:field="*{contrasena}" required placeholder="Ingrese una contraseña" />
 
-        <button type="submit">Registrar</button>
-    </form>
+            <button type="submit">Registrar</button>
+        </form>
+    </div>
 
     <div class="mensaje" th:if="${mensaje}" th:text="${mensaje}"></div>
 
 </body>
-</html>
