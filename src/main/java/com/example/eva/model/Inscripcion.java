@@ -8,23 +8,28 @@ public class Inscripcion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_inscripcion")
-    private Long idInscripcion;
+    @Column(name = "numero") // en la BD es "numero"
+    private Long numero;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", nullable = false)
     private Usuario usuario;
 
-    // otros campos de inscripcion...
-    private String detalle;
+    @Column(name = "fhinscripcion")
+    private String fhInscripcion;
+
+    private String telefono;
+    private String correo;
+    private String estado;
+    private String rut;
 
     // Getters y Setters
-    public Long getIdInscripcion() {
-        return idInscripcion;
+    public Long getNumero() {
+        return numero;
     }
 
-    public void setIdInscripcion(Long idInscripcion) {
-        this.idInscripcion = idInscripcion;
+    public void setNumero(Long numero) {
+        this.numero = numero;
     }
 
     public Usuario getUsuario() {
@@ -35,11 +40,43 @@ public class Inscripcion {
         this.usuario = usuario;
     }
 
-    public String getDetalle() {
-        return detalle;
+    public String getFhInscripcion() {
+        return fhInscripcion;
     }
 
-    public void setDetalle(String detalle) {
-        this.detalle = detalle;
+    public void setFhInscripcion(String fhInscripcion) {
+        this.fhInscripcion = fhInscripcion;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getRut() {
+        return rut;
+    }
+
+    public void setRut(String rut) {
+        this.rut = rut;
     }
 }

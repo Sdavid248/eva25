@@ -24,6 +24,7 @@
                 <li class="nav__items"><a th:href="@{/info}" href="/info" class="nav__links">Info</a></li>
                 <li class="nav__items"><a th:href="@{/login}" href="/login" class="nav__links">Login</a></li>
                 <li class="nav__items"><a th:href="@{/mapa}" href="/mapa" class="nav__links">Mapa</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/pdf}">Exportar PDF</a></li>
 
                 <!-- 🔹 CRUD -->
                 <li class="nav__items"><a th:href="@{/usuario}" href="/usuario" class="nav__links">Lista Usuarios</a></li>
@@ -230,8 +231,8 @@
                     <li class="nav__items"><a th:href="@{/mapa}" href="/mapa" class="nav__links">Mapa</a></li>
 
                     <!-- 🔹 CRUD -->
-                    <li class="nav__items"><a th:href="@{/usuarios/list}" href="/usuarios/list" class="nav__links">Lista Usuarios</a></li>
-                    <li class="nav__items"><a th:href="@{/usuarios/form}" href="/usuarios/form" class="nav__links">Nuevo Usuario</a></li>
+                    <li class="nav__items"><a th:href="@{/usuario}" href="/usuario" class="nav__links">Lista Usuarios</a></li>
+                    <li class="nav__items"><a th:href="@{/usuario/nuevo}" href="/usuario/nuevo" class="nav__links">Nuevo Usuario</a></li>
                 </ul> 
             </nav>
             <form class="footer__form">

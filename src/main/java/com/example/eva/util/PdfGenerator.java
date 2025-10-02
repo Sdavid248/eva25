@@ -25,7 +25,6 @@ public class PdfGenerator {
              PdfDocument pdfDoc = new PdfDocument(writer);
              Document document = new Document(pdfDoc)) {
 
-            // Fuente estándar
             PdfFont font = PdfFontFactory.createFont();
 
             // Título
@@ -36,35 +35,24 @@ public class PdfGenerator {
                     .setMarginBottom(20);
             document.add(titulo);
 
-            // Tabla con 4 columnas
-            Table table = new Table(UnitValue.createPercentArray(new float[]{1, 3, 3, 2}))
+            // Tabla con más columnas
+            Table table = new Table(UnitValue.createPercentArray(new float[]{1, 2, 3, 2, 2, 3}))
                     .useAllAvailableWidth();
 
-            // Encabezados
-            String[] headers = {"ID", "Nombre", "Correo", "Estado"};
+            String[] headers = {"ID", "Documento", "Nombre", "Correo", "Estado", "Teléfono"};
             for (String header : headers) {
                 Cell cell = new Cell().add(new Paragraph(header).setFont(font));
                 cell.setBackgroundColor(ColorConstants.LIGHT_GRAY);
                 table.addHeaderCell(cell);
             }
 
-            // Filas
             for (Usuario usuario : usuarios) {
-                table.addCell(new Paragraph(
-                        usuario.getIdUser() != null ? usuario.getIdUser().toString() : ""
-                ).setFont(font));
-
-                table.addCell(new Paragraph(
-                        usuario.getNombre() != null ? usuario.getNombre() : ""
-                ).setFont(font));
-
-                table.addCell(new Paragraph(
-                        usuario.getCorreo() != null ? usuario.getCorreo() : ""
-                ).setFont(font));
-
-                table.addCell(new Paragraph(
-                        usuario.getEstado() != null ? usuario.getEstado() : ""
-                ).setFont(font));
+                table.addCell(String.valueOf(usuario.getIdUser()));
+                table.addCell(usuario.getDocumento() != null ? usuario.getDocumento() : "");
+                table.addCell(usuario.getNombre() != null ? usuario.getNombre() : "");
+                table.addCell(usuario.getCorreo() != null ? usuario.getCorreo() : "");
+                table.addCell(usuario.getEstado() != null ? usuario.getEstado() : "");
+                table.addCell(usuario.getTelefono() != null ? usuario.getTelefono() : "");
             }
 
             document.add(table);
