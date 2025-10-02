@@ -2,55 +2,57 @@ package com.example.eva.controller;
 
 import com.example.eva.model.Usuario;
 import com.example.eva.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/usuarios")
+@RequestMapping("/usuario")
 public class UsuarioCrudController {
 
     private final UsuarioService usuarioService;
 
+    @Autowired
     public UsuarioCrudController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 
-    // 📌 Listar
-    @GetMapping("/list")
-    public String listar(Model model, @RequestParam(required = false) String keyword) {
+    // 🔹 Listar usuarios
+    @GetMapping
+    public String listarUsuarios(Model model, @RequestParam(required = false) String keyword) {
         model.addAttribute("usuarios", usuarioService.buscar(keyword));
         model.addAttribute("keyword", keyword);
-        return "usuarios/list"; // ✅ list.html
+        return "lista"; // apunta a templates/lista.html
     }
 
-    // 📌 Nuevo
-    @GetMapping("/form")
-    public String nuevo(Model model) {
+    // 🔹 Mostrar formulario nuevo
+    @GetMapping("/nuevo")
+    public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("usuario", new Usuario());
-        return "usuarios/form"; // ✅ form.html
+        return "form"; // apunta a templates/form.html
     }
 
-    // 📌 Guardar (nuevo o editar)
+    // 🔹 Guardar usuario
     @PostMapping("/save")
-    public String guardar(@ModelAttribute Usuario usuario) {
+    public String guardarUsuario(@ModelAttribute Usuario usuario) {
         usuarioService.guardar(usuario);
-        return "redirect:/usuarios/list";
+        return "redirect:/usuario"; // redirige a la lista
     }
 
-    // 📌 Editar
+    // 🔹 Editar usuario
     @GetMapping("/editar/{id}")
-    public String editar(@PathVariable Long id, Model model) {
+    public String editarUsuario(@PathVariable Long id, Model model) {
         Usuario usuario = usuarioService.buscarPorId(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con id: " + id));
         model.addAttribute("usuario", usuario);
-        return "usuarios/form"; // ✅ reutiliza form.html
+        return "form"; // usa el mismo form.html
     }
 
-    // 📌 Eliminar
+    // 🔹 Eliminar usuario
     @GetMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id) {
+    public String eliminarUsuario(@PathVariable Long id) {
         usuarioService.eliminar(id);
-        return "redirect:/usuarios/list";
+        return "redirect:/usuario"; // redirige a la lista
     }
 }
