@@ -1,43 +1,84 @@
 package com.example.eva.service;
 
+import com.example.eva.model.Rol;
 import com.example.eva.model.Usuario;
+import com.example.eva.model.UsuarioRol;
+import com.example.eva.repository.RolRepository;
 import com.example.eva.repository.UsuarioRepository;
+import com.example.eva.repository.UsuarioRolRepository;
 import com.example.eva.repository.InscripcionRepository;
 import com.example.eva.repository.ValoracionRepository;
-import com.example.eva.repository.UsuarioRolRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@Transactional
-public class UsuarioService {
+// 📑 imports extra para paginación
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+// 📑 imports extra para seguridad
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+@Service
+public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final InscripcionRepository inscripcionRepository;
     private final ValoracionRepository valoracionRepository;
     private final UsuarioRolRepository usuarioRolRepository;
+    private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UsuarioService(UsuarioRepository usuarioRepository,
                           InscripcionRepository inscripcionRepository,
                           ValoracionRepository valoracionRepository,
                           UsuarioRolRepository usuarioRolRepository,
+                          RolRepository rolRepository,
                           PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.inscripcionRepository = inscripcionRepository;
         this.valoracionRepository = valoracionRepository;
         this.usuarioRolRepository = usuarioRolRepository;
+        this.rolRepository = rolRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    // 🔍 Búsqueda rápida por keyword
+    // Guardar usuario con rol por defecto
+    public Usuario guardar(Usuario usuario) {
+        if (usuario.getContrasena() != null && !usuario.getContrasena().isBlank()) {
+            usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
+        }
+
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+
+        // Asignar rol USER si no tiene roles
+        if (usuarioGuardado.getUsuarioRoles() == null || usuarioGuardado.getUsuarioRoles().isEmpty()) {
+            Rol rolUser = rolRepository.findByNombre("USER")
+                    .orElseThrow(() -> new RuntimeException("⚠️ Rol USER no encontrado en la BD"));
+            UsuarioRol ur = new UsuarioRol();
+            ur.setUsuario(usuarioGuardado);
+            ur.setRol(rolUser);
+            usuarioRolRepository.save(ur);
+        }
+        return usuarioGuardado;
+    }
+
+    public List<Usuario> listar() {
+        return usuarioRepository.findAll();
+    }
+
+    public Optional<Usuario> buscarPorId(Long id) {
+        return usuarioRepository.findById(id);
+    }
+
+    public void eliminar(Long id) {
+        usuarioRepository.deleteById(id);
+    }
+
+    // 🔍 Búsqueda por keyword usando el repositorio ya definido
     public List<Usuario> buscar(String keyword) {
         if (keyword == null || keyword.isBlank()) {
             return usuarioRepository.findAll();
@@ -45,73 +86,70 @@ public class UsuarioService {
         return usuarioRepository.searchByKeyword(keyword);
     }
 
-    // 🔍 Búsqueda multicriterio (sin paginación)
-    public List<Usuario> buscarConFiltros(String nombre, String correo, String estado, String documento) {
-        Specification<Usuario> spec = construirFiltros(nombre, correo, estado, documento);
-        return usuarioRepository.findAll(spec);
+    // 🔍 Búsqueda con filtros múltiples (AMPLIADA con teléfono y dirección)
+    public List<Usuario> buscarConFiltros(String nombre, String correo, String estado, String documento,
+                                          String telefono, String direccion) {
+        return usuarioRepository.findAll().stream()
+                .filter(u -> (nombre == null || u.getNombre().toLowerCase().contains(nombre.toLowerCase())))
+                .filter(u -> (correo == null || u.getCorreo().toLowerCase().contains(correo.toLowerCase())))
+                .filter(u -> (estado == null || (u.getEstado() != null && u.getEstado().toLowerCase().contains(estado.toLowerCase()))))
+                .filter(u -> (documento == null || u.getDocumento().contains(documento)))
+                .filter(u -> (telefono == null || (u.getTelefono() != null && u.getTelefono().toLowerCase().contains(telefono.toLowerCase()))))
+                .filter(u -> (direccion == null || (u.getDireccion() != null && u.getDireccion().toLowerCase().contains(direccion.toLowerCase()))))
+                .toList();
     }
 
-    // 🔍 Búsqueda multicriterio con paginación
+    // 📑 NUEVO: búsqueda con paginación extendida
+    public Page<Usuario> buscarConFiltrosPaginado(String nombre, String correo, String estado, String documento,
+                                                  String telefono, String direccion, Pageable pageable) {
+        List<Usuario> filtrados = buscarConFiltros(nombre, correo, estado, documento, telefono, direccion);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filtrados.size());
+        return new PageImpl<>(filtrados.subList(start, end), pageable, filtrados.size());
+    }
+
+    // 📑 NUEVO: Método para saber si el usuario autenticado es ADMIN
+    public boolean esAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities() != null) {
+            return auth.getAuthorities().stream()
+                    .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+        }
+        return false;
+    }
+
+    // 📑 NUEVO: Método que retorna solo la info permitida según el rol
+    public List<Usuario> listarSegunRol() {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        if (esAdmin()) {
+            return usuarios; // ADMIN ve todo
+        } else {
+            // Si es USER, limpiamos campos sensibles
+            return usuarios.stream().map(u -> {
+                Usuario safeUser = new Usuario();
+                safeUser.setIdUser(u.getIdUser());
+                safeUser.setNombre(u.getNombre());
+                safeUser.setCorreo(u.getCorreo());
+                safeUser.setEstado(u.getEstado());
+                // ❌ No exponemos documento, dirección, teléfono a USER
+                return safeUser;
+            }).toList();
+        }
+    }
+
+    // ✅ AGREGADO: compatibilidad con controladores que usan searchByKeyword
+    public List<Usuario> searchByKeyword(String keyword) {
+        return buscar(keyword);
+    }
+
+    // ✅ AGREGADO: compatibilidad con controladores que usan searchWithFilters
+    public Page<Usuario> searchWithFilters(String nombre, String correo, String estado, String documento,
+                                           String telefono, String direccion, Pageable pageable) {
+        return buscarConFiltrosPaginado(nombre, correo, estado, documento, telefono, direccion, pageable);
+    }
+
+    // ✅ AGREGADO: sobrecarga para compatibilidad con UsuarioViewController
     public Page<Usuario> buscarConFiltrosPaginado(String nombre, String correo, String estado, String documento, Pageable pageable) {
-        Specification<Usuario> spec = construirFiltros(nombre, correo, estado, documento);
-        return usuarioRepository.findAll(spec, pageable);
-    }
-
-    // 🏗️ Método auxiliar para construir los filtros dinámicos
-    private Specification<Usuario> construirFiltros(String nombre, String correo, String estado, String documento) {
-        Specification<Usuario> spec = Specification.where(null);
-
-        if (nombre != null && !nombre.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                    cb.like(cb.lower(root.get("nombre")), "%" + nombre.toLowerCase() + "%"));
-        }
-
-        if (correo != null && !correo.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                    cb.like(cb.lower(root.get("correo")), "%" + correo.toLowerCase() + "%"));
-        }
-
-        if (estado != null && !estado.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                    cb.like(cb.lower(root.get("estado")), "%" + estado.toLowerCase() + "%"));
-        }
-
-        if (documento != null && !documento.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                    cb.like(root.get("documento").as(String.class), "%" + documento + "%"));
-        }
-
-        return spec;
-    }
-
-    // 💾 Guardar usuario (encripta password si se envía)
-    public Usuario guardar(Usuario usuario) {
-        if (usuario.getContrasena() != null && !usuario.getContrasena().isBlank()) {
-            usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
-        }
-        return usuarioRepository.save(usuario);
-    }
-
-    // 🔎 Buscar usuario por ID
-    public Optional<Usuario> buscarPorId(Long id) {
-        return usuarioRepository.findById(id);
-    }
-
-    // 🗑️ Eliminar usuario y sus relaciones
-    public void eliminar(Long id) {
-        inscripcionRepository.deleteByUsuarioIdUser(id);
-        valoracionRepository.deleteByUsuarioIdUser(id);
-        usuarioRolRepository.deleteByUsuarioIdUser(id);
-        usuarioRepository.deleteById(id);
-    }
-
-    // 📋 Listar todos los usuarios
-    public List<Usuario> listarTodos() {
-        return usuarioRepository.findAll();
-    }
-
-    // 📋 Listar todos con paginación
-    public Page<Usuario> listarTodosPaginado(Pageable pageable) {
-        return usuarioRepository.findAll(pageable);
+        return buscarConFiltrosPaginado(nombre, correo, estado, documento, null, null, pageable);
     }
 }

@@ -67,6 +67,14 @@
             Anterior
         </a>
 
+        <span th:each="i : ${#numbers.sequence(0, usuarios.totalPages - 1)}">
+            <a th:href="@{/usuarios(page=${i}, size=${usuarios.size},
+                                    nombre=${nombre}, correo=${correo},
+                                    estado=${estado}, documento=${documento})}"
+               th:text="${i + 1}"
+               th:classappend="${i == usuarios.number} ? 'active' : ''"></a>
+        </span>
+
         <a th:if="${usuarios.hasNext()}"
            th:href="@{/usuarios(page=${usuarios.number + 1}, size=${usuarios.size},
                                 nombre=${nombre}, correo=${correo},

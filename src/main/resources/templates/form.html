@@ -32,6 +32,15 @@
         <label for="documento">Documento:</label>
         <input type="text" id="documento" th:field="*{documento}" placeholder="Ingrese el documento" required><br><br>
 
+        <!-- 🔹 Nuevo campo: Selección de Rol -->
+        <label for="rol">Rol:</label>
+        <select id="rol" th:field="*{rol}" required>
+            <option value="" disabled th:selected="${usuario.rol == null}">Seleccione un rol</option>
+            <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.nombre}" 
+                    th:selected="${usuario.rol != null and usuario.rol.id == r.id}">
+            </option>
+        </select><br><br>
+
         <button type="submit">Guardar</button>
         <a th:href="@{/usuario}">Cancelar</a>
     </form>

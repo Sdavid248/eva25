@@ -1,9 +1,25 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <!-- 🔹 Importante -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Usuarios</title>
+
+    <!-- 🔹 AGREGADO: estilos para mejorar el formulario -->
+    <style>
+        .filtros-form {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .filtros-form label {
+            margin-right: 5px;
+        }
+        .filtros-form input {
+            margin-right: 15px;
+        }
+    </style>
 </head>
 <body> 
 
@@ -26,10 +42,48 @@
     <form th:action="@{/usuario}" method="get">
         <input type="text" id="keyword" name="keyword" th:value="${keyword}" placeholder="Buscar usuario...">
         <button type="submit">Buscar</button>
+        <!-- 📄 AGREGADO: Exportar PDF búsqueda -->
+        <a th:href="@{/pdf(keyword=${keyword})}" target="_blank">📄 Exportar PDF búsqueda</a>
     </form>
 
-    <!-- Botones -->
-    <p>
+    <!-- 🔹 AGREGADO: Filtros avanzados -->
+    <form th:action="@{/usuario}" method="get" class="filtros-form">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" th:value="${nombre}" placeholder="Ingrese nombre">
+
+        <label for="correo">Correo:</label>
+        <input type="text" id="correo" name="correo" th:value="${correo}" placeholder="Ingrese correo">
+
+        <label for="estado">Estado:</label>
+        <input type="text" id="estado" name="estado" th:value="${estado}" placeholder="Activo/Inactivo">
+
+        <!-- Filtros visibles solo para ADMIN -->
+        <span sec:authorize="hasRole('ADMIN')">
+            <label for="documento">Documento:</label>
+            <input type="text" id="documento" name="documento" th:value="${documento}" placeholder="Ingrese documento">
+
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" name="telefono" th:value="${telefono}" placeholder="Ingrese teléfono">
+
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" name="direccion" th:value="${direccion}" placeholder="Ingrese dirección">
+        </span>
+
+        <button type="submit">Filtrar</button>
+        <!-- 📄 AGREGADO: Exportar PDF filtros -->
+        <a th:href="@{/pdf-filtros(
+            nombre=${nombre},
+            correo=${correo},
+            estado=${estado},
+            documento=${documento},
+            telefono=${telefono},
+            direccion=${direccion}
+        )}" target="_blank">📄 Exportar PDF filtros</a>
+    </form>
+    <!-- 🔹 FIN AGREGADO -->
+
+    <!-- Botón Nuevo Usuario: Solo visible para ADMIN -->
+    <p sec:authorize="hasRole('ADMIN')">
         <a th:href="@{/usuario/nuevo}">➕ Nuevo Usuario</a>
     </p>
 
@@ -41,6 +95,12 @@
                 <th>Nombre</th>
                 <th>Correo</th>
                 <th>Estado</th>
+
+                <!-- Campos extra solo visibles para ADMIN -->
+                <th sec:authorize="hasRole('ADMIN')">Documento</th>
+                <th sec:authorize="hasRole('ADMIN')">Teléfono</th>
+                <th sec:authorize="hasRole('ADMIN')">Dirección</th>
+
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -50,13 +110,47 @@
                 <td th:text="${usuario.nombre}"></td>
                 <td th:text="${usuario.correo}"></td>
                 <td th:text="${usuario.estado}"></td>
+
+                <!-- Campos adicionales: visibles solo para ADMIN -->
+                <td sec:authorize="hasRole('ADMIN')" th:text="${usuario.documento}"></td>
+                <td sec:authorize="hasRole('ADMIN')" th:text="${usuario.telefono}"></td>
+                <td sec:authorize="hasRole('ADMIN')" th:text="${usuario.direccion}"></td>
+
                 <td>
-                    <a th:href="@{/usuario/editar/{id}(id=${usuario.idUser})}">✏️ Editar</a> |
-                    <a th:href="@{/usuario/eliminar/{id}(id=${usuario.idUser})}"
-                       onclick="return confirm('¿Seguro que quieres eliminar este usuario?')">🗑️ Eliminar</a>
+                    <!-- Acciones visibles solo para ADMIN -->
+                    <span sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/usuario/editar/{id}(id=${usuario.idUser})}">✏️ Editar</a> |
+                        <a th:href="@{/usuario/eliminar/{id}(id=${usuario.idUser})}"
+                           onclick="return confirm('¿Seguro que quieres eliminar este usuario?')">🗑️ Eliminar</a>
+                    </span>
                 </td>
             </tr>
         </tbody>
     </table>
+    <!-- --- AÑADIR en lista.html: paginación (después de la tabla) --- -->
+<!-- 🔹 Paginación -->
+<div style="margin-top:15px;">
+    <span th:if="${totalPages != null and totalPages > 1}">
+        <!-- Anterior -->
+        <a th:if="${currentPage != null and currentPage > 0}"
+           th:href="@{/usuario(page=${currentPage - 1}, keyword=${keyword}, nombre=${nombre}, correo=${correo}, estado=${estado}, documento=${documento}, telefono=${telefono}, direccion=${direccion})}">
+            ⬅️ Anterior
+        </a>
+
+        <!-- Números de página -->
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}" style="margin:0 6px;">
+            <a th:href="@{/usuario(page=${i}, keyword=${keyword}, nombre=${nombre}, correo=${correo}, estado=${estado}, documento=${documento}, telefono=${telefono}, direccion=${direccion})}"
+               th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? 'active' : ''"></a>
+        </span>
+
+        <!-- Siguiente -->
+        <a th:if="${currentPage != null and currentPage < totalPages - 1}"
+           th:href="@{/usuario(page=${currentPage + 1}, keyword=${keyword}, nombre=${nombre}, correo=${correo}, estado=${estado}, documento=${documento}, telefono=${telefono}, direccion=${direccion})}">
+            Siguiente ➡️
+        </a>
+    </span>
+</div>
+
 </body>
 </html>
