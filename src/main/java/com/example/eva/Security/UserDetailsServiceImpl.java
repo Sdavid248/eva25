@@ -23,16 +23,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
-        // Cargar usuario con sus roles
+        // Usamos fetchRoles SIEMPRE
         Usuario usuario = usuarioRepository.findByCorreoFetchRoles(correo)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + correo));
 
         Set<GrantedAuthority> authorities = new HashSet<>();
         for (UsuarioRol ur : usuario.getUsuarioRoles()) {
             String rolName = ur.getRol().getNombre();
-            // Prefijo ROLE_ requerido por Spring Security
             authorities.add(new SimpleGrantedAuthority("ROLE_" + rolName.toUpperCase()));
         }
+
+        // 🔎 Debug: ver roles cargados
+        System.out.println("Usuario autenticado: " + correo + " con roles: " + authorities);
 
         return new User(usuario.getCorreo(), usuario.getContrasena(), authorities);
     }

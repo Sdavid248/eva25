@@ -1,6 +1,4 @@
-
 package com.example.eva.controller;
-
 import com.example.eva.model.Usuario;
 import com.example.eva.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/usuarios")
 public class UsuarioViewController {
-
     @Autowired
     private UsuarioService usuarioService;
 
@@ -33,18 +30,15 @@ public class UsuarioViewController {
             @RequestParam(required = false) String estado,
             @RequestParam(required = false) String documento,
             Model model) {
-
         Pageable pageable = PageRequest.of(page, size);
         Page<Usuario> usuarios = usuarioService.buscarConFiltrosPaginado(nombre, correo, estado, documento, pageable);
-
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("nombre", nombre);
         model.addAttribute("correo", correo);
         model.addAttribute("estado", estado);
         model.addAttribute("documento", documento);
-
         return "view"; // usa templates/view.html
-    }
+   }
 
     // ➕ Nuevo usuario
     @GetMapping("/nuevo")

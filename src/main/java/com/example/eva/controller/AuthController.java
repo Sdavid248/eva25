@@ -6,7 +6,6 @@ import com.example.eva.model.UsuarioRol;
 import com.example.eva.repository.UsuarioRepository;
 import com.example.eva.repository.RolRepository;
 import com.example.eva.repository.UsuarioRolRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -15,18 +14,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.HashSet;
+
 @Controller
 public class AuthController {
-
     @Autowired
     private UsuarioRepository usuarioRepository;
-
     @Autowired
     private RolRepository rolRepository;
-
     @Autowired
     private UsuarioRolRepository usuarioRolRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -59,6 +56,14 @@ public class AuthController {
             ur.setUsuario(usuarioGuardado);
             ur.setRol(rolUser);
             usuarioRolRepository.save(ur);
+
+            // ✅ Asegurar la relación bidireccional (si la colección es null, inicializarla como Set)
+            if (usuarioGuardado.getUsuarioRoles() == null) {
+                usuarioGuardado.setUsuarioRoles(new HashSet<>());
+            }
+            usuarioGuardado.getUsuarioRoles().add(ur);
+
+            usuarioRepository.save(usuarioGuardado);
 
             model.addAttribute("mensaje", "✅ Usuario registrado con éxito. Ahora puedes iniciar sesión.");
             return "login"; // después de registrarse, vuelve al login

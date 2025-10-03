@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true) // 🔹 Habilitamos PreAuthorize
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -27,9 +27,12 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
                 // Páginas públicas
-                .requestMatchers("/", "/index", "/acercade", "/info", "/mapa", "/centrosdeportivos", "/registro", "/login", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/", "/index", "/acercade", "/info", "/mapa", "/centrosdeportivos",
+                        "/registro", "/login", "/css/**", "/js/**", "/images/**").permitAll()
                 // Endpoints admin
                 .requestMatchers("/admin/**", "/usuarios/**").hasRole("ADMIN")
+                // 🔒 Restricción específica: exportar PDF solo ADMIN
+                .requestMatchers("/pdf", "/pdf-filtros").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -42,6 +45,12 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
+            )
+            // 👇 Manejo de acceso denegado
+            .exceptionHandling(ex -> ex
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.sendRedirect("/"); // Redirige al index si no tiene permisos
+                })
             );
 
         return http.build();

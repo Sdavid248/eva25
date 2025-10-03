@@ -34,10 +34,10 @@ public class DataInitializer {
                 return rolRepository.save(r);
             });
 
-            // Crear usuario normal
-            Usuario user = usuarioRepository.findByCorreo("user@demo.com").orElseGet(() -> {
+            // Crear usuario normal con fetchRoles para evitar id_rol
+            Usuario user = usuarioRepository.findByCorreoFetchRoles("user@demo.com").orElseGet(() -> {
                 Usuario u = new Usuario();
-                u.setDocumento("1040323456"); // ⚡ requerido
+                u.setDocumento("1040323456");
                 u.setNombre("Usuario Demo");
                 u.setDireccion("Calle 123");
                 u.setTelefono("3001112233");
@@ -48,9 +48,9 @@ public class DataInitializer {
             });
 
             // Crear usuario admin
-            Usuario admin = usuarioRepository.findByCorreo("admin@demo.com").orElseGet(() -> {
+            Usuario admin = usuarioRepository.findByCorreoFetchRoles("admin@demo.com").orElseGet(() -> {
                 Usuario u = new Usuario();
-                u.setDocumento("1021392980"); // ⚡ requerido
+                u.setDocumento("1021392980");
                 u.setNombre("Administrador");
                 u.setDireccion("Av Siempre Viva 742");
                 u.setTelefono("3009998877");
@@ -60,7 +60,7 @@ public class DataInitializer {
                 return usuarioRepository.save(u);
             });
 
-            // Asociar roles a usuarios
+            // Asociar roles
             if (usuarioRolRepository.findByUsuarioAndRol(user, rolUser).isEmpty()) {
                 UsuarioRol ur = new UsuarioRol();
                 ur.setUsuario(user);
