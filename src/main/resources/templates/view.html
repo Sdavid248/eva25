@@ -3,86 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Gestión de Usuarios</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <title>Gestión de Usuarios</title>
+    <link rel="stylesheet" th:href="@{/css/view.css}" />
 </head>
-<body>
-<h1>Gestión de Usuarios</h1>
+<body class="page">
 
-<!-- 🔍 Formulario de Filtros -->
-<form th:action="@{/usuarios}" method="get">
-    <input type="text" name="nombre" th:value="${nombre}" placeholder="Filtrar por nombre"/>
-    <input type="text" name="correo" th:value="${correo}" placeholder="Filtrar por correo"/>
-    <input type="text" name="estado" th:value="${estado}" placeholder="Filtrar por estado"/>
-    <input type="text" name="documento" th:value="${documento}" placeholder="Filtrar por documento"/>
-    <button type="submit">Buscar</button>
-    <a th:href="@{/usuarios}">Limpiar</a>
-</form>
+    <div class="container">
+        <h1 class="title">Gestión de Usuarios</h1>
 
-<!-- ➕ Botón nuevo usuario -->
-<p>
-    <a th:href="@{/usuarios/nuevo}">Nuevo Usuario</a>
-</p>
+        <!-- 🔍 Formulario de Filtros -->
+        <form th:action="@{/usuarios}" method="get" class="filter-form">
+            <input type="text" name="nombre" th:value="${nombre}" placeholder="Filtrar por nombre" class="input"/>
+            <input type="text" name="correo" th:value="${correo}" placeholder="Filtrar por correo" class="input"/>
+            <input type="text" name="estado" th:value="${estado}" placeholder="Filtrar por estado" class="input"/>
+            <input type="text" name="documento" th:value="${documento}" placeholder="Filtrar por documento" class="input"/>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <a th:href="@{/usuarios}" class="btn btn-secondary">Limpiar</a>
+        </form>
 
-<!-- 📋 Tabla de usuarios -->
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Correo</th>
-        <th>Estado</th>
-        <th>Documento</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="usuario : ${usuarios.content}">
-        <td th:text="${usuario.id}"></td>
-        <td th:text="${usuario.nombre}"></td>
-        <td th:text="${usuario.correo}"></td>
-        <td th:text="${usuario.estado}"></td>
-        <td th:text="${usuario.documento}"></td>
-        <td>
-            <a th:href="@{'/usuarios/editar/' + ${usuario.id}}">Editar</a> |
-            <a th:href="@{'/usuarios/eliminar/' + ${usuario.id}}"
-               onclick="return confirm('¿Seguro que deseas eliminar este usuario?')">Eliminar</a>
-        </td>
-    </tr>
-    <tr th:if="${usuarios.totalElements == 0}">
-        <td colspan="6">No se encontraron usuarios</td>
-    </tr>
-    </tbody>
-</table>
+        <!-- ➕ Botón nuevo usuario -->
+        <p class="new-user">
+            <a th:href="@{/usuarios/nuevo}" class="btn btn-success">➕ Nuevo Usuario</a>
+        </p>
 
-<!-- 📑 Paginación -->
-<div>
-    <span th:text="'Página ' + ${usuarios.number + 1} + ' de ' + ${usuarios.totalPages}"></span>
+        <!-- 📋 Tabla de usuarios -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Estado</th>
+                <th>Documento</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="usuario : ${usuarios.content}">
+                <td th:text="${usuario.id}"></td>
+                <td th:text="${usuario.nombre}"></td>
+                <td th:text="${usuario.correo}"></td>
+                <td th:text="${usuario.estado}"></td>
+                <td th:text="${usuario.documento}"></td>
+                <td>
+                    <a th:href="@{'/usuarios/editar/' + ${usuario.id}}" class="btn-link edit">✏️ Editar</a> |
+                    <a th:href="@{'/usuarios/eliminar/' + ${usuario.id}}"
+                        onclick="return confirm('¿Seguro que deseas eliminar este usuario?')"
+                        class="btn-link delete">🗑️ Eliminar</a>
+                </td>
+            </tr>
+            <tr th:if="${usuarios.totalElements == 0}">
+                <td colspan="6" class="no-results">No se encontraron usuarios</td>
+            </tr>
+            </tbody>
+        </table>
 
-    <div>
-        <a th:if="${usuarios.hasPrevious()}"
-           th:href="@{/usuarios(page=${usuarios.number - 1}, size=${usuarios.size},
-                                nombre=${nombre}, correo=${correo},
-                                estado=${estado}, documento=${documento})}">
-            Anterior
-        </a>
+        <!-- 📑 Paginación -->
+        <div class="pagination">
+            <span th:text="'Página ' + ${usuarios.number + 1} + ' de ' + ${usuarios.totalPages}"></span>
 
-        <span th:each="i : ${#numbers.sequence(0, usuarios.totalPages - 1)}">
-            <a th:href="@{/usuarios(page=${i}, size=${usuarios.size},
-                                    nombre=${nombre}, correo=${correo},
-                                    estado=${estado}, documento=${documento})}"
-               th:text="${i + 1}"
-               th:classappend="${i == usuarios.number} ? 'active' : ''"></a>
-        </span>
+            <div class="pagination-links">
+                <a th:if="${usuarios.hasPrevious()}"
+                    th:href="@{/usuarios(page=${usuarios.number - 1}, size=${usuarios.size},
+                                        nombre=${nombre}, correo=${correo},
+                                        estado=${estado}, documento=${documento})}"
+                    class="page-link">⬅️ Anterior</a>
 
-        <a th:if="${usuarios.hasNext()}"
-           th:href="@{/usuarios(page=${usuarios.number + 1}, size=${usuarios.size},
-                                nombre=${nombre}, correo=${correo},
-                                estado=${estado}, documento=${documento})}">
-            Siguiente
-        </a>
+                <span th:each="i : ${#numbers.sequence(0, usuarios.totalPages - 1)}">
+                    <a th:href="@{/usuarios(page=${i}, size=${usuarios.size},
+                                            nombre=${nombre}, correo=${correo},
+                                            estado=${estado}, documento=${documento})}"
+                        th:text="${i + 1}"
+                        th:classappend="${i == usuarios.number} ? 'active page-link' : 'page-link'"></a>
+                </span>
+
+                <a th:if="${usuarios.hasNext()}"
+                    th:href="@{/usuarios(page=${usuarios.number + 1}, size=${usuarios.size},
+                                        nombre=${nombre}, correo=${correo},
+                                        estado=${estado}, documento=${documento})}"
+                    class="page-link">Siguiente ➡️</a>
+            </div>
+        </div>
     </div>
-</div>
 
 </body>
 </html>

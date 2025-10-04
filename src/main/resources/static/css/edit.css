@@ -1,0 +1,49 @@
+/* Fondo suave */
+body {
+    background: linear-gradient(to right, #e3f2fd, #bbdefb);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Tarjeta personalizada */
+.custom-card {
+    border-radius: 12px;
+    overflow: hidden;
+    border: none;
+}
+
+/* Cabecera */
+.card-header {
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Inputs elegantes */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #90caf9;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 8px rgba(25, 118, 210, 0.3);
+}
+
+/* Botón personalizado */
+.btn-custom {
+    width: 100%;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-custom:hover {
+    background-color: #fdd835 !important;
+    transform: scale(1.02);
+}
+
+/* Botón volver */
+.btn-secondary {
+    border-radius: 8px;
+}

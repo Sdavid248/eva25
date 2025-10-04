@@ -1,156 +1,189 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <!-- 🔹 Importante -->
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Usuarios</title>
 
-    <!-- 🔹 AGREGADO: estilos para mejorar el formulario -->
-    <style>
-        .filtros-form {
-            margin-top: 15px;
-            margin-bottom: 15px;
-        }
-        .filtros-form label {
-            margin-right: 5px;
-        }
-        .filtros-form input {
-            margin-right: 15px;
-        }
-    </style>
+    <!-- 🔹 Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body> 
+<body class="bg-light">
 
-    <nav class="nav_menu">
-        <ul class="nav_links">
-            <li><a th:href="@{/}">Inicio</a></li>
-            <li><a th:href="@{/acercade}">Acerca de</a></li>
-            <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
-            <li><a th:href="@{/info}">Info</a></li>
-            <li><a th:href="@{/mapa}">Mapa</a></li>
-            <li><a th:href="@{/login}">Login</a></li>
-            <li><a th:href="@{/registro}">Registro</a></li>
-            <li class="nav-item"><a class="nav-link" th:href="@{/pdf}">Exportar PDF</a></li>
-        </ul>
+    <!-- 🔹 Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}"> E.V.A</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/acercade}">Acerca de</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/info}">Info</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/mapa}">Mapa</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/registro}">Registro</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/pdf}">Exportar PDF</a></li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
-    <h2>Lista de Usuarios</h2>
+    <div class="container">
 
-    <!-- Buscar -->
-    <form th:action="@{/usuario}" method="get">
-        <input type="text" id="keyword" name="keyword" th:value="${keyword}" placeholder="Buscar usuario...">
-        <button type="submit">Buscar</button>
-        <!-- 📄 AGREGADO: Exportar PDF búsqueda -->
-        <a th:href="@{/pdf(keyword=${keyword})}" target="_blank">📄 Exportar PDF búsqueda</a>
-    </form>
+        <h2 class="mb-4">Lista de Usuarios</h2>
 
-    <!-- 🔹 AGREGADO: Filtros avanzados -->
-    <form th:action="@{/usuario}" method="get" class="filtros-form">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" th:value="${nombre}" placeholder="Ingrese nombre">
+        <!-- Buscar -->
+        <form th:action="@{/usuario}" method="get" class="row g-2 mb-3">
+            <div class="col-md-6">
+                <input type="text" id="keyword" name="keyword" th:value="${keyword}" class="form-control"
+                        placeholder="Buscar usuario...">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">Buscar</button>
+            </div>
+            <div class="col-md-3">
+                <a th:href="@{/pdf(keyword=${keyword})}" target="_blank" class="btn btn-danger w-100">
+                    📄 Exportar PDF búsqueda
+                </a>
+            </div>
+        </form>
 
-        <label for="correo">Correo:</label>
-        <input type="text" id="correo" name="correo" th:value="${correo}" placeholder="Ingrese correo">
+        <!-- 🔹 Filtros avanzados -->
+        <form th:action="@{/usuario}" method="get" class="row g-3 mb-4">
+            <div class="col-md-4">
+                <label for="nombre" class="form-label">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" th:value="${nombre}" class="form-control"
+                        placeholder="Ingrese nombre">
+            </div>
+            <div class="col-md-4">
+                <label for="correo" class="form-label">Correo:</label>
+                <input type="text" id="correo" name="correo" th:value="${correo}" class="form-control"
+                        placeholder="Ingrese correo">
+            </div>
+            <div class="col-md-4">
+                <label for="estado" class="form-label">Estado:</label>
+                <input type="text" id="estado" name="estado" th:value="${estado}" class="form-control"
+                        placeholder="Activo/Inactivo">
+            </div>
 
-        <label for="estado">Estado:</label>
-        <input type="text" id="estado" name="estado" th:value="${estado}" placeholder="Activo/Inactivo">
+            <!-- Filtros solo ADMIN -->
+            <span sec:authorize="hasRole('ADMIN')">
+                <div class="col-md-4">
+                    <label for="documento" class="form-label">Documento:</label>
+                    <input type="text" id="documento" name="documento" th:value="${documento}" class="form-control"
+                            placeholder="Ingrese documento">
+                </div>
+                <div class="col-md-4">
+                    <label for="telefono" class="form-label">Teléfono:</label>
+                    <input type="text" id="telefono" name="telefono" th:value="${telefono}" class="form-control"
+                            placeholder="Ingrese teléfono">
+                </div>
+                <div class="col-md-4">
+                    <label for="direccion" class="form-label">Dirección:</label>
+                    <input type="text" id="direccion" name="direccion" th:value="${direccion}" class="form-control"
+                            placeholder="Ingrese dirección">
+                </div>
+            </span>
 
-        <!-- Filtros visibles solo para ADMIN -->
-        <span sec:authorize="hasRole('ADMIN')">
-            <label for="documento">Documento:</label>
-            <input type="text" id="documento" name="documento" th:value="${documento}" placeholder="Ingrese documento">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-success w-100">Filtrar</button>
+            </div>
+            <div class="col-md-6">
+                <a th:href="@{/pdf-filtros(
+                    nombre=${nombre},
+                    correo=${correo},
+                    estado=${estado},
+                    documento=${documento},
+                    telefono=${telefono},
+                    direccion=${direccion}
+                )}" target="_blank" class="btn btn-danger w-100">
+                    📄 Exportar PDF filtros
+                </a>
+            </div>
+        </form>
 
-            <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" name="telefono" th:value="${telefono}" placeholder="Ingrese teléfono">
+        <!-- Botón Nuevo Usuario: Solo ADMIN -->
+        <p sec:authorize="hasRole('ADMIN')" class="mb-3">
+            <a th:href="@{/usuario/nuevo}" class="btn btn-primary">➕ Nuevo Usuario</a>
+        </p>
 
-            <label for="direccion">Dirección:</label>
-            <input type="text" id="direccion" name="direccion" th:value="${direccion}" placeholder="Ingrese dirección">
-        </span>
+        <!-- Tabla -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Estado</th>
+                        <th sec:authorize="hasRole('ADMIN')">Documento</th>
+                        <th sec:authorize="hasRole('ADMIN')">Teléfono</th>
+                        <th sec:authorize="hasRole('ADMIN')">Dirección</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="usuario : ${usuarios}">
+                        <td th:text="${usuario.idUser}"></td>
+                        <td th:text="${usuario.nombre}"></td>
+                        <td th:text="${usuario.correo}"></td>
+                        <td th:text="${usuario.estado}"></td>
+                        <td sec:authorize="hasRole('ADMIN')" th:text="${usuario.documento}"></td>
+                        <td sec:authorize="hasRole('ADMIN')" th:text="${usuario.telefono}"></td>
+                        <td sec:authorize="hasRole('ADMIN')" th:text="${usuario.direccion}"></td>
+                        <td>
+                            <span sec:authorize="hasRole('ADMIN')">
+                                <a th:href="@{/usuario/editar/{id}(id=${usuario.idUser})}" class="btn btn-warning btn-sm">✏️ Editar</a>
+                                <a th:href="@{/usuario/eliminar/{id}(id=${usuario.idUser})}"
+                                    onclick="return confirm('¿Seguro que quieres eliminar este usuario?')"
+                                    class="btn btn-danger btn-sm">🗑️ Eliminar</a>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <button type="submit">Filtrar</button>
-        <!-- 📄 AGREGADO: Exportar PDF filtros -->
-        <a th:href="@{/pdf-filtros(
-            nombre=${nombre},
-            correo=${correo},
-            estado=${estado},
-            documento=${documento},
-            telefono=${telefono},
-            direccion=${direccion}
-        )}" target="_blank">📄 Exportar PDF filtros</a>
-    </form>
-    <!-- 🔹 FIN AGREGADO -->
+        <!-- 🔹 Paginación -->
+        <div class="d-flex justify-content-center mt-4" th:if="${totalPages != null and totalPages > 1}">
+            <ul class="pagination">
+                <!-- Anterior -->
+                <li class="page-item" th:if="${currentPage != null and currentPage > 0}">
+                    <a class="page-link"
+                        th:href="@{/usuario(page=${currentPage - 1}, keyword=${keyword}, nombre=${nombre}, correo=${correo}, estado=${estado}, documento=${documento}, telefono=${telefono}, direccion=${direccion})}">
+                        ⬅️ Anterior
+                    </a>
+                </li>
 
-    <!-- Botón Nuevo Usuario: Solo visible para ADMIN -->
-    <p sec:authorize="hasRole('ADMIN')">
-        <a th:href="@{/usuario/nuevo}">➕ Nuevo Usuario</a>
-    </p>
+                <!-- Números de página -->
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link"
+                        th:href="@{/usuario(page=${i}, keyword=${keyword}, nombre=${nombre}, correo=${correo}, estado=${estado}, documento=${documento}, telefono=${telefono}, direccion=${direccion})}"
+                        th:text="${i + 1}">
+                    </a>
+                </li>
 
-    <!-- Tabla -->
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>Estado</th>
+                <!-- Siguiente -->
+                <li class="page-item" th:if="${currentPage != null and currentPage < totalPages - 1}">
+                    <a class="page-link"
+                        th:href="@{/usuario(page=${currentPage + 1}, keyword=${keyword}, nombre=${nombre}, correo=${correo}, estado=${estado}, documento=${documento}, telefono=${telefono}, direccion=${direccion})}">
+                        Siguiente ➡️
+                    </a>
+                </li>
+            </ul>
+        </div>
 
-                <!-- Campos extra solo visibles para ADMIN -->
-                <th sec:authorize="hasRole('ADMIN')">Documento</th>
-                <th sec:authorize="hasRole('ADMIN')">Teléfono</th>
-                <th sec:authorize="hasRole('ADMIN')">Dirección</th>
+    </div>
 
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="usuario : ${usuarios}">
-                <td th:text="${usuario.idUser}"></td>
-                <td th:text="${usuario.nombre}"></td>
-                <td th:text="${usuario.correo}"></td>
-                <td th:text="${usuario.estado}"></td>
-
-                <!-- Campos adicionales: visibles solo para ADMIN -->
-                <td sec:authorize="hasRole('ADMIN')" th:text="${usuario.documento}"></td>
-                <td sec:authorize="hasRole('ADMIN')" th:text="${usuario.telefono}"></td>
-                <td sec:authorize="hasRole('ADMIN')" th:text="${usuario.direccion}"></td>
-
-                <td>
-                    <!-- Acciones visibles solo para ADMIN -->
-                    <span sec:authorize="hasRole('ADMIN')">
-                        <a th:href="@{/usuario/editar/{id}(id=${usuario.idUser})}">✏️ Editar</a> |
-                        <a th:href="@{/usuario/eliminar/{id}(id=${usuario.idUser})}"
-                           onclick="return confirm('¿Seguro que quieres eliminar este usuario?')">🗑️ Eliminar</a>
-                    </span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <!-- --- AÑADIR en lista.html: paginación (después de la tabla) --- -->
-<!-- 🔹 Paginación -->
-<div style="margin-top:15px;">
-    <span th:if="${totalPages != null and totalPages > 1}">
-        <!-- Anterior -->
-        <a th:if="${currentPage != null and currentPage > 0}"
-           th:href="@{/usuario(page=${currentPage - 1}, keyword=${keyword}, nombre=${nombre}, correo=${correo}, estado=${estado}, documento=${documento}, telefono=${telefono}, direccion=${direccion})}">
-            ⬅️ Anterior
-        </a>
-
-        <!-- Números de página -->
-        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}" style="margin:0 6px;">
-            <a th:href="@{/usuario(page=${i}, keyword=${keyword}, nombre=${nombre}, correo=${correo}, estado=${estado}, documento=${documento}, telefono=${telefono}, direccion=${direccion})}"
-               th:text="${i + 1}"
-               th:classappend="${i == currentPage} ? 'active' : ''"></a>
-        </span>
-
-        <!-- Siguiente -->
-        <a th:if="${currentPage != null and currentPage < totalPages - 1}"
-           th:href="@{/usuario(page=${currentPage + 1}, keyword=${keyword}, nombre=${nombre}, correo=${correo}, estado=${estado}, documento=${documento}, telefono=${telefono}, direccion=${direccion})}">
-            Siguiente ➡️
-        </a>
-    </span>
-</div>
-
+    <!-- 🔹 Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
