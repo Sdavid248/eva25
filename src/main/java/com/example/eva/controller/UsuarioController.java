@@ -26,7 +26,7 @@ public class UsuarioController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/pdf")
     public void exportarPDF(HttpServletResponse response,
-                            @RequestParam(required = false) String keyword) throws IOException {
+            @RequestParam(required = false) String keyword) throws IOException {
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=usuarios.pdf");
 
@@ -38,12 +38,12 @@ public class UsuarioController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/pdf-filtros")
     public void exportarPDFFiltros(HttpServletResponse response,
-                                   @RequestParam(required = false) String nombre,
-                                   @RequestParam(required = false) String correo,
-                                   @RequestParam(required = false) String estado,
-                                   @RequestParam(required = false) String documento,
-                                   @RequestParam(required = false) String telefono,
-                                   @RequestParam(required = false) String direccion) throws IOException {
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) String documento,
+            @RequestParam(required = false) String telefono,
+            @RequestParam(required = false) String direccion) throws IOException {
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=usuarios_filtros.pdf");
 

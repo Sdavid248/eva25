@@ -14,12 +14,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-// 📑 imports extra para paginación
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-// 📑 imports extra para seguridad
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -46,7 +43,6 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Guardar usuario con rol por defecto
     public Usuario guardar(Usuario usuario) {
         if (usuario.getContrasena() != null && !usuario.getContrasena().isBlank()) {
             usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
@@ -54,7 +50,6 @@ public class UsuarioService {
 
         Usuario usuarioGuardado = usuarioRepository.save(usuario);
 
-        // Asignar rol USER si no tiene roles
         if (usuarioGuardado.getUsuarioRoles() == null || usuarioGuardado.getUsuarioRoles().isEmpty()) {
             Rol rolUser = rolRepository.findByNombre("USER")
                     .orElseThrow(() -> new RuntimeException("⚠️ Rol USER no encontrado en la BD"));
@@ -78,7 +73,6 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    // 🔍 Búsqueda por keyword usando el repositorio ya definido
     public List<Usuario> buscar(String keyword) {
         if (keyword == null || keyword.isBlank()) {
             return usuarioRepository.findAll();
@@ -86,7 +80,6 @@ public class UsuarioService {
         return usuarioRepository.searchByKeyword(keyword);
     }
 
-    // 🔍 Búsqueda con filtros múltiples (AMPLIADA con teléfono y dirección)
     public List<Usuario> buscarConFiltros(String nombre, String correo, String estado, String documento,
                                           String telefono, String direccion) {
         return usuarioRepository.findAll().stream()
@@ -99,7 +92,6 @@ public class UsuarioService {
                 .toList();
     }
 
-    // 📑 NUEVO: búsqueda con paginación extendida
     public Page<Usuario> buscarConFiltrosPaginado(String nombre, String correo, String estado, String documento,
                                                   String telefono, String direccion, Pageable pageable) {
         List<Usuario> filtrados = buscarConFiltros(nombre, correo, estado, documento, telefono, direccion);
@@ -108,7 +100,6 @@ public class UsuarioService {
         return new PageImpl<>(filtrados.subList(start, end), pageable, filtrados.size());
     }
 
-    // 📑 NUEVO: Método para saber si el usuario autenticado es ADMIN
     public boolean esAdmin() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getAuthorities() != null) {
@@ -118,38 +109,39 @@ public class UsuarioService {
         return false;
     }
 
-    // 📑 NUEVO: Método que retorna solo la info permitida según el rol
     public List<Usuario> listarSegunRol() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         if (esAdmin()) {
-            return usuarios; // ADMIN ve todo
+            return usuarios;
         } else {
-            // Si es USER, limpiamos campos sensibles
             return usuarios.stream().map(u -> {
                 Usuario safeUser = new Usuario();
                 safeUser.setIdUser(u.getIdUser());
                 safeUser.setNombre(u.getNombre());
                 safeUser.setCorreo(u.getCorreo());
                 safeUser.setEstado(u.getEstado());
-                // ❌ No exponemos documento, dirección, teléfono a USER
                 return safeUser;
             }).toList();
         }
     }
 
-    // ✅ AGREGADO: compatibilidad con controladores que usan searchByKeyword
     public List<Usuario> searchByKeyword(String keyword) {
         return buscar(keyword);
     }
 
-    // ✅ AGREGADO: compatibilidad con controladores que usan searchWithFilters
     public Page<Usuario> searchWithFilters(String nombre, String correo, String estado, String documento,
                                            String telefono, String direccion, Pageable pageable) {
         return buscarConFiltrosPaginado(nombre, correo, estado, documento, telefono, direccion, pageable);
     }
 
-    // ✅ AGREGADO: sobrecarga para compatibilidad con UsuarioViewController
     public Page<Usuario> buscarConFiltrosPaginado(String nombre, String correo, String estado, String documento, Pageable pageable) {
         return buscarConFiltrosPaginado(nombre, correo, estado, documento, null, null, pageable);
+    }
+
+    // ✅ NUEVO: asignar permisos del rol (solo imprime si no hay tabla)
+    public void asignarPermisosPorRol(Usuario usuario, Rol rol) {
+        if (rol != null) {
+            System.out.println("🟢 Asignando permisos del rol " + rol.getNombre() + " al usuario " + usuario.getNombre());
+        }
     }
 }

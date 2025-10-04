@@ -1,6 +1,4 @@
 package com.example.eva.controller;
-import com.example.eva.model.Usuario;
-import com.example.eva.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.eva.model.Usuario;
+import com.example.eva.service.UsuarioService;
 
 @Controller
 @RequestMapping("/usuarios")
