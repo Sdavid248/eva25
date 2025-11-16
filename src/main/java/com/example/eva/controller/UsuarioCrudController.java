@@ -10,9 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping; // 🔹 Importante
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable; // 🔹 agregado para trabajar con Optional
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,10 +29,11 @@ public class UsuarioCrudController {
 
     @Autowired
     private UsuarioService usuarioService;
+
     @Autowired
     private RolRepository rolRepository;
 
-    // ✅ Todos los usuarios autenticados pueden ver la lista
+    // ✔ Lista con filtros + paginación
     @GetMapping
     public String listarUsuarios(
             @RequestParam(required = false) String nombre,
@@ -47,14 +48,15 @@ public class UsuarioCrudController {
             Model model) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Usuario> usuariosPage;
 
+        // ✔ Si hay búsqueda global
         if (keyword != null && !keyword.isEmpty()) {
-            model.addAttribute("usuarios", usuarioService.searchByKeyword(keyword));
+            model.addAttribute("usuarios", usuarioService.buscar(keyword));
             model.addAttribute("currentPage", 0);
             model.addAttribute("totalPages", 1);
         } else {
-            usuariosPage = usuarioService.searchWithFilters(
+            // ✔ Usar método REAL que sí existe en UsuarioService
+            Page<Usuario> usuariosPage = usuarioService.buscarConFiltrosPaginado(
                     nombre, correo, estado, documento, telefono, direccion, pageable);
 
             model.addAttribute("usuarios", usuariosPage.getContent());
@@ -62,6 +64,7 @@ public class UsuarioCrudController {
             model.addAttribute("totalPages", usuariosPage.getTotalPages());
         }
 
+        // ✔ Mantener filtros en pantalla
         model.addAttribute("nombre", nombre);
         model.addAttribute("correo", correo);
         model.addAttribute("estado", estado);
@@ -73,7 +76,7 @@ public class UsuarioCrudController {
         return "/lista";
     }
 
-    // 🔒 Solo ADMIN puede crear
+    // ✔ Solo ADMIN puede crear usuario
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/nuevo")
     public String nuevoUsuarioForm(Model model) {
@@ -82,11 +85,12 @@ public class UsuarioCrudController {
         return "/form";
     }
 
-    // 🔒 Solo ADMIN puede guardar
+    // ✔ Guardar usuario (ADMIN)
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/guardar")
     public String guardarUsuario(@ModelAttribute Usuario usuario,
                                  @RequestParam(required = false) Long rolId) {
+
         Usuario u = usuarioService.guardar(usuario);
 
         if (rolId != null) {
@@ -98,24 +102,24 @@ public class UsuarioCrudController {
             }
 
             u.getUsuarioRoles().clear();
+
             UsuarioRol ur = new UsuarioRol();
             ur.setUsuario(u);
             ur.setRol(rol);
+
             u.getUsuarioRoles().add(ur);
 
             usuarioService.guardar(u);
-
-            // ✅ Nuevo: asignar automáticamente permisos del rol
-            usuarioService.asignarPermisosPorRol(u, rol);
         }
 
         return "redirect:/usuario";
     }
 
-    // 🔒 Solo ADMIN puede editar
+    // ✔ Editar usuario
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/editar/{id}")
     public String editarUsuario(@PathVariable Long id, Model model) {
+
         Usuario usuario = usuarioService.buscarPorId(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
@@ -125,12 +129,13 @@ public class UsuarioCrudController {
         Optional<Rol> rolActual = usuario.getUsuarioRoles().stream()
                 .map(UsuarioRol::getRol)
                 .findFirst();
+
         rolActual.ifPresent(r -> model.addAttribute("rolId", r.getId()));
 
         return "/form";
     }
 
-    // 🔒 Solo ADMIN puede eliminar
+    // ✔ Eliminar usuario
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Long id) {
@@ -138,11 +143,12 @@ public class UsuarioCrudController {
         return "redirect:/usuario";
     }
 
-    // 🧩 NUEVO MÉTODO COMPATIBLE CON form.html (no borra nada existente)
+    // ✔ Método alternativo de guardado (compatibilidad con form.html)
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
     public String guardarDesdeFormulario(@ModelAttribute Usuario usuario,
                                          @RequestParam(required = false) Long rolId) {
+
         Usuario u = usuarioService.guardar(usuario);
 
         if (rolId != null) {
@@ -154,18 +160,16 @@ public class UsuarioCrudController {
             }
 
             u.getUsuarioRoles().clear();
+
             UsuarioRol ur = new UsuarioRol();
             ur.setUsuario(u);
             ur.setRol(rol);
+
             u.getUsuarioRoles().add(ur);
 
             usuarioService.guardar(u);
-
-            // ✅ Nuevo: asignar automáticamente permisos del rol
-            usuarioService.asignarPermisosPorRol(u, rol);
         }
 
         return "redirect:/usuario";
     }
-
 }
