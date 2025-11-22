@@ -33,7 +33,7 @@ public class UsuarioCrudController {
     @Autowired
     private RolRepository rolRepository;
 
-    // ✔ Lista con filtros + paginación
+    
     @GetMapping
     public String listarUsuarios(
             @RequestParam(required = false) String nombre,
@@ -49,7 +49,7 @@ public class UsuarioCrudController {
 
         Pageable pageable = PageRequest.of(page, size);
 
-        // ✔ Si hay búsqueda global
+        
         if (keyword != null && !keyword.isEmpty()) {
             model.addAttribute("usuarios", usuarioService.buscar(keyword));
             model.addAttribute("currentPage", 0);
@@ -64,7 +64,7 @@ public class UsuarioCrudController {
             model.addAttribute("totalPages", usuariosPage.getTotalPages());
         }
 
-        // ✔ Mantener filtros en pantalla
+        
         model.addAttribute("nombre", nombre);
         model.addAttribute("correo", correo);
         model.addAttribute("estado", estado);
@@ -76,7 +76,7 @@ public class UsuarioCrudController {
         return "/lista";
     }
 
-    // ✔ Solo ADMIN puede crear usuario
+   
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/nuevo")
     public String nuevoUsuarioForm(Model model) {
@@ -85,7 +85,7 @@ public class UsuarioCrudController {
         return "/form";
     }
 
-    // ✔ Guardar usuario (ADMIN)
+    
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/guardar")
     public String guardarUsuario(@ModelAttribute Usuario usuario,
@@ -115,7 +115,7 @@ public class UsuarioCrudController {
         return "redirect:/usuario";
     }
 
-    // ✔ Editar usuario
+    
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/editar/{id}")
     public String editarUsuario(@PathVariable Long id, Model model) {
@@ -135,7 +135,7 @@ public class UsuarioCrudController {
         return "/form";
     }
 
-    // ✔ Eliminar usuario
+    
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Long id) {
@@ -143,7 +143,7 @@ public class UsuarioCrudController {
         return "redirect:/usuario";
     }
 
-    // ✔ Método alternativo de guardado (compatibilidad con form.html)
+    
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
     public String guardarDesdeFormulario(@ModelAttribute Usuario usuario,
