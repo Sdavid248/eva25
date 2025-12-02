@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones</title>
+</head>
+<body>
+
+<h1>Enviar notificación</h1>
+
+<form action="/notificaciones/enviar" method="post">
+    <label for="titulo">Título:</label>
+    <input type="text" id="titulo" name="titulo" placeholder="Título del correo" required>
+
+    <label for="mensaje">Mensaje (HTML permitido):</label>
+    <textarea id="mensaje" name="mensaje" rows="6" placeholder="Escribe el mensaje..." required></textarea>
+
+    <!-- Solo ADMIN ve y puede pulsar el botón -->
+    <sec:authorize access="hasRole('ADMIN')">
+        <button type="submit">Enviar Notificación</button>
+    </sec:authorize>
+
+    <!-- Si quieres que los no-admin vean el botón deshabilitado -->
+    <sec:authorize access="!hasRole('ADMIN')">
+        <button type="button" disabled title="Solo administradores pueden enviar notificaciones">Enviar Notificación</button>
+    </sec:authorize>
+</form>
+
+<div th:if="${exito}">
+    <div th:text="${exito}"></div>
+</div>
+
+<!-- Ejemplo: lista de usuarios con campos filtrados -->
+<h2>Usuarios</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <!-- campo sensible: documento -->
+            <th sec:authorize="hasRole('ADMIN')">Documento</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="u : ${usuarios}">
+            <td th:text="${u.nombre}">Nombre</td>
+            <td th:text="${u.correo}">correo</td>
+            <td sec:authorize="hasRole('ADMIN')" th:text="${u.documento}">documento</td>
+            <td th:text="${u.estado}">estado</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

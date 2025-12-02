@@ -1,6 +1,5 @@
 package com.example.eva.controller;
 
-import java.util.HashSet;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.eva.model.Rol;
 import com.example.eva.model.Usuario;
@@ -33,7 +28,9 @@ public class UsuarioCrudController {
     @Autowired
     private RolRepository rolRepository;
 
-    
+    // =======================================================
+    // LISTAR USUARIOS
+    // =======================================================
     @GetMapping
     public String listarUsuarios(
             @RequestParam(required = false) String nombre,
@@ -49,14 +46,42 @@ public class UsuarioCrudController {
 
         Pageable pageable = PageRequest.of(page, size);
 
-        
+        // Saber si es admin para la vista
+        boolean isAdmin = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        model.addAttribute("isAdmin", isAdmin);
+
+        Page<Usuario> usuariosPage;
+
+        // =======================================================
+        // CORRECCIÓN: antes llamabas a un método que NO existía
+        // usuariosPage = usuarioService.buscarPaginado(keyword, pageable);
+        // Ahora reuso buscarConFiltrosPaginado() que sí existe
+        // =======================================================
+
         if (keyword != null && !keyword.isEmpty()) {
-            model.addAttribute("usuarios", usuarioService.buscar(keyword));
-            model.addAttribute("currentPage", 0);
-            model.addAttribute("totalPages", 1);
+
+            usuariosPage = usuarioService.buscarConFiltrosPaginado(
+                    keyword, // nombre
+                    keyword, // correo
+                    estado,
+                    documento,
+                    telefono,
+                    direccion,
+                    pageable
+            );
+
+            model.addAttribute("usuarios", usuariosPage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", usuariosPage.getTotalPages());
+
         } else {
-            // ✔ Usar método REAL que sí existe en UsuarioService
-            Page<Usuario> usuariosPage = usuarioService.buscarConFiltrosPaginado(
+
+            usuariosPage = usuarioService.buscarConFiltrosPaginado(
                     nombre, correo, estado, documento, telefono, direccion, pageable);
 
             model.addAttribute("usuarios", usuariosPage.getContent());
@@ -64,42 +89,58 @@ public class UsuarioCrudController {
             model.addAttribute("totalPages", usuariosPage.getTotalPages());
         }
 
-        
+        // Mantener filtros
+        model.addAttribute("keyword", keyword);
         model.addAttribute("nombre", nombre);
         model.addAttribute("correo", correo);
         model.addAttribute("estado", estado);
         model.addAttribute("documento", documento);
         model.addAttribute("telefono", telefono);
         model.addAttribute("direccion", direccion);
-        model.addAttribute("keyword", keyword);
 
-        return "/lista";
+        return "lista"; // 👉 ARCHIVO EXACTO: src/main/resources/templates/lista.html
     }
 
-   
-    @PreAuthorize("hasRole('ADMIN')")
+    // =======================================================
+    // AUXILIAR: verificar admin
+    // =======================================================
+    private boolean esAdmin() {
+        return SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    // =======================================================
+    // NUEVO USUARIO
+    // =======================================================
     @GetMapping("/nuevo")
+    @PreAuthorize("hasRole('ADMIN')")
     public String nuevoUsuarioForm(Model model) {
+
+        if (!esAdmin()) return "redirect:/usuario?error=permiso";
+
         model.addAttribute("usuario", new Usuario());
         model.addAttribute("roles", rolRepository.findAll());
         return "/form";
     }
 
-    
-    @PreAuthorize("hasRole('ADMIN')")
+    // =======================================================
+    // GUARDAR CREACIÓN
+    // =======================================================
     @PostMapping("/guardar")
+    @PreAuthorize("hasRole('ADMIN')")
     public String guardarUsuario(@ModelAttribute Usuario usuario,
                                  @RequestParam(required = false) Long rolId) {
+
+        if (!esAdmin()) return "redirect:/usuario?error=permiso";
 
         Usuario u = usuarioService.guardar(usuario);
 
         if (rolId != null) {
             Rol rol = rolRepository.findById(rolId)
                     .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
-
-            if (u.getUsuarioRoles() == null) {
-                u.setUsuarioRoles(new HashSet<>());
-            }
 
             u.getUsuarioRoles().clear();
 
@@ -115,10 +156,14 @@ public class UsuarioCrudController {
         return "redirect:/usuario";
     }
 
-    
-    @PreAuthorize("hasRole('ADMIN')")
+    // =======================================================
+    // EDITAR
+    // =======================================================
     @GetMapping("/editar/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String editarUsuario(@PathVariable Long id, Model model) {
+
+        if (!esAdmin()) return "redirect:/usuario?error=permiso";
 
         Usuario usuario = usuarioService.buscarPorId(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -135,29 +180,34 @@ public class UsuarioCrudController {
         return "/form";
     }
 
-    
-    @PreAuthorize("hasRole('ADMIN')")
+    // =======================================================
+    // ELIMINAR
+    // =======================================================
     @GetMapping("/eliminar/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String eliminarUsuario(@PathVariable Long id) {
+
+        if (!esAdmin()) return "redirect:/usuario?error=permiso";
+
         usuarioService.eliminar(id);
         return "redirect:/usuario";
     }
 
-    
-    @PreAuthorize("hasRole('ADMIN')")
+    // =======================================================
+    // GUARDAR EDICIÓN
+    // =======================================================
     @PostMapping("/save")
+    @PreAuthorize("hasRole('ADMIN')")
     public String guardarDesdeFormulario(@ModelAttribute Usuario usuario,
                                          @RequestParam(required = false) Long rolId) {
+
+        if (!esAdmin()) return "redirect:/usuario?error=permiso";
 
         Usuario u = usuarioService.guardar(usuario);
 
         if (rolId != null) {
             Rol rol = rolRepository.findById(rolId)
                     .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
-
-            if (u.getUsuarioRoles() == null) {
-                u.setUsuarioRoles(new HashSet<>());
-            }
 
             u.getUsuarioRoles().clear();
 

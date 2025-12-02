@@ -2,6 +2,7 @@ package com.example.eva.Security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -12,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableMethodSecurity(prePostEnabled = true) // 🔹 Habilitamos PreAuthorize
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -26,13 +27,37 @@ public class SecurityConfig {
         http
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
-                // Páginas públicas
+
+                // públicas
                 .requestMatchers("/", "/index", "/acercade", "/info", "/mapa", "/centrosdeportivos",
-                        "/registro", "/login", "/css/**", "/js/**", "/images/**").permitAll()
-                // Endpoints admin
-                .requestMatchers("/admin/**", "/usuarios/**").hasRole("ADMIN")
-                // 🔒 Restricción específica: exportar PDF solo ADMIN
+                        "/registro", "/login", "/css/**", "/js/**", "/images/**")
+                .permitAll()
+
+                // notificaciones: vista autenticada, envío solo admin
+                .requestMatchers(HttpMethod.GET, "/notificaciones", "/notificaciones/**")
+                .authenticated()
+                .requestMatchers(HttpMethod.POST, "/notificaciones/enviar")
+                .hasRole("ADMIN")
+
+                // Usuarios: vista general accesible a todos los autenticados
+                .requestMatchers("/usuarios").authenticated()
+                .requestMatchers("/usuarios/").authenticated()
+                .requestMatchers("/usuarios/page/**").authenticated()
+
+                // Acciones sensibles SOLO admin
+                .requestMatchers(
+                    "/usuarios/nuevo",
+                    "/usuarios/editar/**",
+                    "/usuarios/eliminar/**"
+                ).hasRole("ADMIN")
+
+                // correo masivo solo admin
+                .requestMatchers("/correo/**").hasRole("ADMIN")
+
+                // PDF solo admin
                 .requestMatchers("/pdf", "/pdf-filtros").hasRole("ADMIN")
+
+                // el resto requiere estar logueado
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -46,10 +71,9 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
             )
-            // 👇 Manejo de acceso denegado
             .exceptionHandling(ex -> ex
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    response.sendRedirect("/"); // Redirige al index si no tiene permisos
+                    response.sendRedirect("/");
                 })
             );
 

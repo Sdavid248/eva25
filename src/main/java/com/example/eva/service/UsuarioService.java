@@ -14,10 +14,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -87,6 +90,78 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    // -------------------- MÉTODOS NUEVOS PARA CORREOS MASIVOS --------------------
+
+    public List<Usuario> listarTodos() {
+        logger.info("listarTodos() llamado");
+        return usuarioRepository.findAll();
+    }
+
+    public List<String> listarCorreos() {
+        logger.info("listarCorreos() llamado");
+        try {
+            return usuarioRepository.obtenerCorreos();
+        } catch (Exception ex) {
+            logger.warning("No fue posible usar obtenerCorreos() - fallback a map.");
+            return usuarioRepository.findAll().stream()
+                    .map(Usuario::getCorreo)
+                    .filter(c -> c != null && !c.isBlank())
+                    .collect(Collectors.toList());
+        }
+    }
+
+    /**
+     * Intentamos filtrar en la BD usando la query searchWithFilters.
+     * Si por alguna razón falla (p. ej. provider no soporta Pageable.unpaged), hacemos fallback en memoria.
+     */
+    public List<Usuario> buscarConFiltrosParaCorreo(String nombre, String correo, String estado, String documento,
+                                                    String telefono, String direccion) {
+        logger.info("buscarConFiltrosParaCorreo llamado");
+
+        // Normalizamos parámetros (trim + lowercase) y convertimos "" -> null
+        final String fnombre = normalizeOrNull(nombre);
+        final String fcorreo = normalizeOrNull(correo);
+        final String festado = normalizeOrNull(estado);
+        final String fdocumento = normalizeOrNull(documento);
+        final String ftelefono = normalizeOrNull(telefono);
+        final String fdireccion = normalizeOrNull(direccion);
+
+        // Intentar con query a BD (mejor opción)
+        try {
+            Page<Usuario> page = usuarioRepository.searchWithFilters(
+                    fnombre, fcorreo, festado, fdocumento, ftelefono, fdireccion, Pageable.unpaged()
+            );
+            List<Usuario> usuarios = page.getContent();
+            logger.info("Busqueda en BD devolvió " + usuarios.size() + " usuarios.");
+            return usuarios;
+        } catch (Exception ex) {
+            logger.warning("searchWithFilters falló: " + ex.getMessage() + " -> fallback a filtrado en memoria");
+            // fallback abajo
+        }
+
+        // Fallback: filtro en memoria con las variables locales finales (evita problema 'effectively final' con lambdas)
+        return usuarioRepository.findAll().stream()
+                .filter(u -> fnombre == null || (u.getNombre() != null && u.getNombre().toLowerCase().contains(fnombre)))
+                .filter(u -> fcorreo == null || (u.getCorreo() != null && u.getCorreo().toLowerCase().contains(fcorreo)))
+                .filter(u -> festado == null || (u.getEstado() != null && u.getEstado().toLowerCase().contains(festado)))
+                .filter(u -> fdocumento == null || (u.getDocumento() != null && u.getDocumento().toLowerCase().contains(fdocumento)))
+                .filter(u -> ftelefono == null || (u.getTelefono() != null && u.getTelefono().toLowerCase().contains(ftelefono)))
+                .filter(u -> fdireccion == null || (u.getDireccion() != null && u.getDireccion().toLowerCase().contains(fdireccion)))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> listarCorreosPorFiltros(String nombre, String correo, String estado, String documento,
+                                                String telefono, String direccion) {
+        logger.info("listarCorreosPorFiltros llamado");
+        return buscarConFiltrosParaCorreo(nombre, correo, estado, documento, telefono, direccion)
+                .stream()
+                .map(Usuario::getCorreo)
+                .filter(c -> c != null && !c.isBlank())
+                .collect(Collectors.toList());
+    }
+
+    // -------------------- FIN MÉTODOS NUEVOS --------------------
+
     public Optional<Usuario> buscarPorId(Long id) {
         logger.info("Buscando usuario por ID: " + id);
         return usuarioRepository.findById(id);
@@ -105,25 +180,51 @@ public class UsuarioService {
         return usuarioRepository.searchByKeyword(keyword);
     }
 
+    /**
+     * Método usado por la lista paginada (mantengo tu implementación paginada)
+     */
     public List<Usuario> buscarConFiltros(String nombre, String correo, String estado, String documento,
                                           String telefono, String direccion) {
 
-        logger.info("Filtrando usuarios con múltiples parámetros");
+        logger.info("Filtrando usuarios con múltiples parámetros (in-memory fallback)");
+
+        final String fnombre = normalizeOrNull(nombre);
+        final String fcorreo = normalizeOrNull(correo);
+        final String festado = normalizeOrNull(estado);
+        final String fdocumento = normalizeOrNull(documento);
+        final String ftelefono = normalizeOrNull(telefono);
+        final String fdireccion = normalizeOrNull(direccion);
 
         return usuarioRepository.findAll().stream()
-                .filter(u -> (nombre == null || u.getNombre().toLowerCase().contains(nombre.toLowerCase())))
-                .filter(u -> (correo == null || u.getCorreo().toLowerCase().contains(correo.toLowerCase())))
-                .filter(u -> (estado == null || (u.getEstado() != null && u.getEstado().toLowerCase().contains(estado.toLowerCase()))))
-                .filter(u -> (documento == null || u.getDocumento().contains(documento)))
-                .filter(u -> (telefono == null || (u.getTelefono() != null && u.getTelefono().toLowerCase().contains(telefono.toLowerCase()))))
-                .filter(u -> (direccion == null || (u.getDireccion() != null && u.getDireccion().toLowerCase().contains(direccion.toLowerCase()))))
-                .toList();
+                .filter(u -> fnombre == null || (u.getNombre() != null && u.getNombre().toLowerCase().contains(fnombre)))
+                .filter(u -> fcorreo == null || (u.getCorreo() != null && u.getCorreo().toLowerCase().contains(fcorreo)))
+                .filter(u -> festado == null || (u.getEstado() != null && u.getEstado().toLowerCase().contains(festado)))
+                .filter(u -> fdocumento == null || (u.getDocumento() != null && u.getDocumento().toLowerCase().contains(fdocumento)))
+                .filter(u -> ftelefono == null || (u.getTelefono() != null && u.getTelefono().toLowerCase().contains(ftelefono)))
+                .filter(u -> fdireccion == null || (u.getDireccion() != null && u.getDireccion().toLowerCase().contains(fdireccion)))
+                .collect(Collectors.toList());
     }
 
     public Page<Usuario> buscarConFiltrosPaginado(String nombre, String correo, String estado, String documento,
                                                   String telefono, String direccion, Pageable pageable) {
 
         logger.info("Búsqueda paginada activada");
+
+        // Intentamos delegar a la consulta en BD (siempre que el proveedor la soporte)
+        try {
+            Page<Usuario> page = usuarioRepository.searchWithFilters(
+                    normalizeOrNull(nombre),
+                    normalizeOrNull(correo),
+                    normalizeOrNull(estado),
+                    normalizeOrNull(documento),
+                    normalizeOrNull(telefono),
+                    normalizeOrNull(direccion),
+                    pageable
+            );
+            return page;
+        } catch (Exception ex) {
+            logger.warning("searchWithFilters con paginación falló: " + ex.getMessage() + " -> fallback manual");
+        }
 
         List<Usuario> filtrados = buscarConFiltros(nombre, correo, estado, documento, telefono, direccion);
         int start = (int) pageable.getOffset();
@@ -140,5 +241,17 @@ public class UsuarioService {
                     .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
         }
         return false;
+    }
+
+    // -------------------- UTIL --------------------
+
+    /**
+     * Normaliza: trims, toLowerCase y convierte "" a null.
+     */
+    private String normalizeOrNull(String s) {
+        if (s == null) return null;
+        String t = s.trim();
+        if (t.isEmpty()) return null;
+        return t.toLowerCase();
     }
 }

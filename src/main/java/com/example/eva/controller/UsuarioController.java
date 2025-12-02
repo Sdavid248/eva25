@@ -2,16 +2,14 @@ package com.example.eva.controller;
 
 import com.example.eva.model.Usuario;
 import com.example.eva.service.UsuarioService;
-import com.example.eva.util.PdfGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
 
 @Controller
 public class UsuarioController {
@@ -19,36 +17,37 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @Autowired
-    private PdfGenerator pdfGenerator;
-
-    // 📄 Exportar PDF con búsqueda simple
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/pdf")
-    public void exportarPDF(HttpServletResponse response,
-            @RequestParam(required = false) String keyword) throws IOException {
-        response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=usuarios.pdf");
-
-        List<Usuario> usuarios = usuarioService.buscar(keyword);
-        pdfGenerator.generarUsuariosPDF(usuarios, response.getOutputStream());
-    }
-
-    // 📄 Exportar PDF con filtros múltiples (7 filtros)
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/pdf-filtros")
-    public void exportarPDFFiltros(HttpServletResponse response,
+    @GetMapping("/usuarios")
+    public String listarUsuarios(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String correo,
             @RequestParam(required = false) String estado,
             @RequestParam(required = false) String documento,
             @RequestParam(required = false) String telefono,
-            @RequestParam(required = false) String direccion) throws IOException {
-        response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=usuarios_filtros.pdf");
+            @RequestParam(required = false) String direccion,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model
+    ) {
 
-        // 🔹 Ahora pasamos los 6 filtros al servicio
-        List<Usuario> usuarios = usuarioService.buscarConFiltros(nombre, correo, estado, documento, telefono, direccion);
-        pdfGenerator.generarUsuariosPDF(usuarios, response.getOutputStream());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Usuario> paginaUsuarios = usuarioService.buscarConFiltrosPaginado(
+                nombre, correo, estado, documento, telefono, direccion, pageable
+        );
+
+        model.addAttribute("usuarios", paginaUsuarios.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", paginaUsuarios.getTotalPages());
+        model.addAttribute("totalItems", paginaUsuarios.getTotalElements());
+
+        // Para mantener filtros en la vista
+        model.addAttribute("nombre", nombre);
+        model.addAttribute("correo", correo);
+        model.addAttribute("estado", estado);
+        model.addAttribute("documento", documento);
+        model.addAttribute("telefono", telefono);
+        model.addAttribute("direccion", direccion);
+
+        return "lista"; // <--- AQUÍ SE CAMBIÓ
     }
 }
