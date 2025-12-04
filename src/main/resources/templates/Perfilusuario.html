@@ -6,30 +6,11 @@
     <title>Perfil de Usuario</title>
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-    body { background-color: #f8f9fa; }
-    .perfil-container {
-        max-width: 800px; margin: 50px auto; padding: 30px;
-        background-color: white; border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .perfil-img { border-radius: 50%; width: 150px; height: 150px; object-fit: cover; }
-
-    .nav_menu {
-        background: linear-gradient(to right, #00aaff, #004e92);
-        padding: 15px 0;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .nav_links { list-style-type: none; display: flex; justify-content: center; margin: 0; padding: 0; }
-    .nav_links li { margin: 0 15px; }
-    .nav_links a { text-decoration: none; color: white; font-weight: bold; font-size: 18px; transition: color 0.3s ease; }
-    .nav_links a:hover { color: #ffd700; }
-    </style>
+    <link rel="stylesheet" href="/css/perfilusuario.css">
 </head>
 <body>
 
-    <!-- Menú -->
+    
     <nav class="nav_menu">
     <ul class="nav_links">
         <li><a th:href="@{/}">Inicio</a></li>
