@@ -29,14 +29,14 @@ public class EmailService {
             helper.setTo(emailDestino);
             helper.setSubject(titulo);
 
-            // VARIABLES PARA PLANTILLA
+       
             Context context = new Context();
             context.setVariable("nombre", nombre);
             context.setVariable("titulo", titulo);
             context.setVariable("mensaje", mensajeHtml);
             context.setVariable("ctaUrl", "http://localhost:8080");
 
-            // Renderizar plantilla email.html
+         
             String htmlContent = templateEngine.process("email", context);
 
             helper.setText(htmlContent, true);

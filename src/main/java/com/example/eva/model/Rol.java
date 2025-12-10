@@ -17,7 +17,7 @@ public class Rol {
     @Column(name = "contrasena")
     private String contrasena;
 
-    //Agregado: relación con permisos (sin romper nada existente)
+   
     @OneToMany(mappedBy = "rol", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<RolPermiso> rolPermisos;
 

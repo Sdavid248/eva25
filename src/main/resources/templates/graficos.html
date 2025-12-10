@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gráficos del Sistema</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <style>
+        .grafico {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 25px;
+            background: #fff;
+        }
+        .titulo {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">📊 Reportes y Gráficos</h2>
+
+ 
+    <form id="filtros" class="card p-3 mb-4">
+
+        <div class="row">
+
+          
+            <div class="col-md-4 mb-3">
+                <label for="orden" class="form-label">Ordenar</label>
+                <select id="orden" name="orden" class="form-select" title="Seleccionar orden">
+                    <option value="ASC">Ascendente</option>
+                    <option value="DESC">Descendente</option>
+                    <option value="ALFA">Alfabético</option>
+                </select>
+            </div>
+
+           
+            <div class="col-md-4 mb-3">
+                <label for="rot" class="form-label">Rotación de etiquetas</label>
+                <select id="rot" name="rot" class="form-select" title="Seleccionar rotación">
+                    <option value="0">0°</option>
+                    <option value="45">45°</option>
+                    <option value="90">90°</option>
+                </select>
+            </div>
+
+           
+            <div class="col-md-4 mb-3">
+                <label for="tam" class="form-label">Tamaño del gráfico</label>
+                <select id="tam" name="tam" class="form-select" title="Seleccionar tamaño">
+                    <option value="900x400">Grande</option>
+                    <option value="600x300">Mediano</option>
+                    <option value="400x250">Pequeño</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="text-end mt-3">
+            <button type="button" onclick="actualizarGraficos()" class="btn btn-primary">
+                Actualizar gráficos
+            </button>
+        </div>
+
+    </form>
+
+    
+    <div class="grafico">
+        <div class="titulo"> Usuarios por estado por centro (Barras)</div>
+        <img id="g1" src="/graficos/centros.png" class="img-fluid" alt="Gráfico de barras centros">
+    </div>
+
+
+    <div class="grafico">
+        <div class="titulo"> Inscripciones por usuario</div>
+        <img id="g2" src="/graficos/lineal.png" class="img-fluid" alt="Gráfico lineal usuarios">
+    </div>
+
+    
+    <div class="grafico">
+        <div class="titulo"> Usuarios por centro</div>
+        <img id="g3" src="/graficos/torta.png" class="img-fluid" alt="Gráfico de torta centros">
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="/graficos/reporte.pdf" target="_blank" class="btn btn-danger">
+             Descargar Reporte PDF
+        </a>
+    </div>
+
+</div>
+
+<script>
+    function actualizarGraficos() {
+
+        let orden = document.getElementById("orden").value;
+        let rot = document.getElementById("rot").value;
+        let tam = document.getElementById("tam").value.split("x");
+
+        let w = tam[0];
+        let h = tam[1];
+
+        document.getElementById("g1").src = `/graficos/centros.png?orden=${orden}&rot=${rot}&w=${w}&h=${h}&t=` + new Date().getTime();
+        document.getElementById("g2").src = `/graficos/lineal.png?orden=${orden}&rot=${rot}&w=${w}&h=${h}&t=` + new Date().getTime();
+        document.getElementById("g3").src = `/graficos/torta.png?orden=${orden}&rot=${rot}&w=${w}&h=${h}&t=` + new Date().getTime();
+    }
+</script>
+
+</body>
+</html>

@@ -25,10 +25,7 @@ public class CorreoController {
         return "correo_masivo";
     }
 
-    /**
-     * Envía correos. Mantiene el mismo comportamiento: el método espera y devuelve la lista de errores.
-     * Si quieres envío en segundo plano, usa correoService.enviarCorreoMasivoUnoPorUnoAsync(...) o el batch async.
-     */
+   
     @PostMapping("/enviar")
     public String enviar(
             @RequestParam("destinatarios") String destinatarios,
@@ -46,13 +43,13 @@ public class CorreoController {
                 return "correo_resultado";
             }
 
-            // separar por comas, ; o saltos de línea
+        
             List<String> lista = Arrays.stream(destinatarios.split("[,;\\n]"))
                     .map(String::trim)
                     .filter(s -> !s.isBlank())
                     .collect(Collectors.toList());
 
-            // Llamada SÍNCRONA (mantiene el comportamiento)
+   
             String htmlFinal = correoService.generarCorreoHTML(asunto, mensajeHtml, "Usuario EVA");
 
 List<String> errores = correoService.enviarCorreoMasivoUnoPorUno(lista, asunto, htmlFinal);

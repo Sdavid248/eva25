@@ -53,6 +53,14 @@
     <version>3.1.1.RELEASE</version>
 </dependency>
 
+<!-- Dependencia para manejar JSON (obligatoria para NominatimService) -->
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20230227</version>
+</dependency>
+
+
 
         <!-- Web -->
         <dependency>
@@ -91,6 +99,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.32</version>
             <scope>provided</scope>
         </dependency>
 
@@ -113,6 +122,13 @@
             <version>7.2.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.5.4</version>
+        </dependency>
+
+
         <!-- Tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -125,6 +141,13 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <dependency>
+    <groupId>org.jfree</groupId>
+    <artifactId>jcommon</artifactId>
+    <version>1.0.24</version>
+</dependency>
+
 
     <build>
         <plugins>
@@ -155,3 +178,5 @@
     </build>
 
 </project>
+
+

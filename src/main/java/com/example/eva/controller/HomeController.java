@@ -8,26 +8,20 @@ public class HomeController {
 
     @GetMapping("/")
     public String index() {
-        return "index"; // templates/index.html
+        return "index"; 
     }
 
     @GetMapping("/acercade")
     public String acercade() {
-        return "acercade"; // templates/acercade.html
+        return "acercade"; 
     }
 
     @GetMapping("/info")
     public String info() {
-        return "info"; // templates/info.html
+        return "info"; 
     }
 
-    @GetMapping("/mapa")
-    public String mapa() {
-        return "mapa"; // templates/mapa.html
-    }
-
-    @GetMapping("/centrosdeportivos")
-    public String centrosDeportivos() {
-        return "centrosdeportivos"; // templates/centrosdeportivos.html
-    }
+    // ❌ Estos dos deben quitarse:
+    // @GetMapping("/mapa")
+    // @GetMapping("/centrosdeportivos")
 }

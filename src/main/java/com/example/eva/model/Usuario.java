@@ -34,17 +34,14 @@ public class Usuario {
     @Column(nullable = false)
     private String contrasena;
 
-    // 🔹 Relación original (usuario puede tener varios roles por usuario_rol)
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<UsuarioRol> usuarioRoles = new HashSet<>();
 
-    // ⚠️ Relación directa con un único rol (DESACTIVADA de BD)
-    //    -> se marca como @Transient para que Hibernate no intente mapear "id_rol" en tabla usuario
+    
     @Transient
     private Rol rol;
 
-    // ===================== Getters y Setters =====================
-
+   
     public Long getIdUser() {
         return idUser;
     }
@@ -117,9 +114,9 @@ public class Usuario {
         this.usuarioRoles = usuarioRoles;
     }
 
-    // 🔹 Getter y Setter para "rol" (campo virtual)
+    
     public Rol getRol() {
-        // si el usuario tiene roles asociados, tomamos el primero
+        
         if (rol == null && usuarioRoles != null && !usuarioRoles.isEmpty()) {
             this.rol = usuarioRoles.iterator().next().getRol();
         }
