@@ -90,7 +90,7 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    // -------------------- MÉTODOS NUEVOS PARA CORREOS MASIVOS --------------------
+
 
     public List<Usuario> listarTodos() {
         logger.info("listarTodos() llamado");
@@ -110,15 +110,12 @@ public class UsuarioService {
         }
     }
 
-    /**
-     * Intentamos filtrar en la BD usando la query searchWithFilters.
-     * Si por alguna razón falla (p. ej. provider no soporta Pageable.unpaged), hacemos fallback en memoria.
-     */
+    
     public List<Usuario> buscarConFiltrosParaCorreo(String nombre, String correo, String estado, String documento,
                                                     String telefono, String direccion) {
         logger.info("buscarConFiltrosParaCorreo llamado");
 
-        // Normalizamos parámetros (trim + lowercase) y convertimos "" -> null
+    
         final String fnombre = normalizeOrNull(nombre);
         final String fcorreo = normalizeOrNull(correo);
         final String festado = normalizeOrNull(estado);
@@ -126,7 +123,7 @@ public class UsuarioService {
         final String ftelefono = normalizeOrNull(telefono);
         final String fdireccion = normalizeOrNull(direccion);
 
-        // Intentar con query a BD (mejor opción)
+
         try {
             Page<Usuario> page = usuarioRepository.searchWithFilters(
                     fnombre, fcorreo, festado, fdocumento, ftelefono, fdireccion, Pageable.unpaged()
@@ -136,10 +133,10 @@ public class UsuarioService {
             return usuarios;
         } catch (Exception ex) {
             logger.warning("searchWithFilters falló: " + ex.getMessage() + " -> fallback a filtrado en memoria");
-            // fallback abajo
+        
         }
 
-        // Fallback: filtro en memoria con las variables locales finales (evita problema 'effectively final' con lambdas)
+
         return usuarioRepository.findAll().stream()
                 .filter(u -> fnombre == null || (u.getNombre() != null && u.getNombre().toLowerCase().contains(fnombre)))
                 .filter(u -> fcorreo == null || (u.getCorreo() != null && u.getCorreo().toLowerCase().contains(fcorreo)))
@@ -160,7 +157,7 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    // -------------------- FIN MÉTODOS NUEVOS --------------------
+    
 
     public Optional<Usuario> buscarPorId(Long id) {
         logger.info("Buscando usuario por ID: " + id);
@@ -180,11 +177,9 @@ public class UsuarioService {
         return usuarioRepository.searchByKeyword(keyword);
     }
 
-    /**
-     * Método usado por la lista paginada (mantengo tu implementación paginada)
-     */
+    
     public List<Usuario> buscarConFiltros(String nombre, String correo, String estado, String documento,
-                                          String telefono, String direccion) {
+                                            String telefono, String direccion) {
 
         logger.info("Filtrando usuarios con múltiples parámetros (in-memory fallback)");
 
@@ -206,11 +201,11 @@ public class UsuarioService {
     }
 
     public Page<Usuario> buscarConFiltrosPaginado(String nombre, String correo, String estado, String documento,
-                                                  String telefono, String direccion, Pageable pageable) {
+                                                    String telefono, String direccion, Pageable pageable) {
 
         logger.info("Búsqueda paginada activada");
 
-        // Intentamos delegar a la consulta en BD (siempre que el proveedor la soporte)
+        
         try {
             Page<Usuario> page = usuarioRepository.searchWithFilters(
                     normalizeOrNull(nombre),
@@ -243,11 +238,7 @@ public class UsuarioService {
         return false;
     }
 
-    // -------------------- UTIL --------------------
-
-    /**
-     * Normaliza: trims, toLowerCase y convierte "" a null.
-     */
+    
     private String normalizeOrNull(String s) {
         if (s == null) return null;
         String t = s.trim();

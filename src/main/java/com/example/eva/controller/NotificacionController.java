@@ -24,15 +24,14 @@ public class NotificacionController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // Mostrar la página (todos los usuarios autenticados pueden verla; los botones estarán condicionados en la vista)
+    
     @GetMapping
     public String mostrarFormulario(Model model) {
         List<Usuario> usuarios = usuarioRepository.findAll();
         model.addAttribute("usuarios", usuarios);
-        return "notificaciones"; // tu plantilla: src/main/resources/templates/notificaciones.html
+        return "notificaciones"; 
     }
 
-    // Solo ADMIN puede ejecutar este POST — doble defensa (seguridad + vista)
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/enviar")
     public String enviarNotificaciones(
@@ -47,10 +46,9 @@ public class NotificacionController {
 
         for (Usuario u : usuarios) {
             try {
-                // Genera HTML personalizado por usuario (usa la plantilla email.html)
-                // Note: agregar ctaUrl para que el template no use @{} (causa error fuera de IWebContext)
+                
                 String html = correoService.generarCorreoHTML(titulo, mensaje, u.getNombre());
-                // Enviamos uno por uno usando la función existente (pasamos lista de 1 elemento)
+                
                 correoService.enviarCorreoMasivoUnoPorUno(List.of(u.getCorreo()), titulo, html);
             } catch (Exception e) {
                 logger.error("Fallo enviando a " + u.getCorreo() + " -> " + e.getMessage());

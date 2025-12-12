@@ -27,28 +27,25 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // 🔹 Página de login
     @GetMapping("/login")
     public String login() {
-        return "login"; // templates/login.html
+        return "login"; 
     }
 
-    // 🔹 Formulario de registro
     @GetMapping("/registro")
     public String mostrarRegistro(Model model) {
         model.addAttribute("usuario", new Usuario());
         return "registro"; // templates/registro.html
     }
 
-    // 🔹 Procesar registro
     @PostMapping("/registro")
     public String registrarUsuario(@ModelAttribute Usuario usuario, Model model) {
         try {
-            // Encriptar contraseña
+        
             usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
             Usuario usuarioGuardado = usuarioRepository.save(usuario);
 
-            // Asignar rol USER automáticamente
+    
             Rol rolUser = rolRepository.findByNombre("USER")
                     .orElseThrow(() -> new RuntimeException("Rol USER no encontrado"));
 
@@ -57,7 +54,6 @@ public class AuthController {
             ur.setRol(rolUser);
             usuarioRolRepository.save(ur);
 
-            // ✅ Asegurar la relación bidireccional (si la colección es null, inicializarla como Set)
             if (usuarioGuardado.getUsuarioRoles() == null) {
                 usuarioGuardado.setUsuarioRoles(new HashSet<>());
             }
@@ -66,9 +62,9 @@ public class AuthController {
             usuarioRepository.save(usuarioGuardado);
 
             model.addAttribute("mensaje", "✅ Usuario registrado con éxito. Ahora puedes iniciar sesión.");
-            return "login"; // después de registrarse, vuelve al login
+            return "login"; 
         } catch (Exception e) {
-            model.addAttribute("mensaje", "❌ Error: " + e.getMessage());
+            model.addAttribute("mensaje", " Error: " + e.getMessage());
             return "registro";
         }
     }

@@ -40,7 +40,7 @@ public class UsuarioController {
         model.addAttribute("totalPages", paginaUsuarios.getTotalPages());
         model.addAttribute("totalItems", paginaUsuarios.getTotalElements());
 
-        // Para mantener filtros en la vista
+        
         model.addAttribute("nombre", nombre);
         model.addAttribute("correo", correo);
         model.addAttribute("estado", estado);
@@ -48,6 +48,6 @@ public class UsuarioController {
         model.addAttribute("telefono", telefono);
         model.addAttribute("direccion", direccion);
 
-        return "lista"; // <--- AQUÍ SE CAMBIÓ
+        return "lista"; 
     }
 }

@@ -11,14 +11,14 @@ public class UsuarioRol {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable = false) // 🔹 corregido
+    @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "id_rol", nullable = false) // 🔹 corregido
+    @JoinColumn(name = "id_rol", nullable = false) 
     private Rol rol;
 
-    // Getters y Setters
+    
     public Long getId() {
         return id;
     }

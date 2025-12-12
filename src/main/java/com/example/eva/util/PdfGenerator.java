@@ -27,7 +27,7 @@ public class PdfGenerator {
 
             PdfFont font = PdfFontFactory.createFont();
 
-            // Título
+            
             Paragraph titulo = new Paragraph("Lista de Usuarios")
                     .setFont(font)
                     .setFontSize(18)
@@ -35,7 +35,7 @@ public class PdfGenerator {
                     .setMarginBottom(20);
             document.add(titulo);
 
-            // Tabla con más columnas
+            
             Table table = new Table(UnitValue.createPercentArray(new float[]{1, 2, 3, 2, 2, 3}))
                     .useAllAvailableWidth();
 

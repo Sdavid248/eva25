@@ -8,7 +8,7 @@ public class Inscripcion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "numero") // en la BD es "numero"
+    @Column(name = "numero") 
     private Long numero;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -21,9 +21,16 @@ public class Inscripcion {
     private String telefono;
     private String correo;
     private String estado;
+
+   
     private String rut;
 
-    // Getters y Setters
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rut", referencedColumnName = "rut", insertable = false, updatable = false)
+    private CentroDeportivo centroDeportivo;
+
+  
     public Long getNumero() {
         return numero;
     }
@@ -78,5 +85,13 @@ public class Inscripcion {
 
     public void setRut(String rut) {
         this.rut = rut;
+    }
+
+    public CentroDeportivo getCentroDeportivo() {
+        return centroDeportivo;
+    }
+
+    public void setCentroDeportivo(CentroDeportivo centroDeportivo) {
+        this.centroDeportivo = centroDeportivo;
     }
 }

@@ -32,9 +32,7 @@ public class CorreoService {
         this.templateEngine = templateEngine;
     }
 
-    // =====================================================================================
-    // ===========================  VALIDACIÓN DE PERMISOS  =================================
-    // =====================================================================================
+
     private boolean esAdmin() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) return false;
@@ -49,9 +47,7 @@ public class CorreoService {
         }
     }
 
-    // =====================================================================================
-    // ======================= ENVÍO UNO POR UNO (ORIGINAL) ================================
-    // =====================================================================================
+
     public List<String> enviarCorreoMasivoUnoPorUno(List<String> destinatarios, String asunto, String html) {
 
         validarPermiso(); // 🔒 Seguridad
@@ -95,9 +91,7 @@ public class CorreoService {
         return errores;
     }
 
-    // =====================================================================================
-    // ============================ ENVÍO MASIVO BCC =======================================
-    // =====================================================================================
+
     public List<String> enviarCorreoMasivoBCC(List<String> destinatarios, String asunto, String html) {
 
         validarPermiso(); // 🔒 Seguridad
@@ -137,9 +131,7 @@ public class CorreoService {
         return errores;
     }
 
-    // =====================================================================================
-    // ============================ ENVÍO POR LOTES ========================================
-    // =====================================================================================
+ 
     public List<String> enviarCorreoMasivoBatch(List<String> destinatarios, String asunto, String html) {
 
         validarPermiso(); // 🔒 Seguridad
@@ -165,9 +157,7 @@ public class CorreoService {
         return errores;
     }
 
-    // =====================================================================================
-    // =========================== MÉTODOS ASÍNCRONOS ======================================
-    // =====================================================================================
+
     @Async("correoExecutor")
     public void enviarCorreoMasivoUnoPorUnoAsync(List<String> destinatarios, String asunto, String html) {
         enviarCorreoMasivoUnoPorUno(destinatarios, asunto, html);
@@ -178,9 +168,7 @@ public class CorreoService {
         enviarCorreoMasivoBatch(destinatarios, asunto, html);
     }
 
-    // =====================================================================================
-    // =========================== MÉTODO INTERNO HTML ======================================
-    // =====================================================================================
+
     private void enviarCorreoHTML(String destino, String asunto, String html) throws MessagingException {
 
         MimeMessage msg = mailSender.createMimeMessage();
@@ -194,9 +182,6 @@ public class CorreoService {
         mailSender.send(msg);
     }
 
-    // =====================================================================================
-    // ========================= PLANTILLA THYMELEAF =======================================
-    // =====================================================================================
     public String generarCorreoHTML(String titulo, String mensaje, String nombreUsuario) {
 
         Context ctx = new Context();

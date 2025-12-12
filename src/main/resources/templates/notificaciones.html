@@ -16,12 +16,16 @@
     <label for="mensaje">Mensaje (HTML permitido):</label>
     <textarea id="mensaje" name="mensaje" rows="6" placeholder="Escribe el mensaje..." required></textarea>
 
+
     
+
     <sec:authorize access="hasRole('ADMIN')">
         <button type="submit">Enviar Notificación</button>
     </sec:authorize>
 
+
     
+
     <sec:authorize access="!hasRole('ADMIN')">
         <button type="button" disabled title="Solo administradores pueden enviar notificaciones">Enviar Notificación</button>
     </sec:authorize>
@@ -31,14 +35,12 @@
     <div th:text="${exito}"></div>
 </div>
 
-
 <h2>Usuarios</h2>
 <table>
     <thead>
         <tr>
             <th>Nombre</th>
             <th>Correo</th>
-            <!-- campo sensible: documento -->
             <th sec:authorize="hasRole('ADMIN')">Documento</th>
             <th>Estado</th>
         </tr>

@@ -17,7 +17,7 @@ public class PerfilController {
     @GetMapping("/perfil")
     public String mostrarPerfil(Model model) {
 
-        // Datos simulados (después pueden venir desde BD)
+        
         model.addAttribute("nombre", "Juan Pérez");
         model.addAttribute("correo", "juanperez@email.com");
         model.addAttribute("ubicacion", "Ciudad de México");
@@ -26,6 +26,6 @@ public class PerfilController {
         model.addAttribute("intereses", "Programación, videojuegos, música");
         model.addAttribute("foto", "https://via.placeholder.com/150");
 
-        return "perfil"; // nombre del HTML
+        return "perfil"; 
     }
 }

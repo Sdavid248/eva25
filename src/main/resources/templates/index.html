@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E.V.A</title>
 
-    
+
     <link rel="shortcut icon" th:href="@{/images/favicon.jpg}" href="/images/favicon.jpg" type="image/x-icon">
 
     
@@ -24,9 +24,11 @@
                 <li class="nav__items"><a th:href="@{/info}" href="/info" class="nav__links">Info</a></li>
                 <li class="nav__items"><a th:href="@{/login}" href="/login" class="nav__links">Login</a></li>
                 <li class="nav__items"><a th:href="@{/mapa}" href="/mapa" class="nav__links">Mapa</a></li>
-                
 
-                
+                <li class="nav__items"><a th:href="@{/graficos}" href="/graficos" class="nav__links">Gráfico</a></li>
+
+
+        
                 <li class="nav__items"><a th:href="@{/usuario}" href="/usuario" class="nav__links">Lista Usuarios</a></li>
                 <li class="nav__items"><a th:href="@{/usuario/nuevo}" href="/usuario/nuevo" class="nav__links">Nuevo Usuario</a></li>
             </ul>
@@ -97,7 +99,7 @@
 <body>
 
     <section class="price__table">
-        <!-- Problema -->
+  
         <div class="price__element">
             <p class="price__name">Problema</p>
             <h3 class="price__price">Sedentarismo</h3>
@@ -109,7 +111,7 @@
             <a th:href="@{/login}" class="price__cta">Conocer más</a>
         </div>
 
-        <!-- Solución -->
+    
         <div class="price__element price__element--best">
             <p class="price__name">Solución</p>
             <h3 class="price__price">E.V.A</h3>
@@ -121,7 +123,7 @@
             <a th:href="@{/registro}" class="price__cta">Empieza ahora</a>
         </div>
 
-        <!-- Impacto -->
+  
         <div class="price__element">
             <p class="price__name">Impacto</p>
             <h3 class="price__price">Comunidad</h3>
@@ -228,8 +230,12 @@
                     <li class="nav__items"><a th:href="@{/info}" href="/info" class="nav__links">Info</a></li>
                     <li class="nav__items"><a th:href="@{/login}" href="/login" class="nav__links">Login</a></li>
                     <li class="nav__items"><a th:href="@{/mapa}" href="/mapa" class="nav__links">Mapa</a></li>
+                    <li class="nav__items"><a th:href="@{/graficos}" href="/graficos" class="nav__links">Gráfico</a></li>
+
+
 
                     
+
                     <li class="nav__items"><a th:href="@{/usuario}" href="/usuario" class="nav__links">Lista Usuarios</a></li>
                     <li class="nav__items"><a th:href="@{/usuario/nuevo}" href="/usuario/nuevo" class="nav__links">Nuevo Usuario</a></li>
                 </ul> 
@@ -254,7 +260,9 @@
         </section>
     </footer>
 
-    
+
+
+
     <script th:src="@{/js/slider.js}"></script>
     <script th:src="@{/js/questions.js}"></script>
 

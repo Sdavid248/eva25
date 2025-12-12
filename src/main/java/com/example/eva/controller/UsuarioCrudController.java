@@ -28,9 +28,7 @@ public class UsuarioCrudController {
     @Autowired
     private RolRepository rolRepository;
 
-    // =======================================================
-    // LISTAR USUARIOS
-    // =======================================================
+
     @GetMapping
     public String listarUsuarios(
             @RequestParam(required = false) String nombre,
@@ -46,7 +44,7 @@ public class UsuarioCrudController {
 
         Pageable pageable = PageRequest.of(page, size);
 
-        // Saber si es admin para la vista
+        
         boolean isAdmin = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getAuthorities()
@@ -57,17 +55,13 @@ public class UsuarioCrudController {
 
         Page<Usuario> usuariosPage;
 
-        // =======================================================
-        // CORRECCIÓN: antes llamabas a un método que NO existía
-        // usuariosPage = usuarioService.buscarPaginado(keyword, pageable);
-        // Ahora reuso buscarConFiltrosPaginado() que sí existe
-        // =======================================================
+    
 
         if (keyword != null && !keyword.isEmpty()) {
 
             usuariosPage = usuarioService.buscarConFiltrosPaginado(
-                    keyword, // nombre
-                    keyword, // correo
+                    keyword, 
+                    keyword, 
                     estado,
                     documento,
                     telefono,
@@ -89,7 +83,6 @@ public class UsuarioCrudController {
             model.addAttribute("totalPages", usuariosPage.getTotalPages());
         }
 
-        // Mantener filtros
         model.addAttribute("keyword", keyword);
         model.addAttribute("nombre", nombre);
         model.addAttribute("correo", correo);
@@ -98,12 +91,10 @@ public class UsuarioCrudController {
         model.addAttribute("telefono", telefono);
         model.addAttribute("direccion", direccion);
 
-        return "lista"; // 👉 ARCHIVO EXACTO: src/main/resources/templates/lista.html
+        return "lista"; 
     }
 
-    // =======================================================
-    // AUXILIAR: verificar admin
-    // =======================================================
+ 
     private boolean esAdmin() {
         return SecurityContextHolder.getContext()
                 .getAuthentication()
@@ -112,9 +103,7 @@ public class UsuarioCrudController {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
-    // =======================================================
-    // NUEVO USUARIO
-    // =======================================================
+
     @GetMapping("/nuevo")
     @PreAuthorize("hasRole('ADMIN')")
     public String nuevoUsuarioForm(Model model) {
@@ -126,13 +115,11 @@ public class UsuarioCrudController {
         return "/form";
     }
 
-    // =======================================================
-    // GUARDAR CREACIÓN
-    // =======================================================
+    
     @PostMapping("/guardar")
     @PreAuthorize("hasRole('ADMIN')")
     public String guardarUsuario(@ModelAttribute Usuario usuario,
-                                 @RequestParam(required = false) Long rolId) {
+                                    @RequestParam(required = false) Long rolId) {
 
         if (!esAdmin()) return "redirect:/usuario?error=permiso";
 
@@ -156,9 +143,7 @@ public class UsuarioCrudController {
         return "redirect:/usuario";
     }
 
-    // =======================================================
-    // EDITAR
-    // =======================================================
+    
     @GetMapping("/editar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public String editarUsuario(@PathVariable Long id, Model model) {
@@ -180,9 +165,7 @@ public class UsuarioCrudController {
         return "/form";
     }
 
-    // =======================================================
-    // ELIMINAR
-    // =======================================================
+    
     @GetMapping("/eliminar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public String eliminarUsuario(@PathVariable Long id) {
@@ -193,13 +176,11 @@ public class UsuarioCrudController {
         return "redirect:/usuario";
     }
 
-    // =======================================================
-    // GUARDAR EDICIÓN
-    // =======================================================
+
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN')")
     public String guardarDesdeFormulario(@ModelAttribute Usuario usuario,
-                                         @RequestParam(required = false) Long rolId) {
+                                            @RequestParam(required = false) Long rolId) {
 
         if (!esAdmin()) return "redirect:/usuario?error=permiso";
 
