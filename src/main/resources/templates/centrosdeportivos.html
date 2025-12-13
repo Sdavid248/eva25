@@ -5,57 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Centros Deportivos</title>
     <link rel="stylesheet" href="/css/centrodeportivo.css" />
+
+    <style>
+        /* Hace toda la tarjeta clickeable */
+        .card {
+            cursor: pointer;
+            transition: transform .2s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        /* El enlace invisible cubre toda la tarjeta */
+        .card-link {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+        }
+
+        .card {
+            position: relative;
+        }
+    </style>
+
 </head>
 <body>
 
-    <nav class="nav_menu">
-        <ul class="nav_links">
-            <li><a th:href="@{/}">Inicio</a></li>
-            <li><a th:href="@{/acercade}">Acerca de</a></li>
-            <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
-            <li><a th:href="@{/info}">Info</a></li>
-            <li><a th:href="@{/mapa}">Mapa</a></li>
-            <li><a th:href="@{/login}">Login</a></li>
-            <li><a th:href="@{/registro}">Registro</a></li>
-        </ul>
-    </nav>
+<nav class="nav_menu">
+    <ul class="nav_links">
+        <li><a th:href="@{/}">Inicio</a></li>
+        <li><a th:href="@{/acercade}">Acerca de</a></li>
+        <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
+        <li><a th:href="@{/info}">Info</a></li>
+        <li><a th:href="@{/mapa}">Mapa</a></li>
+        <li><a th:href="@{/login}">Login</a></li>
+        <li><a th:href="@{/registro}">Registro</a></li>
+    </ul>
+</nav>
 
-    <main class="centros-container">
-        <h2>Centros Deportivos Disponibles</h2>
-        <p>
-            Aquí encontrarás una lista de centros deportivos registrados en nuestra plataforma,
-            con información de ubicación, horarios y servicios disponibles.
-        </p>
+<main class="centros-container">
+    <h2>Centros Deportivos Disponibles</h2>
+    <p>
+        Aquí encontrarás una lista de centros deportivos registrados en nuestra plataforma,
+        con información de ubicación, horarios y servicios disponibles.
+    </p>
 
-        <!-- 🔥 SECCIÓN DINÁMICA CON THYMELEAF -->
-        <section class="card-container" th:each="centro : ${centros}">
+    <!-- 🔥 CADA TARJETA ES UN LINK COMPLETO -->
+    <section class="card-container" th:each="centro : ${centros}">
 
-            <article class="card">
-                <img src="/images/centro-norte.jpg" alt="Centro Deportivo" />
+        <article class="card">
 
-                <h2 th:text="${centro.nombre}">Nombre del Centro</h2>
+            <!-- 🔗 Link invisible sobre toda la tarjeta -->
+            <a class="card-link"
+               th:href="@{'/centrosdeportivos/inscribir/' + ${centro.rut}}">
+            </a>
 
-                <p>
-                    <strong>Ubicación:</strong>
-                    <span th:text="${centro.direccion}">Dirección</span>
-                </p>
+            <img src="/images/centro-norte.jpg" alt="Centro Deportivo" />
 
-                <p>
-                    <strong>Horarios:</strong>
-                    <span th:text="${centro.apertura}">Hora apertura</span> -
-                    <span th:text="${centro.cierre}">Hora cierre</span>
-                </p>
+            <h2 th:text="${centro.nombre}">Nombre del Centro</h2>
 
-                <p>
-                    <strong>Teléfono:</strong>
-                    <span th:text="${centro.telefono}">Teléfono</span>
-                </p>
+            <p>
+                <strong>Ubicación:</strong>
+                <span th:text="${centro.direccion}">Dirección</span>
+            </p>
 
-            </article>
+            <p>
+                <strong>Horarios:</strong>
+                <span th:text="${centro.apertura}">Hora apertura</span> -
+                <span th:text="${centro.cierre}">Hora cierre</span>
+            </p>
 
-        </section>
+            <p>
+                <strong>Teléfono:</strong>
+                <span th:text="${centro.telefono}">Teléfono</span>
+            </p>
 
-    </main>
+        </article>
+
+    </section>
+
+</main>
 
 </body>
 </html>

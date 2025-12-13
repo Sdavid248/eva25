@@ -20,4 +20,7 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> 
             "GROUP BY c.nombre, u.estado " +
             "ORDER BY c.nombre")
     List<Object[]> countUsuariosEstadoPorCentro();
+    // ========= NUEVO =========
+boolean existsByUsuarioIdUserAndRut(Long idUser, Integer rut);
+
 }

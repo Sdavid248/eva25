@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Inscripción Masiva</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        tr.seleccionado {
+            background-color: #d1e7dd !important;
+        }
+        tr { cursor: pointer; }
+    </style>
+</head>
+
+<body class="container mt-4">
+
+<h2 th:text="'Inscribir usuarios al centro: ' + ${centro.nombre}"></h2>
+
+<p>
+    Dirección:
+    <strong th:text="${centro.direccion}"></strong>
+</p>
+
+<table class="table table-bordered table-hover mt-4">
+    <thead class="table-dark">
+    <tr>
+        <th>Nombre</th>
+        <th>Correo</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="u : ${usuarios}"
+        th:data-id="${u.idUser}"
+        onclick="toggleSeleccion(this)">
+        <td th:text="${u.nombre}"></td>
+        <td th:text="${u.correo}"></td>
+    </tr>
+    </tbody>
+</table>
+<form th:action="@{/centrosdeportivos/inscribir/{rut}/csv(rut=${centro.rut})}"
+      method="post"
+      class="mb-4">
+
+    <label class="form-label">
+        Pegue aquí el CSV (con encabezados)
+    </label>
+
+    <textarea name="csv"
+              class="form-control"
+              rows="8"
+              placeholder="documento,nombre,direccion,telefono,correo"
+              required></textarea>
+
+    <button class="btn btn-primary mt-2">
+        Inscripción masiva
+    </button>
+</form>
+
+
+<button class="btn btn-success"
+        data-bs-toggle="modal"
+        data-bs-target="#confirmarModal">
+    Inscribir seleccionados
+</button>
+
+<!-- MODAL -->
+<div class="modal fade" id="confirmarModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar inscripción</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"
+                        title="Cerrar">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                ¿Desea inscribir los usuarios seleccionados?
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <button class="btn btn-success"
+                        onclick="enviarInscripcion()">
+                    Confirmar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const seleccionados = new Set();
+
+    function toggleSeleccion(fila) {
+        const id = fila.dataset.id;
+        if (seleccionados.has(id)) {
+            seleccionados.delete(id);
+            fila.classList.remove("seleccionado");
+        } else {
+            seleccionados.add(id);
+            fila.classList.add("seleccionado");
+        }
+    }
+
+    function enviarInscripcion() {
+        if (seleccionados.size === 0) {
+            alert("Debe seleccionar al menos un usuario");
+            return;
+        }
+
+        fetch(window.location.pathname, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usuarios: Array.from(seleccionados) })
+        })
+        .then(r => r.ok ? location.href = "/centrosdeportivos" : alert("Error"))
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
