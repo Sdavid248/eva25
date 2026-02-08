@@ -11,7 +11,7 @@ public class MailConfig {
     @Bean
     public ClassLoaderTemplateResolver emailTemplateResolver() {
         ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
-        resolver.setPrefix("templates/"); // Thymeleaf busca en classpath:/templates/
+        resolver.setPrefix("templates/"); 
         resolver.setSuffix(".html");
         resolver.setTemplateMode("HTML");
         resolver.setCharacterEncoding("UTF-8");

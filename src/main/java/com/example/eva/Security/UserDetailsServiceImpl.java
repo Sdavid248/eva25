@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
-        // Usamos fetchRoles SIEMPRE
+
         Usuario usuario = usuarioRepository.findByCorreoFetchRoles(correo)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + correo));
 
@@ -33,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + rolName.toUpperCase()));
         }
 
-        // 🔎 Debug: ver roles cargados
+      
         System.out.println("Usuario autenticado: " + correo + " con roles: " + authorities);
 
         return new User(usuario.getCorreo(), usuario.getContrasena(), authorities);

@@ -26,6 +26,6 @@ public class PerfilController {
         model.addAttribute("intereses", "Programación, videojuegos, música");
         model.addAttribute("foto", "https://via.placeholder.com/150");
 
-        return "perfil"; // nombre del HTML
+        return "perfil"; 
     }
 }

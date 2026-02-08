@@ -3,12 +3,12 @@ package com.example.eva.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "valoraciones") // en la BD es plural
+@Table(name = "valoraciones") 
 public class Valoracion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "codigo") // en la BD es "codigo"
+    @Column(name = "codigo") 
     private Long codigo;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -21,11 +21,11 @@ public class Valoracion {
     @Column(name = "fhvaloracion")
     private String fhValoracion;
 
-    private String cometario; // así está en tu BD (ojo al typo!)
+    private String cometario; 
 
     private String rut;
 
-    // Getters y Setters
+    
     public Long getCodigo() {
         return codigo;
     }

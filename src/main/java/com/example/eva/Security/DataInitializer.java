@@ -21,7 +21,7 @@ public class DataInitializer {
                                UsuarioRolRepository usuarioRolRepository,
                                PasswordEncoder passwordEncoder) {
         return args -> {
-            // Crear roles si no existen
+
             Rol rolUser = rolRepository.findByNombre("USER").orElseGet(() -> {
                 Rol r = new Rol();
                 r.setNombre("USER");
@@ -34,7 +34,7 @@ public class DataInitializer {
                 return rolRepository.save(r);
             });
 
-            // Crear usuario normal con fetchRoles para evitar id_rol
+            
             Usuario user = usuarioRepository.findByCorreoFetchRoles("user@demo.com").orElseGet(() -> {
                 Usuario u = new Usuario();
                 u.setDocumento("1040323456");
@@ -47,7 +47,7 @@ public class DataInitializer {
                 return usuarioRepository.save(u);
             });
 
-            // Crear usuario admin
+            
             Usuario admin = usuarioRepository.findByCorreoFetchRoles("admin@demo.com").orElseGet(() -> {
                 Usuario u = new Usuario();
                 u.setDocumento("1021392980");
@@ -60,7 +60,7 @@ public class DataInitializer {
                 return usuarioRepository.save(u);
             });
 
-            // Asociar roles
+            
             if (usuarioRolRepository.findByUsuarioAndRol(user, rolUser).isEmpty()) {
                 UsuarioRol ur = new UsuarioRol();
                 ur.setUsuario(user);

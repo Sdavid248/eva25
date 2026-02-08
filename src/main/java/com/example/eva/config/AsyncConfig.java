@@ -7,10 +7,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 
-/**
- * Configuración de ejecución asíncrona opcional.
- * No cambia la funcionalidad existente: solo habilita métodos @Async que he añadido como auxiliares.
- */
 @Configuration
 @EnableAsync
 public class AsyncConfig {

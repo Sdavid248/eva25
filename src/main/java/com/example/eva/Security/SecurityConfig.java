@@ -51,13 +51,13 @@ public class SecurityConfig {
                     "/usuarios/eliminar/**"
                 ).hasRole("ADMIN")
 
-                // correo masivo solo admin
+   
                 .requestMatchers("/correo/**").hasRole("ADMIN")
 
                 // PDF solo admin
                 .requestMatchers("/pdf", "/pdf-filtros").hasRole("ADMIN")
 
-                // el resto requiere estar logueado
+     
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

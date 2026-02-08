@@ -1,6 +1,11 @@
 package com.example.eva.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "inscripcion")
@@ -8,22 +13,41 @@ public class Inscripcion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "numero") // en la BD es "numero"
     private Long numero;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", nullable = false)
     private Usuario usuario;
 
-    @Column(name = "fhinscripcion")
-    private String fhInscripcion;
+    @Column(name = "fhinscripcion", nullable = false)
+    private LocalDate fhInscripcion;
 
+    @Column(nullable = false)
     private String telefono;
-    private String correo;
-    private String estado;
-    private String rut;
 
-    // Getters y Setters
+    @Column(nullable = false)
+    private String correo;
+
+    @Column(nullable = false)
+    private String estado;
+
+    @Column(nullable = false)
+    private Integer rut;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "rut",
+        referencedColumnName = "rut",
+        insertable = false,
+        updatable = false
+    )
+    private CentroDeportivo centroDeportivo;
+
+    @PrePersist
+    public void prePersist() {
+        this.fhInscripcion = LocalDate.now();
+    }
+
     public Long getNumero() {
         return numero;
     }
@@ -40,11 +64,11 @@ public class Inscripcion {
         this.usuario = usuario;
     }
 
-    public String getFhInscripcion() {
+    public LocalDate getFhInscripcion() {
         return fhInscripcion;
     }
 
-    public void setFhInscripcion(String fhInscripcion) {
+    public void setFhInscripcion(LocalDate fhInscripcion) {
         this.fhInscripcion = fhInscripcion;
     }
 
@@ -72,11 +96,19 @@ public class Inscripcion {
         this.estado = estado;
     }
 
-    public String getRut() {
+    public Integer getRut() {
         return rut;
     }
 
-    public void setRut(String rut) {
+    public void setRut(Integer rut) {
         this.rut = rut;
+    }
+
+    public CentroDeportivo getCentroDeportivo() {
+        return centroDeportivo;
+    }
+
+    public void setCentroDeportivo(CentroDeportivo centroDeportivo) {
+        this.centroDeportivo = centroDeportivo;
     }
 }

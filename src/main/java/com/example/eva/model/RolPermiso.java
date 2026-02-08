@@ -15,9 +15,9 @@ public class RolPermiso {
     private Rol rol;
 
     @Column(name = "id_permiso", nullable = false)
-    private Long idPermiso; // si luego tienes entidad Permiso, se puede mapear
+    private Long idPermiso; 
 
-    // Getters y Setters
+    
     public Long getId() {
         return id;
     }
