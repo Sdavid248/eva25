@@ -21,7 +21,5 @@ public class HomeController {
         return "info"; 
     }
 
-    // ❌ Estos dos deben quitarse:
-    // @GetMapping("/mapa")
-    // @GetMapping("/centrosdeportivos")
+
 }

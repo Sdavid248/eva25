@@ -28,23 +28,23 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
 
-                // públicas
+               
                 .requestMatchers("/", "/index", "/acercade", "/info", "/mapa", "/centrosdeportivos",
                         "/registro", "/login", "/css/**", "/js/**", "/images/**")
                 .permitAll()
 
-                // notificaciones: vista autenticada, envío solo admin
+             
                 .requestMatchers(HttpMethod.GET, "/notificaciones", "/notificaciones/**")
                 .authenticated()
                 .requestMatchers(HttpMethod.POST, "/notificaciones/enviar")
                 .hasRole("ADMIN")
 
-                // Usuarios: vista general accesible a todos los autenticados
+          
                 .requestMatchers("/usuarios").authenticated()
                 .requestMatchers("/usuarios/").authenticated()
                 .requestMatchers("/usuarios/page/**").authenticated()
 
-                // Acciones sensibles SOLO admin
+        
                 .requestMatchers(
                     "/usuarios/nuevo",
                     "/usuarios/editar/**",
@@ -54,7 +54,7 @@ public class SecurityConfig {
    
                 .requestMatchers("/correo/**").hasRole("ADMIN")
 
-                // PDF solo admin
+              
                 .requestMatchers("/pdf", "/pdf-filtros").hasRole("ADMIN")
 
      

@@ -2,47 +2,103 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${titulo}">Notificación EVA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>EVA - Notificación</title>
+
+    <!-- MODO OSCURO AUTOMÁTICO PARA CLIENTES QUE LO SOPORTEN -->
     <style>
         @media (prefers-color-scheme: dark) {
-            body { background:#1e1e1e !important; }
-            .card { background:#2a2a2a !important; color:#eee !important; }
-            .footer { color:#aaa !important; }
+            body {
+                background: #1c1f26 !important;
+            }
+            .card {
+                background: #2a2e37 !important;
+                color: #f3f4f6 !important;
+            }
+            .footer {
+                color: #ccc !important;
+            }
         }
-        .header-anim { animation: fadeInDown 0.8s ease-out; }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ANIMACIÓN CABECERA */
+        .header-anim {
+            background: linear-gradient(90deg, #0d6efd, #6610f2);
+            animation: move 6s linear infinite;
+            background-size: 300% 300%;
+        }
+
+        @keyframes move {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
     </style>
 </head>
-<body style="margin:0; padding:20px; background:#f5f7fb; font-family: Arial, sans-serif;">
-<div class="card" style="max-width:600px; margin:20px auto; background:#fff; padding:25px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.08);">
-    <div class="header-anim" style="text-align:center; margin-bottom:20px;">
-        <img src="https://via.placeholder.com/150x50?text=EVA" alt="EVA" style="max-width:150px; margin-bottom:10px;">
-        <h2 style="margin:0; font-size:22px; color:#0d6efd;" th:text="${titulo}">Título de la Notificación</h2>
+
+<body style="font-family: Arial, sans-serif; background:#f5f7fb; padding:20px; margin:0;">
+
+<!-- TARJETA PRINCIPAL -->
+<div class="card" style="
+    max-width:600px;
+    margin:20px auto;
+    background:#ffffff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.08);
+">
+
+    <!-- CABECERA ANIMADA -->
+    <div class="header-anim" style="
+        padding:25px;
+        border-radius:10px;
+        text-align:center;
+        color:white;
+        font-size:22px;
+        font-weight:bold;
+        letter-spacing:1px;
+        margin-bottom:20px;
+    ">
+        ✉ Nueva Notificación del Sistema E.V.A.
     </div>
 
-    <p style="font-size:16px; color:#333; margin-top:0;">
-        Hola <strong th:text="${nombre}">Usuario</strong> 👋
-    </p>
+    <!-- SALUDO -->
+    <h2 style="color:#222; font-size:20px; margin:0 0 10px 0;">
+        Hola <span th:text="${nombre}">Usuario</span> 👋
+    </h2>
 
-    <div style="font-size:15px; color:#444; line-height:1.6;" th:utext="${mensaje}">
-        Mensaje HTML enviado por el administrador.
+    <!-- CONTENIDO HTML DEL MENSAJE -->
+    <div style="font-size:15px; color:#333; line-height:1.6;" th:utext="${mensaje}">
+        Contenido del mensaje enviado por el administrador.
     </div>
 
-    <div style="text-align:center; margin-top:25px;">
-      
-        <a th:href="${ctaUrl}" 
-           style="background:#0d6efd; padding:12px 22px; color:white; text-decoration:none; border-radius:6px; font-size:15px; font-weight:bold; display:inline-block;">
+    <!-- BOTÓN CTA -->
+    <div style="margin-top:25px; text-align:center;">
+        <a href="http://localhost:8081/"
+           style="
+               display:inline-block;
+               padding:12px 20px;
+               background:#0d6efd;
+               color:white;
+               text-decoration:none;
+               border-radius:8px;
+               font-size:16px;
+               font-weight:bold;
+               box-shadow:0 3px 6px rgba(13,110,253,0.3);
+               transition:0.3s;
+           ">
             Ver Notificación
         </a>
     </div>
 
+    <!-- SEPARADOR -->
     <hr style="margin:25px 0; border:none; border-top:1px solid #eee;">
 
-    <p class="footer" style="font-size:12px; color:#888; margin:0; text-align:center;">
-        Este correo fue enviado por el sistema <strong>E.V.A</strong>.  
-        Si no solicitaste esta notificación, ignora este mensaje.
+    <!-- PIE DE PÁGINA -->
+    <p class="footer" style="font-size:13px; color:#888; margin:0;">
+        Este correo fue enviado automáticamente por el sistema <strong>E.V.A</strong>.
+        Si no lo solicitaste, contacta al administrador.
     </p>
 </div>
+
 </body>
 </html>

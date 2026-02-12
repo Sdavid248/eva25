@@ -21,9 +21,7 @@ public class PdfController {
     private PdfGenerator pdfGenerator;
 
 
-    // ==================================
-    //     PDF PARA BÚSQUEDA SIMPLE
-    // ==================================
+
     @GetMapping("/pdf")
     public void generarPdfBusqueda(
             @RequestParam(required = false) String keyword,
@@ -44,9 +42,7 @@ public class PdfController {
     }
 
 
-    // ==================================
-    //      PDF PARA FILTROS AVANZADOS
-    // ==================================
+
     @GetMapping("/pdf-filtros")
     public void generarPdfFiltros(
             @RequestParam(required = false) String nombre,
