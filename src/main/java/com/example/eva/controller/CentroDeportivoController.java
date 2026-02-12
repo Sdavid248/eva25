@@ -135,34 +135,40 @@ public class CentroDeportivoController {
         return "inscripcion_masiva";
     }
 
-    @PostMapping("/inscribir/{rut}")
-    public String procesarInscripcion(
-            @PathVariable Integer rut,
-            @RequestParam(name = "usuariosSeleccionados", required = false)
-            List<Long> usuariosSeleccionados) {
+@PostMapping("/inscribir/{rut}")
+public String procesarInscripcion(
+        @PathVariable Integer rut,
+        @RequestParam(name = "usuariosSeleccionados", required = false)
+        List<Long> usuariosSeleccionados) {
 
-        if (usuariosSeleccionados != null && !usuariosSeleccionados.isEmpty()) {
-            inscripcionService.inscribirMasivo(rut, usuariosSeleccionados);
+    if (usuariosSeleccionados != null && !usuariosSeleccionados.isEmpty()) {
+
+        for (Long idUser : usuariosSeleccionados) {
+            inscripcionService.inscribir(idUser, rut);
         }
-
-        return "redirect:/centrosdeportivos";
     }
 
-    @PostMapping(value = "/inscribir/{rut}", consumes = "application/json")
-    @ResponseBody
-    public ResponseEntity<?> procesarInscripcionJson(
-            @PathVariable Integer rut,
-            @RequestBody Map<String, List<Long>> body) {
+    return "redirect:/centrosdeportivos";
+}
 
-        List<Long> usuarios = body.get("usuarios");
+@PostMapping(value = "/inscribir/{rut}", consumes = "application/json")
+@ResponseBody
+public ResponseEntity<?> procesarInscripcionJson(
+        @PathVariable Integer rut,
+        @RequestBody Map<String, List<Long>> body) {
 
-        if (usuarios == null || usuarios.isEmpty()) {
-            return ResponseEntity.badRequest().body("No hay usuarios seleccionados");
-        }
+    List<Long> usuarios = body.get("usuarios");
 
-        inscripcionService.inscribirMasivo(rut, usuarios);
-        return ResponseEntity.ok("OK");
+    if (usuarios == null || usuarios.isEmpty()) {
+        return ResponseEntity.badRequest().body("No hay usuarios seleccionados");
     }
+
+    for (Long idUser : usuarios) {
+        inscripcionService.inscribir(idUser, rut);
+    }
+
+    return ResponseEntity.ok("OK");
+}
 
 
     @PostMapping("/inscribir/{rut}/csv")
