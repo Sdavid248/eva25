@@ -39,27 +39,21 @@ public class CentroDeportivoController {
     @Autowired
     private NominatimService nominatim;
 
-    // ==============================
-    // LISTAR CENTROS
-    // ==============================
+  
     @GetMapping("")
     public String listarCentros(Model model) {
         model.addAttribute("centros", repo.findAll());
         return "centrosdeportivos";
     }
 
-    // ==============================
-    // GESTIÓN
-    // ==============================
+
     @GetMapping("/gestion")
     public String gestion(Model model) {
         model.addAttribute("centros", repo.findAll());
         return "centros_gestion";
     }
 
-    // ==============================
-    // NUEVO CENTRO
-    // ==============================
+
     @GetMapping("/nuevo")
     public String nuevoCentro(Model model) {
         model.addAttribute("centro", new CentroDeportivo());
@@ -104,9 +98,7 @@ public class CentroDeportivoController {
         }
     }
 
-    // ==============================
-    // EDITAR / GUARDAR
-    // ==============================
+
     @GetMapping("/editar/{rut}")
     public String editarCentro(@PathVariable Integer rut, Model model) {
         CentroDeportivo centro = repo.findById(rut)
@@ -121,18 +113,14 @@ public class CentroDeportivoController {
         return "redirect:/centrosdeportivos/gestion";
     }
 
-    // ==============================
-    // ELIMINAR
-    // ==============================
+
     @GetMapping("/eliminar/{rut}")
     public String eliminarCentro(@PathVariable Integer rut) {
         repo.deleteById(rut);
         return "redirect:/centrosdeportivos/gestion";
     }
 
-    // ==============================
-    // INSCRIPCIÓN MASIVA (VISTA)
-    // ==============================
+
     @GetMapping("/inscribir/{rut}")
     public String inscripcionMasiva(@PathVariable Integer rut, Model model) {
 
@@ -147,9 +135,6 @@ public class CentroDeportivoController {
         return "inscripcion_masiva";
     }
 
-    // ==============================
-    // INSCRIPCIÓN MANUAL (LISTA)
-    // ==============================
     @PostMapping("/inscribir/{rut}")
     public String procesarInscripcion(
             @PathVariable Integer rut,
@@ -163,9 +148,6 @@ public class CentroDeportivoController {
         return "redirect:/centrosdeportivos";
     }
 
-    // ==============================
-    // INSCRIPCIÓN MANUAL (JSON)
-    // ==============================
     @PostMapping(value = "/inscribir/{rut}", consumes = "application/json")
     @ResponseBody
     public ResponseEntity<?> procesarInscripcionJson(
@@ -182,9 +164,7 @@ public class CentroDeportivoController {
         return ResponseEntity.ok("OK");
     }
 
-    // ==============================
-    // INSCRIPCIÓN MASIVA POR CSV (SOLO ADMIN)
-    // ==============================
+
     @PostMapping("/inscribir/{rut}/csv")
     public String inscripcionMasivaCSV(
             @PathVariable Integer rut,
@@ -192,12 +172,12 @@ public class CentroDeportivoController {
             Model model
     ) {
 
-        // 🔒 Seguridad extra
+  
         if (!usuarioService.esAdmin()) {
             return "redirect:/";
         }
 
-        // 🛡 Validación mínima
+        
         if (csv == null || csv.trim().isEmpty()) {
             model.addAttribute("creados", 0);
             model.addAttribute("inscritos", 0);
@@ -219,9 +199,7 @@ public class CentroDeportivoController {
         return "resultado_masivo";
     }
 
-    // ==============================
-    // MAPA
-    // ==============================
+
     @GetMapping("/mapa")
     public String mapa(Model model) {
 

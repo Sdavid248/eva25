@@ -47,11 +47,7 @@
     <artifactId>spring-boot-starter-mail</artifactId>
 </dependency>
 
-<dependency>
-    <groupId>org.thymeleaf.extras</groupId>
-    <artifactId>thymeleaf-extras-springsecurity6</artifactId>
-    <version>3.1.1.RELEASE</version>
-</dependency>
+
 
 <!-- Dependencia para manejar JSON (obligatoria para NominatimService) -->
 <dependency>
@@ -151,13 +147,15 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-    </dependencies>
-<!-- jcommon (AGREGADO) -->
+
+        <!-- jcommon (AGREGADO) -->
 <dependency>
     <groupId>org.jfree</groupId>
     <artifactId>jcommon</artifactId>
     <version>1.0.24</version>
 </dependency>
+
+    </dependencies>
 
 
 

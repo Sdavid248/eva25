@@ -41,22 +41,22 @@ public class InscripcionArchivoService {
             if (linea.isBlank()) continue;
 
             String[] d = linea.split(";");
-            if (d.length < 3) continue;
+            if (d.length < 4) continue; 
 
             String nombre = d[0].trim();
             String correo = d[1].trim();
             String telefono = d[2].trim();
+            String direccion = d[3].trim();
 
             Usuario usuario = usuarioRepository.findByCorreo(correo).orElse(null);
 
             if (usuario == null) {
-
                 usuario = new Usuario();
                 usuario.setDocumento(String.valueOf(
-                        (int)(Math.random() * 90000000) + 10000000
+                        (int) (Math.random() * 90000000) + 10000000
                 ));
                 usuario.setNombre(nombre);
-                usuario.setDireccion("Dirección pendiente");
+                usuario.setDireccion(direccion);
                 usuario.setTelefono(telefono);
                 usuario.setCorreo(correo);
                 usuario.setEstado("activo");

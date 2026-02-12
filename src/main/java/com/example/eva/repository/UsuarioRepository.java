@@ -75,18 +75,14 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>, JpaSpec
 
 
 
-    // =========================================================
-    // 🔥 MÉTODOS NECESARIOS PARA EL PDF (AGREGADOS, NO EXISTÍAN)
-    // =========================================================
 
-    // --- BÚSQUEDA SIMPLE ---
+
     @Query("SELECT u FROM Usuario u " +
             "WHERE LOWER(u.nombre) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "   OR LOWER(u.correo) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Usuario> buscarPorNombreOCorreo(@Param("keyword") String keyword);
 
 
-    // --- BÚSQUEDA AVANZADA (SIN PAGINACIÓN PARA PDF) ---
     @Query("SELECT u FROM Usuario u WHERE " +
             "(:nombre IS NULL OR LOWER(u.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))) AND " +
             "(:correo IS NULL OR LOWER(u.correo) LIKE LOWER(CONCAT('%', :correo, '%'))) AND " +
