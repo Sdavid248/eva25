@@ -20,8 +20,4 @@ public class HomeController {
     public String info() {
         return "info"; 
     }
-
-    // ❌ Estos dos deben quitarse:
-    // @GetMapping("/mapa")
-    // @GetMapping("/centrosdeportivos")
 }

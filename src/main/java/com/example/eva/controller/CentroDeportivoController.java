@@ -173,7 +173,7 @@ public class CentroDeportivoController {
             Model model
     ) {
 
-       
+        
         if (!usuarioService.esAdmin()) {
             return "redirect:/";
         }

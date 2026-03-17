@@ -44,4 +44,14 @@ public class InscripcionService {
 
         inscripcionRepo.save(ins);
     }
+
+    public void inscribirMasivo(Integer rutCentro, java.util.List<Long> usuariosIds) {
+        CentroDeportivo centro = centroRepo.findById(rutCentro)
+                .orElseThrow(() -> new RuntimeException("Centro no encontrado"));
+
+        for (Long usuarioId : usuariosIds) {
+            inscribir(usuarioId, rutCentro);
+        }
+    }
 }
+
