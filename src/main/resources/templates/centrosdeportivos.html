@@ -39,37 +39,15 @@
             <li><a th:href="@{/acercade}">Acerca de</a></li>
             <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
             <li><a th:href="@{/info}">Info</a></li>
-            <li><a th:href="@{/mapa}">Mapa</a></li>
+            <li><a th:href="@{/centrosdeportivos/mapa}">Mapa</a></li>
             <li><a th:href="@{/login}">Login</a></li>
             <li><a th:href="@{/registro}">Registro</a></li>
         </ul>
     </nav>
-
-
-    <main class="centros-container">
-        <h2>Centros Deportivos Disponibles</h2>
-        <p>
-            Aquí encontrarás una lista de centros deportivos registrados en nuestra plataforma,
-            con información de ubicación, horarios y servicios disponibles.
-        </p>
-
-
         <section class="card-container"> 
 
         
         <section class="card-container" th:each="centro : ${centros}">
-
-<nav class="nav_menu">
-    <ul class="nav_links">
-        <li><a th:href="@{/}">Inicio</a></li>
-        <li><a th:href="@{/acercade}">Acerca de</a></li>
-        <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
-        <li><a th:href="@{/info}">Info</a></li>
-        <li><a th:href="@{/mapa}">Mapa</a></li>
-        <li><a th:href="@{/login}">Login</a></li>
-        <li><a th:href="@{/registro}">Registro</a></li>
-    </ul>
-</nav>
 
 <main class="centros-container">
     <h2>Centros Deportivos Disponibles</h2>
