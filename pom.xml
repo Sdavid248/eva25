@@ -47,11 +47,6 @@
 </dependency>
 
 
-<dependency>
-    <groupId>org.thymeleaf.extras</groupId>
-    <artifactId>thymeleaf-extras-springsecurity6</artifactId>
-    <version>3.1.1.RELEASE</version>
-</dependency>
 
 <dependency>
         <groupId>org.jfree</groupId>
@@ -166,12 +161,15 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- jcommon (AGREGADO) -->
+<dependency>
+    <groupId>org.jfree</groupId>
+    <artifactId>jcommon</artifactId>
+    <version>1.0.24</version>
+</dependency>
+
     </dependencies>
-
-
-
-
-
 
 
 

@@ -28,36 +28,40 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
 
-                // públicas
-                .requestMatchers("/", "/index", "/acercade", "/info", "/mapa", "/centrosdeportivos",
-                        "/registro", "/login", "/css/**", "/js/**", "/images/**")
+                // 🔓 Páginas públicas
+                .requestMatchers("/", "/index", "/acercade", "/info",
+                        "/registro", "/login",
+                        "/css/**", "/js/**", "/images/**")
                 .permitAll()
 
-                // notificaciones: vista autenticada, envío solo admin
+                // 🔥 SOLO ADMIN puede crear centros deportivos
+                .requestMatchers(HttpMethod.POST, "/centrosdeportivos/nuevo")
+                .hasRole("ADMIN")
+
+                // Notificaciones
                 .requestMatchers(HttpMethod.GET, "/notificaciones", "/notificaciones/**")
                 .authenticated()
+
                 .requestMatchers(HttpMethod.POST, "/notificaciones/enviar")
                 .hasRole("ADMIN")
 
-                // Usuarios: vista general accesible a todos los autenticados
-                .requestMatchers("/usuarios").authenticated()
-                .requestMatchers("/usuarios/").authenticated()
-                .requestMatchers("/usuarios/page/**").authenticated()
+                // Usuarios
+                .requestMatchers("/usuarios", "/usuarios/", "/usuarios/page/**")
+                .authenticated()
 
-                // Acciones sensibles SOLO admin
                 .requestMatchers(
-                    "/usuarios/nuevo",
-                    "/usuarios/editar/**",
-                    "/usuarios/eliminar/**"
+                        "/usuarios/nuevo",
+                        "/usuarios/editar/**",
+                        "/usuarios/eliminar/**"
                 ).hasRole("ADMIN")
 
-   
+                // Correo
                 .requestMatchers("/correo/**").hasRole("ADMIN")
 
-                // PDF solo admin
+                // PDF
                 .requestMatchers("/pdf", "/pdf-filtros").hasRole("ADMIN")
 
-     
+                // Todo lo demás requiere login
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

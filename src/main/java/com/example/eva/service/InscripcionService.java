@@ -9,6 +9,8 @@ import com.example.eva.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List; // 👈 ESTE IMPORT VA ARRIBA
+
 @Service
 public class InscripcionService {
 
@@ -43,5 +45,14 @@ public class InscripcionService {
         ins.setRut(centro.getRut());
 
         inscripcionRepo.save(ins);
+    }
+
+    // 👇 AGREGA EL MÉTODO AQUÍ (dentro de la clase)
+    public void inscribirMasivo(Integer rutCentro, List<Long> usuarios) {
+        for (Long idUser : usuarios) {
+            if (!estaInscrito(idUser, rutCentro)) {
+                inscribir(idUser, rutCentro);
+            }
+        }
     }
 }
