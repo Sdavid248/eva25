@@ -1,15 +1,17 @@
 package com.example.eva.controller;
 
-import com.example.eva.model.Usuario;
-import com.example.eva.repository.UsuarioRepository;
-import com.example.eva.util.PdfGenerator;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import com.example.eva.model.Usuario;
+import com.example.eva.repository.UsuarioRepository;
+import com.example.eva.util.PdfGenerator;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class PdfController {
@@ -19,8 +21,6 @@ public class PdfController {
 
     @Autowired
     private PdfGenerator pdfGenerator;
-
-
 
     @GetMapping("/pdf")
     public void generarPdfBusqueda(
