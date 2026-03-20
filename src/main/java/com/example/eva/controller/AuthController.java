@@ -41,11 +41,11 @@ public class AuthController {
     @PostMapping("/registro")
     public String registrarUsuario(@ModelAttribute Usuario usuario, Model model) {
         try {
-       
+        
             usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
             Usuario usuarioGuardado = usuarioRepository.save(usuario);
 
-   
+    
             Rol rolUser = rolRepository.findByNombre("USER")
                     .orElseThrow(() -> new RuntimeException("Rol USER no encontrado"));
 

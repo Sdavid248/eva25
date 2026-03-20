@@ -37,7 +37,7 @@ public class GraficosService {
         this.inscripcionRepository = inscripcionRepository;
     }
 
-  
+    
     private Paint[] paletaEVA() {
         return new Paint[]{
                 new Color(52, 152, 219),
@@ -196,7 +196,7 @@ public class GraficosService {
         return baos.toByteArray();
     }
 
-   
+        
     public byte[] generarGraficoTortaCentros(int width, int height) throws Exception {
 
         List<Object[]> rows = inscripcionRepository.countUsuariosEstadoPorCentro();

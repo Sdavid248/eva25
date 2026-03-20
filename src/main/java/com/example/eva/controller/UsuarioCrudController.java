@@ -44,7 +44,7 @@ public class UsuarioCrudController {
 
         Pageable pageable = PageRequest.of(page, size);
 
-      
+        
         boolean isAdmin = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getAuthorities()
@@ -115,11 +115,11 @@ public class UsuarioCrudController {
         return "/form";
     }
 
-  
+    
     @PostMapping("/guardar")
     @PreAuthorize("hasRole('ADMIN')")
     public String guardarUsuario(@ModelAttribute Usuario usuario,
-                                 @RequestParam(required = false) Long rolId) {
+                                    @RequestParam(required = false) Long rolId) {
 
         if (!esAdmin()) return "redirect:/usuario?error=permiso";
 
@@ -143,7 +143,7 @@ public class UsuarioCrudController {
         return "redirect:/usuario";
     }
 
-   
+    
     @GetMapping("/editar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public String editarUsuario(@PathVariable Long id, Model model) {
@@ -165,7 +165,7 @@ public class UsuarioCrudController {
         return "/form";
     }
 
- 
+    
     @GetMapping("/eliminar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public String eliminarUsuario(@PathVariable Long id) {
@@ -180,7 +180,7 @@ public class UsuarioCrudController {
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN')")
     public String guardarDesdeFormulario(@ModelAttribute Usuario usuario,
-                                         @RequestParam(required = false) Long rolId) {
+                                            @RequestParam(required = false) Long rolId) {
 
         if (!esAdmin()) return "redirect:/usuario?error=permiso";
 

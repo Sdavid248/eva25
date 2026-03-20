@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="/css/centrodeportivo.css" />
 
     <style>
-        /* Hace toda la tarjeta clickeable */
         .card {
             cursor: pointer;
             transition: transform .2s ease;
@@ -32,17 +31,23 @@
 </head>
 <body>
 
-<nav class="nav_menu">
-    <ul class="nav_links">
-        <li><a th:href="@{/}">Inicio</a></li>
-        <li><a th:href="@{/acercade}">Acerca de</a></li>
-        <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
-        <li><a th:href="@{/info}">Info</a></li>
-        <li><a th:href="@{/mapa}">Mapa</a></li>
-        <li><a th:href="@{/login}">Login</a></li>
-        <li><a th:href="@{/registro}">Registro</a></li>
-    </ul>
-</nav>
+
+
+    <nav class="nav_menu">
+        <ul class="nav_links">
+            <li><a th:href="@{/}">Inicio</a></li>
+            <li><a th:href="@{/acercade}">Acerca de</a></li>
+            <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
+            <li><a th:href="@{/info}">Info</a></li>
+            <li><a th:href="@{/centrosdeportivos/mapa}">Mapa</a></li>
+            <li><a th:href="@{/login}">Login</a></li>
+            <li><a th:href="@{/registro}">Registro</a></li>
+        </ul>
+    </nav>
+        <section class="card-container"> 
+
+        
+        <section class="card-container" th:each="centro : ${centros}">
 
 <main class="centros-container">
     <h2>Centros Deportivos Disponibles</h2>
@@ -51,14 +56,15 @@
         con información de ubicación, horarios y servicios disponibles.
     </p>
 
-    <!-- 🔥 CADA TARJETA ES UN LINK COMPLETO -->
+    
     <section class="card-container" th:each="centro : ${centros}">
+
 
         <article class="card">
 
-            <!-- 🔗 Link invisible sobre toda la tarjeta -->
+            
             <a class="card-link"
-               th:href="@{'/centrosdeportivos/inscribir/' + ${centro.rut}}">
+                th:href="@{'/centrosdeportivos/inscribir/' + ${centro.rut}}">
             </a>
 
             <img src="/images/centro-norte.jpg" alt="Centro Deportivo" />
@@ -76,10 +82,26 @@
                 <span th:text="${centro.cierre}">Hora cierre</span>
             </p>
 
+
+
+            
+            <article class="card">
+                <img src="/images/centro-sur.jpg" alt="Centro Deportivo Sur" />
+                <h2>Centro Deportivo Sur</h2>
+                <p>Ubicación: Carrera 89 #12-34</p>
+                <p>Horarios: Todos los días de 7:00 am a 10:00 pm</p>
+            </article>
+
+        
+
+
+        </section>
+
             <p>
                 <strong>Teléfono:</strong>
                 <span th:text="${centro.telefono}">Teléfono</span>
             </p>
+
 
         </article>
 

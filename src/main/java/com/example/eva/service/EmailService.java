@@ -29,14 +29,14 @@ public class EmailService {
             helper.setTo(emailDestino);
             helper.setSubject(titulo);
 
-       
+        
             Context context = new Context();
             context.setVariable("nombre", nombre);
             context.setVariable("titulo", titulo);
             context.setVariable("mensaje", mensajeHtml);
             context.setVariable("ctaUrl", "http://localhost:8080");
 
-         
+            
             String htmlContent = templateEngine.process("email", context);
 
             helper.setText(htmlContent, true);

@@ -18,7 +18,7 @@ public class GraficosController {
         this.graficosService = graficosService;
     }
 
- 
+    
     @GetMapping("/graficos/centros.png")
     public ResponseEntity<byte[]> graficoCentros(
             @RequestParam(defaultValue = "DESC") String orden,
@@ -66,7 +66,7 @@ public class GraficosController {
         }
     }
 
-  
+    
     @GetMapping("/graficos/torta.png")
     public ResponseEntity<byte[]> graficoTortaCentros(
             @RequestParam(defaultValue = "600") int w,
@@ -86,7 +86,7 @@ public class GraficosController {
         }
     }
 
-  
+    
     @GetMapping("/graficos/reporte.pdf")
     public ResponseEntity<byte[]> descargarPDF() {
         try {

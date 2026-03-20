@@ -1,0 +1,10 @@
+body {
+            background: linear-gradient(135deg, #f4f7f9, #e6edf3);
+        }
+        .card {
+            border-radius: 20px;
+        }
+        .icon-check {
+            font-size: 5rem;
+            color: #28a745;
+        }

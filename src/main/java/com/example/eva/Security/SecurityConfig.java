@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+
+
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
@@ -28,36 +30,40 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
 
-               
-                .requestMatchers("/", "/index", "/acercade", "/info", "/mapa", "/centrosdeportivos",
-                        "/registro", "/login", "/css/**", "/js/**", "/images/**")
+                // 🔓 Páginas públicas
+                .requestMatchers("/", "/index", "/acercade", "/info",
+                        "/registro", "/login",
+                        "/css/**", "/js/**", "/images/**")
                 .permitAll()
 
-             
+                // 🔥 SOLO ADMIN puede crear centros deportivos
+                .requestMatchers(HttpMethod.POST, "/centrosdeportivos/nuevo")
+                .hasRole("ADMIN")
+
+                // Notificaciones
                 .requestMatchers(HttpMethod.GET, "/notificaciones", "/notificaciones/**")
                 .authenticated()
+
                 .requestMatchers(HttpMethod.POST, "/notificaciones/enviar")
                 .hasRole("ADMIN")
 
-          
-                .requestMatchers("/usuarios").authenticated()
-                .requestMatchers("/usuarios/").authenticated()
-                .requestMatchers("/usuarios/page/**").authenticated()
+                // Usuarios
+                .requestMatchers("/usuarios", "/usuarios/", "/usuarios/page/**")
+                .authenticated()
 
-        
                 .requestMatchers(
-                    "/usuarios/nuevo",
-                    "/usuarios/editar/**",
-                    "/usuarios/eliminar/**"
+                        "/usuarios/nuevo",
+                        "/usuarios/editar/**",
+                        "/usuarios/eliminar/**"
                 ).hasRole("ADMIN")
 
-   
+                // Correo
                 .requestMatchers("/correo/**").hasRole("ADMIN")
 
-              
+                // PDF
                 .requestMatchers("/pdf", "/pdf-filtros").hasRole("ADMIN")
 
-     
+                // Todo lo demás requiere login
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

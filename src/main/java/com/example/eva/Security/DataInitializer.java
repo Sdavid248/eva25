@@ -17,9 +17,9 @@ public class DataInitializer {
 
     @Bean
     CommandLineRunner initData(UsuarioRepository usuarioRepository,
-                               RolRepository rolRepository,
-                               UsuarioRolRepository usuarioRolRepository,
-                               PasswordEncoder passwordEncoder) {
+        RolRepository rolRepository,
+        UsuarioRolRepository usuarioRolRepository,
+        PasswordEncoder passwordEncoder) {
         return args -> {
 
             Rol rolUser = rolRepository.findByNombre("USER").orElseGet(() -> {

@@ -5,13 +5,49 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Open Street Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+        integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <link rel="stylesheet" th:href="@{/css/mapa.css}" />
+</head>
+
+<body>
+    
+    
+    <nav class="nav_menu">
+        <ul class="nav_links">
+            <li><a th:href="@{/}">Inicio</a></li>
+            <li><a th:href="@{/acercade}">Acerca de</a></li>
+            <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
+            <li><a th:href="@{/info}">Info</a></li>
+            <li><a th:href=@{/centrosdeportivos/mapa}>Mapa</a></li>
+            <li><a th:href="@{/login}">Login</a></li>
+            <li><a th:href="@{/registro}">Registro</a></li>
+        </ul>
+    </nav>
+    <br>
+    <br>
+    <br>
+
     <title>Mapa - Centros Deportivos</title>
 
     <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+ <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 
     <style>
+        #mi_mapa {
+            width: 100%;
+            height: 800px;
+        }
+
         #formCentro {
             display: none;
             position: fixed;
@@ -33,81 +69,86 @@
         }
 
         #closeForm {
-            background: red;
+            background: rgb(88, 139, 198);
             color: white;
         }
     </style>
-
 </head>
 
 <body>
 
-    <br><br><br>
+<div id="mi_mapa"></div>
 
-    <div id="mi_mapa" style="width: 100%; height: 800px;"></div>
+<div id="formCentro">
+    <h3>Agregar Centro Deportivo</h3>
 
-    <div id="formCentro">
-        <h3>Agregar Centro Deportivo</h3>
+    <input id="nombre" type="text" placeholder="Nombre del centro">
+    <input id="direccion" type="text" placeholder="Dirección real">
+    <input id="telefono" type="text" placeholder="Teléfono">
+    <input id="apertura" type="text" placeholder="Hora apertura">
+    <input id="cierre" type="text" placeholder="Hora cierre">
 
-        <input id="nombre" type="text" placeholder="Nombre del centro" required>
-        <input id="direccion" type="text" placeholder="Dirección real" required>
-        <input id="telefono" type="text" placeholder="Teléfono">
-        <input id="apertura" type="text" placeholder="Hora apertura (6:00)">
-        <input id="cierre" type="text" placeholder="Hora cierre (22:00)">
+    <button onclick="guardarCentro()">Guardar</button>
+    <button id="closeForm" onclick="cerrarFormulario()">Cancelar</button>
+</div>
 
-        <button onclick="guardarCentro()">Guardar</button>
-        <button id="closeForm" onclick="cerrarFormulario()">Cancelar</button>
-    </div>
+<script th:inline="javascript">
 
-    <script th:inline="javascript">
-        const centros = /*[[${centros}]]*/ [];
+    const centros = /*[[${centros}]]*/ [];
 
-        let map = L.map('mi_mapa').setView([4.7110, -74.0721], 13);
+    console.log("Centros recibidos:", centros);
 
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19
-        }).addTo(map);
+    let map = L.map('mi_mapa').setView([4.7110, -74.0721], 13);
 
-        centros.forEach(c => {
-            if (c.lat && c.lng) {
-                L.marker([c.lat, c.lng])
-                    .addTo(map)
-                    .bindPopup(`<b>${c.nombre}</b><br>${c.direccion}`);
-            }
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+    }).addTo(map);
+
+    centros.forEach(c => {
+
+        if (c.lat && c.lng) {
+
+            L.marker([c.lat, c.lng])
+                .addTo(map)
+                .bindPopup(
+                    `<b>${c.nombre}</b><br>${c.direccion}`
+                );
+        }
+    });
+
+    map.on('click', () => {
+        document.getElementById("formCentro").style.display = "block";
+    });
+
+    function cerrarFormulario() {
+        document.getElementById("formCentro").style.display = "none";
+    }
+
+    async function guardarCentro() {
+
+        const data = {
+            nombre: document.getElementById("nombre").value,
+            direccion: document.getElementById("direccion").value,
+            telefono: document.getElementById("telefono").value,
+            apertura: document.getElementById("apertura").value,
+            cierre: document.getElementById("cierre").value
+        };
+
+        const resp = await fetch("/centrosdeportivos/nuevo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
         });
 
-        map.on('click', () => {
-            document.getElementById("direccion").value = "";
-            document.getElementById("formCentro").style.display = "block";
-        });
-
-        function cerrarFormulario() {
-            document.getElementById("formCentro").style.display = "none";
+        if (resp.ok) {
+            alert("Centro guardado correctamente");
+            location.reload();
+        } else {
+            alert("Error al guardar");
         }
+    }
 
-        async function guardarCentro() {
-            const data = {
-                nombre: document.getElementById("nombre").value,
-                direccion: document.getElementById("direccion").value,
-                telefono: document.getElementById("telefono").value,
-                apertura: document.getElementById("apertura").value,
-                cierre: document.getElementById("cierre").value
-            };
-
-            const resp = await fetch("/centrosdeportivos/nuevo", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-
-            if (resp.ok) {
-                alert("Centro guardado correctamente");
-                window.location.reload();
-            } else {
-                alert("Error al guardar");
-            }
-        }
-    </script>
+</script>
 
 </body>
 </html>

@@ -15,22 +15,22 @@
             <input type="text" name="nombre" th:value="${nombre}" placeholder="Filtrar por nombre" class="input"/>
 
             <input type="text" name="correo" th:value="${correo}"
-                   placeholder="Filtrar por correo" class="input"
-                   th:if="${esAdmin}" />
+                    placeholder="Filtrar por correo" class="input"
+                    th:if="${esAdmin}" />
 
             <input type="text" name="estado" th:value="${estado}" placeholder="Filtrar por estado" class="input"/>
 
             <input type="text" name="documento" th:value="${documento}"
-                   placeholder="Filtrar por documento" class="input"
-                   th:if="${esAdmin}" />
+                    placeholder="Filtrar por documento" class="input"
+                    th:if="${esAdmin}" />
 
             <input type="text" name="telefono" th:value="${telefono}"
-                   placeholder="Filtrar por teléfono" class="input"
-                   th:if="${esAdmin}" />
+                    placeholder="Filtrar por teléfono" class="input"
+                    th:if="${esAdmin}" />
 
             <input type="text" name="direccion" th:value="${direccion}"
-                   placeholder="Filtrar por dirección" class="input"
-                   th:if="${esAdmin}" />
+                    placeholder="Filtrar por dirección" class="input"
+                    th:if="${esAdmin}" />
 
             <button type="submit" class="btn btn-primary">Buscar</button>
             <a th:href="@{/usuarios}" class="btn btn-secondary">Limpiar</a>
@@ -46,15 +46,15 @@
                 <th>ID</th>
                 <th>Nombre</th>
 
-         
+            
                 <th th:if="${esAdmin}">Correo</th>
 
                 <th>Estado</th>
 
-          
+            
                 <th th:if="${esAdmin}">Documento</th>
 
-      
+        
                 <th th:if="${esAdmin}">Teléfono</th>
 
                 <th th:if="${esAdmin}">Dirección</th>
@@ -71,30 +71,30 @@
 
                 <td th:text="${usuario.nombre}"></td>
 
-              
+                
                 <td th:if="${esAdmin}" th:text="${usuario.correo}"></td>
 
                 <td th:text="${usuario.estado}"></td>
 
-         
+            
                 <td th:if="${esAdmin}" th:text="${usuario.documento}"></td>
 
                 <td th:if="${esAdmin}" th:text="${usuario.telefono}"></td>
 
-               
+                
                 <td th:if="${esAdmin}" th:text="${usuario.direccion}"></td>
 
                 <td>
 
                     <span th:if="${esAdmin}">
-                  
+                    
                         <a th:href="@{'/usuarios/editar/' + ${usuario.idUser}}" class="btn-link edit">✏️ Editar</a> |
                         <a th:href="@{'/usuarios/eliminar/' + ${usuario.idUser}}"
-                           onclick="return confirm('¿Seguro que deseas eliminar este usuario?')"
-                           class="btn-link delete">🗑️ Eliminar</a>
+                            onclick="return confirm('¿Seguro que deseas eliminar este usuario?')"
+                            class="btn-link delete">🗑️ Eliminar</a>
                     </span>
 
-             
+                
                     <span th:if="${!esAdmin}">
                         <span class="no-access">Sin permisos</span>
                     </span>
@@ -107,7 +107,7 @@
             </tbody>
         </table>
 
-   
+    
         <div class="pagination">
             <span th:text="'Página ' + ${usuarios.number + 1} + ' de ' + ${usuarios.totalPages}"></span>
 
@@ -136,8 +136,8 @@
                             telefono=${esAdmin ? telefono : null},
                             direccion=${esAdmin ? direccion : null}
                         )}"
-                       th:text="${i + 1}"
-                       th:classappend="${i == usuarios.number} ? 'active page-link' : 'page-link'"></a>
+                        th:text="${i + 1}"
+                        th:classappend="${i == usuarios.number} ? 'active page-link' : 'page-link'"></a>
                 </span>
 
                 <a th:if="${usuarios.hasNext()}"

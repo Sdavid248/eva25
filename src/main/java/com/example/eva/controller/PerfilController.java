@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class PerfilController {
 
-    @GetMapping("/perfil")
+    @GetMapping("Perfilusuario")
     public String mostrarPerfil(Model model) {
 
-        // Datos simulados (después pueden venir desde BD)
-        model.addAttribute("nombre", "Juan Pérez");
-        model.addAttribute("correo", "juanperez@email.com");
-        model.addAttribute("ubicacion", "Ciudad de México");
-        model.addAttribute("edad", 28);
-        model.addAttribute("ocupacion", "Desarrollador Web");
-        model.addAttribute("intereses", "Programación, videojuegos, música");
+        
+        model.addAttribute("nombre", "");
+        model.addAttribute("correo", "");
+        model.addAttribute("ubicacion", "");
+        model.addAttribute("edad", "");
+        model.addAttribute("ocupacion", "");
+        model.addAttribute("intereses", "");
         model.addAttribute("foto", "https://via.placeholder.com/150");
 
-        return "perfil"; 
+        return "Perfilusuario"; 
     }
 }

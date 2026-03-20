@@ -48,7 +48,7 @@ public class NotificacionController {
             try {
                 
                 String html = correoService.generarCorreoHTML(titulo, mensaje, u.getNombre());
-               
+                
                 correoService.enviarCorreoMasivoUnoPorUno(List.of(u.getCorreo()), titulo, html);
             } catch (Exception e) {
                 logger.error("Fallo enviando a " + u.getCorreo() + " -> " + e.getMessage());

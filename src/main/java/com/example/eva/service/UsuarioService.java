@@ -110,12 +110,12 @@ public class UsuarioService {
         }
     }
 
- 
+    
     public List<Usuario> buscarConFiltrosParaCorreo(String nombre, String correo, String estado, String documento,
                                                     String telefono, String direccion) {
         logger.info("buscarConFiltrosParaCorreo llamado");
 
-  
+    
         final String fnombre = normalizeOrNull(nombre);
         final String fcorreo = normalizeOrNull(correo);
         final String festado = normalizeOrNull(estado);
@@ -157,7 +157,7 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-  
+    
 
     public Optional<Usuario> buscarPorId(Long id) {
         logger.info("Buscando usuario por ID: " + id);
@@ -177,9 +177,9 @@ public class UsuarioService {
         return usuarioRepository.searchByKeyword(keyword);
     }
 
-   
+    
     public List<Usuario> buscarConFiltros(String nombre, String correo, String estado, String documento,
-                                          String telefono, String direccion) {
+                                            String telefono, String direccion) {
 
         logger.info("Filtrando usuarios con múltiples parámetros (in-memory fallback)");
 
@@ -201,11 +201,11 @@ public class UsuarioService {
     }
 
     public Page<Usuario> buscarConFiltrosPaginado(String nombre, String correo, String estado, String documento,
-                                                  String telefono, String direccion, Pageable pageable) {
+                                                    String telefono, String direccion, Pageable pageable) {
 
         logger.info("Búsqueda paginada activada");
 
-      
+        
         try {
             Page<Usuario> page = usuarioRepository.searchWithFilters(
                     normalizeOrNull(nombre),
@@ -238,7 +238,7 @@ public class UsuarioService {
         return false;
     }
 
-  
+    
     private String normalizeOrNull(String s) {
         if (s == null) return null;
         String t = s.trim();

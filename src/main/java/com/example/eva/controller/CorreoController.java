@@ -25,7 +25,7 @@ public class CorreoController {
         return "correo_masivo";
     }
 
-   
+    
     @PostMapping("/enviar")
     public String enviar(
             @RequestParam("destinatarios") String destinatarios,
@@ -49,7 +49,7 @@ public class CorreoController {
                     .filter(s -> !s.isBlank())
                     .collect(Collectors.toList());
 
-   
+    
             String htmlFinal = correoService.generarCorreoHTML(asunto, mensajeHtml, "Usuario EVA");
 
 List<String> errores = correoService.enviarCorreoMasivoUnoPorUno(lista, asunto, htmlFinal);

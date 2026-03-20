@@ -11,6 +11,7 @@ import com.example.eva.service.NominatimService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,20 +40,17 @@ public class CentroDeportivoController {
     @Autowired
     private NominatimService nominatim;
 
-  
     @GetMapping("")
     public String listarCentros(Model model) {
         model.addAttribute("centros", repo.findAll());
         return "centrosdeportivos";
     }
 
-
     @GetMapping("/gestion")
     public String gestion(Model model) {
         model.addAttribute("centros", repo.findAll());
         return "centros_gestion";
     }
-
 
     @GetMapping("/nuevo")
     public String nuevoCentro(Model model) {
@@ -98,7 +96,6 @@ public class CentroDeportivoController {
         }
     }
 
-
     @GetMapping("/editar/{rut}")
     public String editarCentro(@PathVariable Integer rut, Model model) {
         CentroDeportivo centro = repo.findById(rut)
@@ -113,13 +110,11 @@ public class CentroDeportivoController {
         return "redirect:/centrosdeportivos/gestion";
     }
 
-
     @GetMapping("/eliminar/{rut}")
     public String eliminarCentro(@PathVariable Integer rut) {
         repo.deleteById(rut);
         return "redirect:/centrosdeportivos/gestion";
     }
-
 
     @GetMapping("/inscribir/{rut}")
     public String inscripcionMasiva(@PathVariable Integer rut, Model model) {
@@ -170,7 +165,20 @@ public ResponseEntity<?> procesarInscripcionJson(
     return ResponseEntity.ok("OK");
 }
 
+=======
+    if (usuarios == null || usuarios.isEmpty()) {
+        return ResponseEntity.badRequest().body("No hay usuarios seleccionados");
+    }
 
+    for (Long idUser : usuarios) {
+        inscripcionService.inscribir(idUser, rut);
+    }
+
+    return ResponseEntity.ok("OK");
+}
+
+
+>>>>>>> origin/eva
     @PostMapping("/inscribir/{rut}/csv")
     public String inscripcionMasivaCSV(
             @PathVariable Integer rut,
@@ -178,12 +186,10 @@ public ResponseEntity<?> procesarInscripcionJson(
             Model model
     ) {
 
-  
         if (!usuarioService.esAdmin()) {
             return "redirect:/";
         }
 
-        
         if (csv == null || csv.trim().isEmpty()) {
             model.addAttribute("creados", 0);
             model.addAttribute("inscritos", 0);
@@ -191,8 +197,8 @@ public ResponseEntity<?> procesarInscripcionJson(
             return "resultado_masivo";
         }
 
-        Map<String, Integer> resultado =
-                archivoService.procesarCSVTexto(csv, rut);
+        Map<String, Integer> resultado
+                = archivoService.procesarCSVTexto(csv, rut);
 
         if (resultado == null) {
             resultado = new HashMap<>();
@@ -205,22 +211,32 @@ public ResponseEntity<?> procesarInscripcionJson(
         return "resultado_masivo";
     }
 
-
     @GetMapping("/mapa")
-    public String mapa(Model model) {
+    public String mapa(Model model, Authentication auth) {
+
+        boolean esAdmin = auth != null &&
+                auth.getAuthorities().stream()
+                        .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        model.addAttribute("esAdmin", esAdmin);
 
         List<CentroDeportivo> centros = repo.findAll();
         List<Map<String, Object>> lista = new ArrayList<>();
 
         for (CentroDeportivo c : centros) {
-            double[] coords = nominatim.obtenerCoordenadas(c.getDireccion());
-            if (coords != null) {
-                Map<String, Object> data = new HashMap<>();
-                data.put("nombre", c.getNombre());
-                data.put("direccion", c.getDireccion());
-                data.put("lat", coords[0]);
-                data.put("lng", coords[1]);
-                lista.add(data);
+
+            if (c.getDireccion() != null && !c.getDireccion().isEmpty()) {
+
+                double[] coords = nominatim.obtenerCoordenadas(c.getDireccion());
+
+                if (coords != null) {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("nombre", c.getNombre());
+                    data.put("direccion", c.getDireccion());
+                    data.put("lat", coords[0]);
+                    data.put("lng", coords[1]);
+                    lista.add(data);
+                }
             }
         }
 
