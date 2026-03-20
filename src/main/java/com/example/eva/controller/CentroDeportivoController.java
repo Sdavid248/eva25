@@ -133,10 +133,14 @@ public class CentroDeportivoController {
     @PostMapping("/inscribir/{rut}")
     public String procesarInscripcion(
             @PathVariable Integer rut,
-            @RequestParam(name = "usuariosSeleccionados", required = false) List<Long> usuariosSeleccionados) {
+            @RequestParam(name = "usuariosSeleccionados", required = false)
+            List<Long> usuariosSeleccionados) {
 
         if (usuariosSeleccionados != null && !usuariosSeleccionados.isEmpty()) {
-            inscripcionService.inscribirMasivo(rut, usuariosSeleccionados);
+
+            for (Long idUser : usuariosSeleccionados) {
+                inscripcionService.inscribir(idUser, rut);
+            }
         }
 
         return "redirect:/centrosdeportivos";
@@ -154,7 +158,10 @@ public class CentroDeportivoController {
             return ResponseEntity.badRequest().body("No hay usuarios seleccionados");
         }
 
-        inscripcionService.inscribirMasivo(rut, usuarios);
+        for (Long idUser : usuarios) {
+            inscripcionService.inscribir(idUser, rut);
+        }
+
         return ResponseEntity.ok("OK");
     }
 
@@ -190,36 +197,36 @@ public class CentroDeportivoController {
         return "resultado_masivo";
     }
 
-@GetMapping("/mapa")
-public String mapa(Model model, Authentication auth) {
+    @GetMapping("/mapa")
+    public String mapa(Model model, Authentication auth) {
 
-    boolean esAdmin = auth != null &&
-            auth.getAuthorities().stream()
-                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean esAdmin = auth != null &&
+                auth.getAuthorities().stream()
+                        .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
-    model.addAttribute("esAdmin", esAdmin);
+        model.addAttribute("esAdmin", esAdmin);
 
-    List<CentroDeportivo> centros = repo.findAll();
-    List<Map<String, Object>> lista = new ArrayList<>();
+        List<CentroDeportivo> centros = repo.findAll();
+        List<Map<String, Object>> lista = new ArrayList<>();
 
-    for (CentroDeportivo c : centros) {
+        for (CentroDeportivo c : centros) {
 
-        if (c.getDireccion() != null && !c.getDireccion().isEmpty()) {
+            if (c.getDireccion() != null && !c.getDireccion().isEmpty()) {
 
-            double[] coords = nominatim.obtenerCoordenadas(c.getDireccion());
+                double[] coords = nominatim.obtenerCoordenadas(c.getDireccion());
 
-            if (coords != null) {
-                Map<String, Object> data = new HashMap<>();
-                data.put("nombre", c.getNombre());
-                data.put("direccion", c.getDireccion());
-                data.put("lat", coords[0]);
-                data.put("lng", coords[1]);
-                lista.add(data);
+                if (coords != null) {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("nombre", c.getNombre());
+                    data.put("direccion", c.getDireccion());
+                    data.put("lat", coords[0]);
+                    data.put("lng", coords[1]);
+                    lista.add(data);
+                }
             }
         }
-    }
 
-    model.addAttribute("centros", lista);
-    return "mapa";
-}
+        model.addAttribute("centros", lista);
+        return "mapa";
+    }
 }
