@@ -1,22 +1,31 @@
 package com.example.eva.controller;
 
-import com.example.eva.model.CentroDeportivo;
-import com.example.eva.model.Usuario;
-import com.example.eva.service.InscripcionArchivoService;
-import com.example.eva.service.InscripcionService;
-import com.example.eva.service.UsuarioService;
-import com.example.eva.repository.CentroDeportivoRepository;
-import com.example.eva.repository.UsuarioRepository;
-import com.example.eva.service.NominatimService;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import com.example.eva.model.CentroDeportivo;
+import com.example.eva.model.Usuario;
+import com.example.eva.repository.CentroDeportivoRepository;
+import com.example.eva.repository.UsuarioRepository;
+import com.example.eva.service.InscripcionArchivoService;
+import com.example.eva.service.InscripcionService;
+import com.example.eva.service.NominatimService;
+import com.example.eva.service.UsuarioService;
 
 @Controller
 @RequestMapping("/centrosdeportivos")
@@ -130,55 +139,42 @@ public class CentroDeportivoController {
         return "inscripcion_masiva";
     }
 
-@PostMapping("/inscribir/{rut}")
-public String procesarInscripcion(
-        @PathVariable Integer rut,
-        @RequestParam(name = "usuariosSeleccionados", required = false)
-        List<Long> usuariosSeleccionados) {
+    @PostMapping("/inscribir/{rut}")
+    public String procesarInscripcion(
+            @PathVariable Integer rut,
+            @RequestParam(name = "usuariosSeleccionados", required = false)
+            List<Long> usuariosSeleccionados) {
 
-    if (usuariosSeleccionados != null && !usuariosSeleccionados.isEmpty()) {
+        if (usuariosSeleccionados != null && !usuariosSeleccionados.isEmpty()) {
 
-        for (Long idUser : usuariosSeleccionados) {
+            for (Long idUser : usuariosSeleccionados) {
+                inscripcionService.inscribir(idUser, rut);
+            }
+        }
+
+        return "redirect:/centrosdeportivos";
+    }
+
+    // ✅ CORREGIDO AQUÍ
+    @PostMapping(value = "/inscribir-json/{rut}", consumes = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> procesarInscripcionJson(
+            @PathVariable Integer rut,
+            @RequestBody Map<String, List<Long>> body) {
+
+        List<Long> usuarios = body.get("usuarios");
+
+        if (usuarios == null || usuarios.isEmpty()) {
+            return ResponseEntity.badRequest().body("No hay usuarios seleccionados");
+        }
+
+        for (Long idUser : usuarios) {
             inscripcionService.inscribir(idUser, rut);
         }
+
+        return ResponseEntity.ok("OK");
     }
 
-    return "redirect:/centrosdeportivos";
-}
-
-@PostMapping(value = "/inscribir/{rut}", consumes = "application/json")
-@ResponseBody
-public ResponseEntity<?> procesarInscripcionJson(
-        @PathVariable Integer rut,
-        @RequestBody Map<String, List<Long>> body) {
-
-    List<Long> usuarios = body.get("usuarios");
-
-    if (usuarios == null || usuarios.isEmpty()) {
-        return ResponseEntity.badRequest().body("No hay usuarios seleccionados");
-    }
-
-    for (Long idUser : usuarios) {
-        inscripcionService.inscribir(idUser, rut);
-    }
-
-    return ResponseEntity.ok("OK");
-}
-
-=======
-    if (usuarios == null || usuarios.isEmpty()) {
-        return ResponseEntity.badRequest().body("No hay usuarios seleccionados");
-    }
-
-    for (Long idUser : usuarios) {
-        inscripcionService.inscribir(idUser, rut);
-    }
-
-    return ResponseEntity.ok("OK");
-}
-
-
->>>>>>> origin/eva
     @PostMapping("/inscribir/{rut}/csv")
     public String inscripcionMasivaCSV(
             @PathVariable Integer rut,
