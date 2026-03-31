@@ -14,48 +14,73 @@
             <li><a th:href="@{/acercade}">Acerca de</a></li>
             <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
             <li><a th:href="@{/info}">Info</a></li>
-            <li><a th:href=@{/centrosdeportivos/mapa}>Mapa</a></li>
+            <li><a th:href="@{/centrosdeportivos/mapa}">Mapa</a></li>
             <li><a th:href="@{/login}">Login</a></li>
             <li><a th:href="@{/registro}">Registro</a></li>
         </ul>
     </nav>
 
+    <!-- 🔥 LAYOUT 3 COLUMNAS -->
+    <div class="layout">
 
-    
+        <!-- 🔵 IZQUIERDA -->
+        <div class="lado-info">
+            <h1>Bienvenido a E.V.A</h1>
+            <p>
+                Regístrate para descubrir centros deportivos cercanos, 
+                ubicarte en el mapa y acceder a todas las funcionalidades 
+                de la plataforma. ¡Únete a nosotros hoy mismo!
+            </p>
+        </div>
 
-    <div class="container">
-        <h2>Formulario de Registro</h2>
-        <form th:action="@{/registro}" th:object="${usuario}" method="post">
+        <!-- 🔥 CENTRO (FORM) -->
+        <div class="container">
+            <form th:action="@{/registro}" th:object="${usuario}" method="post">
 
-            <label for="documento">Documento:</label>
-            <input type="number" id="documento" th:field="*{documento}" required placeholder="Ingrese su documento" />
+                <h2>Formulario de Registro</h2>
 
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" th:field="*{nombre}" required placeholder="Ingrese su nombre" />
+                <label for="documento">Documento:</label>
+                <input type="number" id="documento" th:field="*{documento}" required placeholder="Ingrese su documento" />
 
-            <label for="direccion">Dirección:</label>
-            <input type="text" id="direccion" th:field="*{direccion}" placeholder="Ingrese su dirección" />
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" th:field="*{nombre}" required placeholder="Ingrese su nombre" />
 
-            <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" th:field="*{telefono}" placeholder="Ingrese su teléfono" />
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" th:field="*{direccion}" placeholder="Ingrese su dirección" />
 
-            <label for="correo">Correo:</label>
-            <input type="email" id="correo" th:field="*{correo}" required placeholder="ejemplo@correo.com" />
+                <label for="telefono">Teléfono:</label>
+                <input type="text" id="telefono" th:field="*{telefono}" placeholder="Ingrese su teléfono" />
 
-            <label for="estado">Estado:</label>
-            <select id="estado" th:field="*{estado}" required>
-                <option value="">--Seleccione--</option>
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
-            </select>
+                <label for="correo">Correo:</label>
+                <input type="email" id="correo" th:field="*{correo}" required placeholder="ejemplo@correo.com" />
 
-            <label for="contrasena">Contraseña:</label>
-            <input type="password" id="contrasena" th:field="*{contrasena}" required placeholder="Ingrese una contraseña" />
+                <label for="estado">Estado:</label>
+                <select id="estado" th:field="*{estado}" required>
+                    <option value="">--Seleccione--</option>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                </select>
 
-            <button type="submit">Registrar</button>
-        </form>
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" id="contrasena" th:field="*{contrasena}" required placeholder="Ingrese una contraseña" />
+
+                <button type="submit">Registrar</button>
+            </form>
+        </div>
+
+        <!-- 🟣 DERECHA (DECORATIVO) -->
+        <div class="lado-extra">
+            <div class="card-info">
+                <h3>¿Por qué registrarte?</h3>
+                <ul>
+                    <li>📍 Encuentra lugares cercanos</li>
+                    <li>⚡ Acceso rápido al mapa</li>
+                    <li>⭐ Guarda tus favoritos</li>
+                </ul>
+            </div>
+        </div>
+
     </div>
 
-    <div class="mensaje" th:if="${mensaje}" th:text="${mensaje}"></div>
-
 </body>
+</html>

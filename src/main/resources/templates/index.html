@@ -266,5 +266,27 @@
     <script th:src="@{/js/questions.js}"></script>
 
 
+    <div id="toastLogin" style="display:none; position:fixed; top:100px; right:20px; background:#053bb1; color:white; padding:15px; border-radius:8px;">
+    Inicio de sesión exitoso ahora puedes explorar E.V.A
+</div>
+
+<script>
+window.onload = function () {
+    const url = new URL(window.location);
+
+    if (url.searchParams.has("loginExitoso")) {
+        const toast = document.getElementById("toastLogin");
+        toast.style.display = "block";
+
+        setTimeout(() => {
+            toast.style.display = "none";
+        }, 3000);
+
+        window.history.replaceState({}, document.title, "/");
+    }
+};
+</script>
+
+
 </body>
 </html>

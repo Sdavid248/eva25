@@ -70,7 +70,7 @@ public class SecurityConfig {
                 .loginPage("/login")
                 .usernameParameter("correo")
                 .passwordParameter("contrasena")
-                .defaultSuccessUrl("/", true)
+                .defaultSuccessUrl("/?loginExitoso", true)
                 .permitAll()
             )
             .logout(logout -> logout

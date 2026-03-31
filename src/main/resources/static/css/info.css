@@ -1,61 +1,113 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #020024;
-    background: linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(6, 6, 86, 1) 31%, rgba(49, 49, 112, 1) 64%, rgba(64, 134, 148, 1) 88%);
-}
-/*nav */
-.nav_menu {
-    background-color: #000000;
-    box-shadow: 0 2px 8px rgb(255, 255, 255);
-    padding: 20px 40px;
-    color: #fefefe;
+* {
+    box-sizing: border-box;
 }
 
+/* 🌌 BODY */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(6,6,86,1) 31%, rgba(49,49,112,1) 64%, rgba(64,134,148,1) 88%);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* 🔝 NAV PRO UNIFICADO */
+.nav_menu {
+    background: rgba(30, 30, 47, 0.85);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    padding: 15px 30px;
+
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* 🔗 LINKS */
 .nav_links {
-    list-style: none; /* elimina las viñetas */
+    list-style: none;
     display: flex;
-    justify-content: center; 
-    gap: 40px; /* espacio entre elementos */
+    justify-content: center;
+    gap: 30px;
     margin: 0;
     padding: 0;
 }
 
 .nav_links li a {
+    color: #f0f0f0;
     text-decoration: none;
-    color: #ffffff;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 16px;
-    transition: color 0.3s ease;
-    padding: 8px 12px;
-    border-radius: 5px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
 }
+
+/* ✨ HOVER PRO */
+.nav_links li a:hover {
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(0, 198, 255, 0.7);
+    transform: translateY(-2px);
+}
+
+/* 🔥 CONTENEDOR PRINCIPAL */
 .info-section {
     max-width: 900px;
-    margin: 80px auto;
+    margin: 120px auto 60px auto; /* 🔥 evita que el nav lo tape */
     padding: 40px;
-    background-color: rgba(0, 0, 0, 0.85);
+
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+
     color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+
+    animation: fadeIn 0.8s ease;
 }
 
+/* ✨ TÍTULO PRINCIPAL */
 .info-section h1 {
-    color: #00c6ff;
-    margin-bottom: 25px;
     text-align: center;
+    margin-bottom: 30px;
+    font-size: 32px;
+
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
+/* ✨ SUBTÍTULOS */
 .info-section h2 {
-    color: #3498db;
+    color: #00c6ff;
     margin-top: 30px;
 }
 
-.info-section p, .info-section ul {
+/* ✨ TEXTO */
+.info-section p,
+.info-section ul {
     line-height: 1.7;
     margin-top: 10px;
+    font-size: 16px;
 }
 
+/* LISTA */
 .info-section ul {
     list-style-type: square;
     padding-left: 20px;
+}
+
+/* ✨ ANIMACIÓN */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

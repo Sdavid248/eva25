@@ -65,7 +65,7 @@ public class AuthController {
             return "login"; 
         } catch (Exception e) {
             model.addAttribute("mensaje", " Error: " + e.getMessage());
-            return "registro";
+            return "redirect:/login?registroExitoso";
         }
     }
 }
