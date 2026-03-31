@@ -4,107 +4,82 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Centros Deportivos</title>
+
     <link rel="stylesheet" href="/css/centrodeportivo.css" />
 
     <style>
         .card {
             cursor: pointer;
             transition: transform .2s ease;
+            position: relative;
         }
 
         .card:hover {
             transform: scale(1.02);
         }
 
-        /* El enlace invisible cubre toda la tarjeta */
         .card-link {
             position: absolute;
             inset: 0;
             z-index: 5;
         }
-
-        .card {
-            position: relative;
-        }
     </style>
-
 </head>
+
 <body>
 
-
-
-    <nav class="nav_menu">
-        <ul class="nav_links">
-            <li><a th:href="@{/}">Inicio</a></li>
-            <li><a th:href="@{/acercade}">Acerca de</a></li>
-            <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
-            <li><a th:href="@{/info}">Info</a></li>
-            <li><a th:href="@{/centrosdeportivos/mapa}">Mapa</a></li>
-            <li><a th:href="@{/login}">Login</a></li>
-            <li><a th:href="@{/registro}">Registro</a></li>
-        </ul>
-    </nav>
-        <section class="card-container"> 
-
-        
-        <section class="card-container" th:each="centro : ${centros}">
+<nav class="nav_menu">
+    <ul class="nav_links">
+        <li><a th:href="@{/}">Inicio</a></li>
+        <li><a th:href="@{/acercade}">Acerca de</a></li>
+        <li><a th:href="@{/centrosdeportivos}">Centros deportivos</a></li>
+        <li><a th:href="@{/info}">Info</a></li>
+        <li><a th:href="@{/centrosdeportivos/mapa}">Mapa</a></li>
+        <li><a th:href="@{/login}">Login</a></li>
+        <li><a th:href="@{/registro}">Registro</a></li>
+    </ul>
+</nav>
 
 <main class="centros-container">
+
     <h2>Centros Deportivos Disponibles</h2>
+
     <p>
         Aquí encontrarás una lista de centros deportivos registrados en nuestra plataforma,
         con información de ubicación, horarios y servicios disponibles.
     </p>
 
-    
+    <!-- LOOP DE CENTROS -->
     <section class="card-container" th:each="centro : ${centros}">
-
-
         <article class="card">
-
-            
             <a class="card-link"
-                th:href="@{'/centrosdeportivos/inscribir/' + ${centro.rut}}">
+               th:href="@{'/centrosdeportivos/inscribir/' + ${centro.rut}}">
             </a>
 
             <img src="/images/centro-norte.jpg" alt="Centro Deportivo" />
-
             <h2 th:text="${centro.nombre}">Nombre del Centro</h2>
 
-            <p>
-                <strong>Ubicación:</strong>
-                <span th:text="${centro.direccion}">Dirección</span>
-            </p>
+            <p><strong>Ubicación:</strong> <span th:text="${centro.direccion}">Dirección</span></p>
+            <p><strong>Horarios:</strong> <span th:text="${centro.apertura}">Hora apertura</span> - <span th:text="${centro.cierre}">Hora cierre</span></p>
+            <p><strong>Teléfono:</strong> <span th:text="${centro.telefono}">Teléfono</span></p>
 
-            <p>
-                <strong>Horarios:</strong>
-                <span th:text="${centro.apertura}">Hora apertura</span> -
-                <span th:text="${centro.cierre}">Hora cierre</span>
-            </p>
-
-
-
-            
-            <article class="card">
-                <img src="/images/centro-sur.jpg" alt="Centro Deportivo Sur" />
-                <h2>Centro Deportivo Sur</h2>
-                <p>Ubicación: Carrera 89 #12-34</p>
-                <p>Horarios: Todos los días de 7:00 am a 10:00 pm</p>
-            </article>
-
-        
-
-
-        </section>
-
-            <p>
-                <strong>Teléfono:</strong>
-                <span th:text="${centro.telefono}">Teléfono</span>
-            </p>
-
+            <!-- FORMULARIO DE INSCRIPCIÓN (CSRF incluido) -->
+            <form th:action="@{'/centrosdeportivos/inscribirme/' + ${centro.rut}}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit">Inscribirme</button>
+            </form>
 
         </article>
+    </section>
 
+    <!-- TARJETA ESTÁTICA OPCIONAL -->
+    <section class="card-container">
+        <article class="card">
+            <img src="/images/centro-sur.jpg" alt="Centro Deportivo Sur" />
+            <h2>Centro Deportivo Sur</h2>
+            <p>Ubicación: Carrera 89 #12-34</p>
+            <p>Horarios: Todos los días de 7:00 am a 10:00 pm</p>
+        </article>
     </section>
 
 </main>

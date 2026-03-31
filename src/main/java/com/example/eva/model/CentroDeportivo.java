@@ -19,6 +19,11 @@ public class CentroDeportivo {
     private Integer capacidad;
     private String estado;
 
+    // 🔥 NUEVO
+    private Double lat;
+    private Double lng;
+    private String tipo;
+
     public Integer getRut() { return rut; }
     public void setRut(Integer rut) { this.rut = rut; }
 
@@ -45,4 +50,13 @@ public class CentroDeportivo {
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
+
+    public Double getLat() { return lat; }
+    public void setLat(Double lat) { this.lat = lat; }
+
+    public Double getLng() { return lng; }
+    public void setLng(Double lng) { this.lng = lng; }
+
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 }

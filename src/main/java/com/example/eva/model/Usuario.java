@@ -37,11 +37,21 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<UsuarioRol> usuarioRoles = new HashSet<>();
 
-    
+    @Column(name = "edad")
+    private Integer edad;
+
+    @Column(name = "ocupacion")
+    private String ocupacion;
+
+    @Column(name = "intereses", length = 500)
+    private String intereses;
+
+    @Column(name = "foto")
+    private String foto;
+
     @Transient
     private Rol rol;
 
-   
     public Long getIdUser() {
         return idUser;
     }
@@ -114,9 +124,8 @@ public class Usuario {
         this.usuarioRoles = usuarioRoles;
     }
 
-    
     public Rol getRol() {
-        
+
         if (rol == null && usuarioRoles != null && !usuarioRoles.isEmpty()) {
             this.rol = usuarioRoles.iterator().next().getRol();
         }
@@ -125,5 +134,38 @@ public class Usuario {
 
     public void setRol(Rol rol) {
         this.rol = rol;
+
+    }
+
+    public Integer getEdad() {
+        return edad;
+    }
+
+    public void setEdad(Integer edad) {
+        this.edad = edad;
+    }
+
+    public String getOcupacion() {
+        return ocupacion;
+    }
+
+    public void setOcupacion(String ocupacion) {
+        this.ocupacion = ocupacion;
+    }
+
+    public String getIntereses() {
+        return intereses;
+    }
+
+    public void setIntereses(String intereses) {
+        this.intereses = intereses;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 }
