@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Centro Deportivo</title>
+
+    <!-- 🔥 LEAFLET -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Crear Centro Deportivo</h2>
+
+<form action="/usuario/crear-centro" method="post">
+
+    <input type="text" name="nombre" placeholder="Nombre" required><br><br>
+
+    <!-- 🔥 DIRECCION -->
+    <input type="text" id="direccion" name="direccion" placeholder="Dirección" required>
+    <button type="button" onclick="buscarDireccion()">Buscar</button>
+
+    <br><br>
+
+    <!-- 🔥 MAPA -->
+    <div id="map"></div>
+
+    <!-- 🔥 OCULTOS -->
+    <input type="hidden" id="lat" name="lat">
+    <input type="hidden" id="lng" name="lng">
+
+    <input type="text" name="telefono" placeholder="Teléfono" required><br><br>
+    <input type="email" name="correo" placeholder="Correo" required><br><br>
+    <input type="text" name="apertura" placeholder="Hora apertura" required><br><br>
+    <input type="text" name="cierre" placeholder="Hora cierre" required><br><br>
+    <input type="number" name="capacidad" placeholder="Capacidad" required><br><br>
+    <input type="text" name="estado" placeholder="Estado" required><br><br>
+    <input type="text" name="tipo" placeholder="Tipo"><br><br>
+
+    <button type="submit">Crear y ser administrador</button>
+
+</form>
+
+<script>
+
+    // 🔥 INICIAR MAPA (Bogotá)
+    var map = L.map('map').setView([4.60971, -74.08175], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker;
+
+    // 🔥 CLICK EN MAPA
+    map.on('click', function(e) {
+
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
+
+        document.getElementById("lat").value = lat;
+        document.getElementById("lng").value = lng;
+
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        marker = L.marker([lat, lng]).addTo(map);
+
+    });
+
+    // 🔥 BUSCAR DIRECCIÓN (Nominatim)
+    function buscarDireccion() {
+
+        var direccion = document.getElementById("direccion").value;
+
+        fetch("https://nominatim.openstreetmap.org/search?format=json&q=" + direccion)
+            .then(response => response.json())
+            .then(data => {
+
+                if (data.length > 0) {
+
+                    var lat = data[0].lat;
+                    var lon = data[0].lon;
+
+                    map.setView([lat, lon], 15);
+
+                    document.getElementById("lat").value = lat;
+                    document.getElementById("lng").value = lon;
+
+                    if (marker) {
+                        map.removeLayer(marker);
+                    }
+
+                    marker = L.marker([lat, lon]).addTo(map);
+
+                } else {
+                    alert("Dirección no encontrada");
+                }
+            });
+    }
+
+</script>
+
+</body>
+</html>

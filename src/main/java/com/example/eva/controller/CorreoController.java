@@ -3,6 +3,7 @@ package com.example.eva.controller;
 import com.example.eva.service.CorreoService;
 import com.example.eva.util.LoggerEva;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +22,13 @@ public class CorreoController {
     private final LoggerEva logger = LoggerEva.getInstancia();
 
     @GetMapping("/masivo")
+    @PreAuthorize("hasRole('ADMIN')")
     public String mostrarFormulario() {
         return "correo_masivo";
     }
 
-    
     @PostMapping("/enviar")
+    @PreAuthorize("hasRole('ADMIN')")
     public String enviar(
             @RequestParam("destinatarios") String destinatarios,
             @RequestParam("asunto") String asunto,
@@ -43,29 +45,31 @@ public class CorreoController {
                 return "correo_resultado";
             }
 
-        
             List<String> lista = Arrays.stream(destinatarios.split("[,;\\n]"))
                     .map(String::trim)
                     .filter(s -> !s.isBlank())
                     .collect(Collectors.toList());
 
-    
             String htmlFinal = correoService.generarCorreoHTML(asunto, mensajeHtml, "Usuario EVA");
 
-List<String> errores = correoService.enviarCorreoMasivoUnoPorUno(lista, asunto, htmlFinal);
-
+            List<String> errores = correoService.enviarCorreoMasivoUnoPorUno(lista, asunto, htmlFinal);
 
             model.addAttribute("destinatariosCount", lista.size());
             model.addAttribute("errores", errores);
-            model.addAttribute("mensaje", "Envío procesado. " + (errores.isEmpty() ? "Sin errores." : (errores.size() + " fallidos.")));
+            model.addAttribute("mensaje",
+                    "Envío procesado. " +
+                    (errores.isEmpty() ? "Sin errores." : errores.size() + " fallidos."));
 
             return "correo_resultado";
+
         } catch (Exception e) {
             logger.error("Error en controlador enviar: " + e.getMessage());
             e.printStackTrace();
+
             model.addAttribute("destinatariosCount", 0);
             model.addAttribute("errores", List.of(e.getMessage()));
-            model.addAttribute("mensaje", "Error al procesar el envío.");
+            model.addAttribute("mensaje", "Error al procesar el envío");
+
             return "correo_resultado";
         }
     }

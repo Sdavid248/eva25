@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <title>Usuarios Inscritos</title>
+</head>
+<body>
+
+<h1 th:text="'Inscritos en ' + ${centro.nombre}"></h1>
+
+<table border="1">
+    <tr>
+        <th>Usuario</th>
+        <th>Correo</th>
+        <th>Estado</th>
+    </tr>
+
+    <tr th:each="i : ${inscripciones}">
+        <td th:text="${i.usuario.nombre}"></td>
+        <td th:text="${i.usuario.correo}"></td>
+        <td th:text="${i.estado}"></td>
+    </tr>
+
+</table>
+
+<a href="/centrosdeportivos/gestion">Volver</a>
+
+</body>
+</html>

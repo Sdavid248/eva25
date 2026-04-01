@@ -1,0 +1,12 @@
+<h2 th:text="'Inscribirse en: ' + ${centro.nombre}"></h2>
+
+<form th:action="@{/inscripciones/guardar}" method="post">
+
+    <input type="hidden" name="rut" th:value="${centro.rut}" />
+
+    <p>¿Desea confirmar la inscripción?</p>
+
+    <button type="submit">Confirmar</button>
+</form>
+
+<a href="/centrosdeportivos">Volver</a>

@@ -23,13 +23,15 @@ public class InscripcionService {
     @Autowired
     private CentroDeportivoRepository centroRepo;
 
+    // 🔥 AHORA USA QUERY (NO STREAM)
     public boolean estaInscrito(Long idUser, Integer rutCentro) {
-        return inscripcionRepo.existsByUsuarioIdUserAndRut(idUser, rutCentro);
+        return inscripcionRepo.existsByUsuarioIdUserAndCentroDeportivoRut(idUser, rutCentro);
     }
 
     public void inscribir(Long idUser, Integer rutCentro) {
         Usuario usuario = usuarioRepo.findById(idUser)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
         CentroDeportivo centro = centroRepo.findById(rutCentro)
                 .orElseThrow(() -> new RuntimeException("Centro no encontrado"));
 
@@ -40,7 +42,9 @@ public class InscripcionService {
         ins.setTelefono(usuario.getTelefono());
         ins.setCorreo(usuario.getCorreo());
         ins.setEstado("postulante");
-        ins.setRut(centro.getRut());
+
+        // 🔥 RELACIÓN CORRECTA
+        ins.setCentroDeportivo(centro);
 
         inscripcionRepo.save(ins);
     }
@@ -55,5 +59,26 @@ public class InscripcionService {
 
     public List<Inscripcion> obtenerInscripcionesPorUsuario(Long idUser) {
         return inscripcionRepo.findByUsuarioIdUser(idUser);
+    }
+
+    // 🔥 CANCELAR
+    public void cancelar(Long numero, Long idUser) {
+
+        Inscripcion ins = inscripcionRepo.findById(numero)
+                .orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
+
+        if (!ins.getUsuario().getIdUser().equals(idUser)) {
+            throw new RuntimeException("No tienes permiso para cancelar esta inscripción");
+        }
+
+        inscripcionRepo.delete(ins);
+    }
+
+    // 🔥 ADMIN
+    public List<Inscripcion> obtenerPorCentro(Integer rutCentro) {
+        return inscripcionRepo.findAll()
+                .stream()
+                .filter(i -> i.getCentroDeportivo().getRut().equals(rutCentro))
+                .toList();
     }
 }

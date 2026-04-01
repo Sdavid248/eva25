@@ -5,103 +5,182 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="_csrf" th:content="${_csrf.token}" />
-<meta name="_csrf_header" th:content="${_csrf.headerName}" />
-
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+
+<!-- 🔥 RUTAS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 
 <style>
-#mi_mapa { width:100%; height:800px; }
+#mi_mapa { height: 600px; }
 
-#formCentro {
-display:none;
-position:fixed;
-top:20%;
-left:50%;
-transform:translateX(-50%);
-width:350px;
-background:white;
-padding:20px;
+.panel {
+    margin-bottom: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<div id="mi_mapa"></div>
+<h2>Mapa de Centros Deportivos </h2>
 
-<div id="formCentro">
-<h3>Agregar Centro Deportivo</h3>
-<input id="nombre" type="text" placeholder="Nombre del centro">
-<input id="direccion" type="text" placeholder="Dirección real">
-<input id="telefono" type="text" placeholder="Teléfono">
-<input id="apertura" type="text" placeholder="Hora apertura">
-<input id="cierre" type="text" placeholder="Hora cierre">
-<button onclick="guardarCentro()">Guardar</button>
-<button onclick="cerrarFormulario()">Cancelar</button>
+<div class="panel">
+
+<input type="text" id="busqueda" placeholder="Buscar centro">
+<button onclick="buscarCentro()">Buscar</button>
+
+<label for="filtroTipo">Filtrar por tipo:</label>
+<select id="filtroTipo" onchange="filtrarTipo()">
+    <option value="">Todos</option>
+    <option value="gym">Gym</option>
+    <option value="piscina">Piscina</option>
+    <option value="cancha">Cancha</option>
+</select>
+
+<button onclick="buscarCercanos()">Cercanos</button>
+
 </div>
 
-<script th:inline="javascript">
+<div id="mi_mapa"></div>
 
-const centros = /*[[${centros}]]*/ [];
+<script>
 
 let map = L.map('mi_mapa').setView([4.7110, -74.0721], 13);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-// 🔥 POPUP CON INFO + INSCRIPCIÓN
-const popup = `
-    <b>${c.nombre}</b><br>
-    ${c.direccion}<br>
-    📞 ${c.telefono ?? 'No disponible'}<br><br>
+let marcadores = [];
+let rutaControl = null;
+let usuarioLatLng = null;
+let centrosGlobal = [];
 
-    <form method="POST" action="/centrosdeportivos/inscribirme/${c.rut}">
-        <button type="submit">Inscribirme</button>
-    </form>
-`;
+// 🔥 LIMPIAR MAPA
+function limpiarMapa() {
+    marcadores.forEach(m => map.removeLayer(m));
+    marcadores = [];
 
-const esAdmin = /*[[${esAdmin}]]*/ false;
-
-if (esAdmin) {
-    map.on('click', () => {
-        document.getElementById("formCentro").style.display = "block";
-    });
-}
-
-function cerrarFormulario() {
-    document.getElementById("formCentro").style.display = "none";
-}
-
-async function guardarCentro() {
-
-    const data = {
-        nombre: document.getElementById("nombre").value,
-        direccion: document.getElementById("direccion").value,
-        telefono: document.getElementById("telefono").value,
-        apertura: document.getElementById("apertura").value,
-        cierre: document.getElementById("cierre").value
-    };
-
-    const token = document.querySelector('meta[name="_csrf"]').content;
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-
-    const resp = await fetch("/centrosdeportivos/nuevo", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            [header]: token
-        },
-        body: JSON.stringify(data)
-    });
-
-    if (resp.ok) {
-        alert("Centro guardado correctamente");
-        location.reload();
-    } else {
-        const error = await resp.text();
-        alert("Error: " + error);
+    if (rutaControl) {
+        map.removeControl(rutaControl);
+        rutaControl = null;
     }
+}
+
+// 🔥 MOSTRAR CENTROS
+function mostrarCentros(data) {
+
+    limpiarMapa();
+
+    // 🔥 ORDENAR POR DISTANCIA
+    data.sort((a, b) => (a.distancia || 0) - (b.distancia || 0));
+
+    data.forEach(c => {
+
+        const marker = L.marker([c.lat, c.lng]).addTo(map);
+
+        marker.bindPopup(`
+            <b>${c.nombre}</b><br>
+            ${c.direccion}<br>
+            🏷️ ${c.tipo || 'N/A'}<br>
+            📏 ${c.distancia ?? 'N/A'} km<br><br>
+            <button onclick="crearRuta(${c.lat}, ${c.lng})">
+                Ir
+            </button>
+        `);
+
+        marcadores.push(marker);
+    });
+
+    centrosGlobal = data;
+}
+
+// 🔥 GEOLOCALIZACIÓN + CERCANOS
+function buscarCercanos() {
+
+    navigator.geolocation.getCurrentPosition(pos => {
+
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        usuarioLatLng = [lat, lng];
+
+        L.marker(usuarioLatLng)
+            .addTo(map)
+            .bindPopup("📍 Tu ubicación")
+            .openPopup();
+
+        map.setView(usuarioLatLng, 14);
+
+        fetch(`/centrosdeportivos/cercanos?lat=${lat}&lng=${lng}`)
+            .then(res => res.json())
+            .then(data => {
+
+                if (data.length === 0) {
+                    alert("No hay centros cercanos");
+                    return;
+                }
+
+                mostrarCentros(data);
+            });
+
+    });
+}
+
+// 🔥 RUTA TIPO GOOGLE MAPS
+function crearRuta(lat, lng) {
+
+    if (!usuarioLatLng) {
+        alert("Primero busca centros cercanos");
+        return;
+    }
+
+    if (rutaControl) {
+        map.removeControl(rutaControl);
+    }
+
+    rutaControl = L.Routing.control({
+        waypoints: [
+            L.latLng(usuarioLatLng[0], usuarioLatLng[1]),
+            L.latLng(lat, lng)
+        ],
+        routeWhileDragging: false
+    }).addTo(map);
+}
+
+// 🔥 BUSCAR POR NOMBRE (HU-8)
+function buscarCentro() {
+
+    const nombre = document.getElementById("busqueda").value;
+
+    fetch(`/centrosdeportivos/buscar?nombre=${nombre}`)
+        .then(res => res.json())
+        .then(data => {
+
+            if (data.length === 0) {
+                alert("No se encontró ningún lugar con ese nombre");
+                return;
+            }
+
+            map.setView([data[0].lat, data[0].lng], 15);
+
+            mostrarCentros(data);
+        });
+}
+
+// 🔥 FILTRO POR TIPO
+function filtrarTipo() {
+
+    const tipo = document.getElementById("filtroTipo").value;
+
+    if (!tipo) {
+        mostrarCentros(centrosGlobal);
+        return;
+    }
+
+    const filtrados = centrosGlobal.filter(c => c.tipo === tipo);
+
+    mostrarCentros(filtrados);
 }
 
 </script>

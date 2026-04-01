@@ -49,6 +49,9 @@
     <p>Intereses: <span th:text="${usuario.intereses}"></span></p>
 
     <br>
+    <a href="/usuario/crear-centro" class="btn btn-success">
+    Crear centro y ser administrador
+</a>
 
     <a href="/perfil/editar" class="btn btn-warning">Editar perfil</a>
   <form th:action="@{/logout}" method="post">

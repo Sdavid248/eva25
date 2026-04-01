@@ -22,20 +22,29 @@ public class AdminController {
         this.usuarioRepo = usuarioRepo;
     }
 
-    @GetMapping("/admin/dashboard")  // ✅ Cambiado a /admin/dashboard
-    @PreAuthorize("hasRole('ADMIN')")
-    public String panelAdmin(Model model) {
-        List<CentroDeportivo> centros = centroRepo.findAll();
-        List<Usuario> usuarios = usuarioRepo.findAll();
-
-        model.addAttribute("centros", centros);
-        model.addAttribute("usuarios", usuarios);
-        model.addAttribute("esAdmin", true);
-
-        model.addAttribute("creados", 0);
-        model.addAttribute("inscritos", 0);
-        model.addAttribute("repetidos", 0);
-
-        return "admin_dashboard"; // debe coincidir con el nombre del HTML
+    @GetMapping("/admin")
+    public String adminRoot() {
+        return "redirect:/admin/dashboard";
     }
+@GetMapping("/admin/dashboard")
+@PreAuthorize("hasRole('ADMIN')")
+public String panelAdmin(Model model) {
+
+    // 📊 métricas
+    model.addAttribute("totalUsuarios", usuarioRepo.count());
+    model.addAttribute("totalCentros", centroRepo.count());
+
+    model.addAttribute("usuariosPorEstado",
+            usuarioRepo.countGroupedByEstado());
+
+    model.addAttribute("usuariosPorRol",
+            usuarioRepo.countUsuariosByRol());
+
+    // 🔥 ESTO ES LO QUE TE FALTABA
+    model.addAttribute("centros", centroRepo.findAll());
+    model.addAttribute("usuarios", usuarioRepo.findAll());
+    model.addAttribute("esAdmin", true);
+
+    return "admin_dashboard";
+}
 }
