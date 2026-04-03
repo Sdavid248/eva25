@@ -3,29 +3,63 @@ package com.example.eva.controller;
 import com.example.eva.model.Usuario;
 import com.example.eva.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class PerfilController {
 
-    @GetMapping("Perfilusuario")
-    public String mostrarPerfil(Model model) {
+    @Autowired
+    private UsuarioService usuarioService;
 
-        
-        model.addAttribute("nombre", "");
-        model.addAttribute("correo", "");
-        model.addAttribute("ubicacion", "");
-        model.addAttribute("edad", "");
-        model.addAttribute("ocupacion", "");
-        model.addAttribute("intereses", "");
-        model.addAttribute("foto", "https://via.placeholder.com/150");
+    @GetMapping("/perfil")
+    public String verPerfil(Model model) {
 
-        return "Perfilusuario"; 
+        Usuario usuario = usuarioService.obtenerUsuarioLogueado();
+
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        // 🔹 Cambiado a 'usuarioLogueado' para coincidir con tu HTML
+        model.addAttribute("usuarioLogueado", usuario);
+        return "Perfilusuario";
+    }
+
+    @GetMapping("/perfil/editar")
+    public String editarPerfil(Model model) {
+
+        Usuario usuario = usuarioService.obtenerUsuarioLogueado();
+
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("usuarioLogueado", usuario);
+        return "editarperfil";
+    }
+
+    @PostMapping("/perfil/editar")
+    public String guardarPerfil(@ModelAttribute Usuario usuarioForm) {
+
+        Usuario usuario = usuarioService.obtenerUsuarioLogueado();
+
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        // 🔒 SOLO CAMPOS EDITABLES
+        usuario.setNombre(usuarioForm.getNombre());
+        usuario.setDireccion(usuarioForm.getDireccion());
+        usuario.setTelefono(usuarioForm.getTelefono());
+        usuario.setEdad(usuarioForm.getEdad());
+        usuario.setOcupacion(usuarioForm.getOcupacion());
+        usuario.setIntereses(usuarioForm.getIntereses());
+        usuario.setFoto(usuarioForm.getFoto());
+
+        usuarioService.guardar(usuario);
+
+        return "redirect:/perfil";
     }
 }

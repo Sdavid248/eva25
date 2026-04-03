@@ -39,33 +39,30 @@ public class AuthController {
     }
 
     @PostMapping("/registro")
-    public String registrarUsuario(@ModelAttribute Usuario usuario, Model model) {
-        try {
-        
-            usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
-            Usuario usuarioGuardado = usuarioRepository.save(usuario);
+public String registrarUsuario(@ModelAttribute Usuario usuario) {
+    try {
+        usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
 
-    
-            Rol rolUser = rolRepository.findByNombre("USER")
-                    .orElseThrow(() -> new RuntimeException("Rol USER no encontrado"));
+        Rol rolUser = rolRepository.findByNombre("USER")
+                .orElseThrow(() -> new RuntimeException("Rol USER no encontrado"));
 
-            UsuarioRol ur = new UsuarioRol();
-            ur.setUsuario(usuarioGuardado);
-            ur.setRol(rolUser);
-            usuarioRolRepository.save(ur);
+        UsuarioRol ur = new UsuarioRol();
+        ur.setUsuario(usuarioGuardado);
+        ur.setRol(rolUser);
+        usuarioRolRepository.save(ur);
 
-            if (usuarioGuardado.getUsuarioRoles() == null) {
-                usuarioGuardado.setUsuarioRoles(new HashSet<>());
-            }
-            usuarioGuardado.getUsuarioRoles().add(ur);
-
-            usuarioRepository.save(usuarioGuardado);
-
-            model.addAttribute("mensaje", "✅ Usuario registrado con éxito. Ahora puedes iniciar sesión.");
-            return "login"; 
-        } catch (Exception e) {
-            model.addAttribute("mensaje", " Error: " + e.getMessage());
-            return "redirect:/login?registroExitoso";
+        if (usuarioGuardado.getUsuarioRoles() == null) {
+            usuarioGuardado.setUsuarioRoles(new HashSet<>());
         }
+        usuarioGuardado.getUsuarioRoles().add(ur);
+
+        usuarioRepository.save(usuarioGuardado);
+
+        // 🔹 REDIRIGE AL LOGIN en lugar de /perfil
+        return "redirect:/login?registroExitoso=true";
+    } catch (Exception e) {
+        return "redirect:/login?registroExitoso=false";
+    }
     }
 }

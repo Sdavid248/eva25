@@ -9,7 +9,7 @@ import com.example.eva.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List; // 👈 ESTE IMPORT VA ARRIBA
+import java.util.List;
 
 @Service
 public class InscripcionService {
@@ -28,10 +28,8 @@ public class InscripcionService {
     }
 
     public void inscribir(Long idUser, Integer rutCentro) {
-
         Usuario usuario = usuarioRepo.findById(idUser)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
         CentroDeportivo centro = centroRepo.findById(rutCentro)
                 .orElseThrow(() -> new RuntimeException("Centro no encontrado"));
 
@@ -47,12 +45,15 @@ public class InscripcionService {
         inscripcionRepo.save(ins);
     }
 
-    // 👇 AGREGA EL MÉTODO AQUÍ (dentro de la clase)
     public void inscribirMasivo(Integer rutCentro, List<Long> usuarios) {
         for (Long idUser : usuarios) {
             if (!estaInscrito(idUser, rutCentro)) {
                 inscribir(idUser, rutCentro);
             }
         }
+    }
+
+    public List<Inscripcion> obtenerInscripcionesPorUsuario(Long idUser) {
+        return inscripcionRepo.findByUsuarioIdUser(idUser);
     }
 }

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Mis Inscripciones</title>
+</head>
+<body>
+    <h1>Mis Inscripciones</h1>
+    <ul>
+        <li th:each="ins : ${inscripciones}">
+            Centro: <span th:text="${ins.centroDeportivo.nombre}"></span> - 
+            Estado: <span th:text="${ins.estado}"></span>
+        </li>
+    </ul>
+    <a th:href="@{/centrosdeportivos}">Volver a la lista de centros</a>
+</body>
+</html>

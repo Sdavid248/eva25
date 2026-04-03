@@ -10,6 +10,10 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> 
 
     void deleteByUsuarioIdUser(Long idUser);
 
+    boolean existsByUsuarioIdUserAndRut(Long idUser, Integer rut);
+
+    List<Inscripcion> findByUsuarioIdUser(Long idUser);
+
     @Query("SELECT i.usuario.nombre, COUNT(i) FROM Inscripcion i GROUP BY i.usuario.nombre")
     List<Object[]> countInscripcionesPorUsuario();
 
@@ -20,7 +24,4 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> 
             "GROUP BY c.nombre, u.estado " +
             "ORDER BY c.nombre")
     List<Object[]> countUsuariosEstadoPorCentro();
-
-boolean existsByUsuarioIdUserAndRut(Long idUser, Integer rut);
-
 }

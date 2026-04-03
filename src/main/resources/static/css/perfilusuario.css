@@ -1,17 +1,176 @@
-body { background-color: #f8f9fa; }
-    .perfil-container {
-        max-width: 800px; margin: 50px auto; padding: 30px;
-        background-color: white; border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .perfil-img { border-radius: 50%; width: 150px; height: 150px; object-fit: cover; }
+* {
+    box-sizing: border-box;
+}
 
-    .nav_menu {
-        background: linear-gradient(to right, #00aaff, #004e92);
-        padding: 15px 0;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+/* 🌌 BODY */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(6,6,86,1) 31%, rgba(49,49,112,1) 64%, rgba(64,134,148,1) 88%);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* 🔝 NAV PRO (mantiene igual que registro) */
+.nav_menu {
+    background: rgba(30, 30, 47, 0.85);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    padding: 15px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.nav_links {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav_links li a {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav_links li a:hover {
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(0, 198, 255, 0.7);
+    transform: translateY(-2px);
+}
+
+/* 🔹 PERFIL CONTENEDOR */
+.perfil-container {
+    max-width: 900px;
+    margin: 120px auto 50px; /* debajo del navbar */
+    padding: 40px;
+    background: rgba(20, 20, 35, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    color: white;
+    box-shadow: 0 0 25px rgba(0,0,0,0.7);
+    text-align: center;
+}
+
+/* 🔹 FOTO PERFIL */
+.perfil-container img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #00c6ff;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.perfil-container img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #00c6ff;
+}
+
+/* 🔹 NOMBRE */
+.perfil-container h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 🔹 INFO DETALLADA */
+.perfil-container p {
+    font-size: 18px;
+    margin: 5px 0;
+    opacity: 0.9;
+}
+
+/* 🔹 SEPARADOR */
+.perfil-container hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    margin: 25px 0;
+    border-radius: 10px;
+}
+
+/* 🔹 BOTONES */
+.perfil-container .btn {
+    padding: 12px 20px;
+    margin: 10px 5px 0 5px;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.perfil-container .btn-warning {
+    background: linear-gradient(45deg, #ffbb33, #ff8800);
+    color: #fff;
+    border: none;
+}
+
+.perfil-container .btn-warning:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ffbb33;
+}
+
+.perfil-container .btn-danger {
+    background: linear-gradient(45deg, #ff4444, #cc0000);
+    color: #fff;
+    border: none;
+}
+
+.perfil-container .btn-danger:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ff4444;
+}
+
+/* 🔹 TOAST */
+#toast {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(45deg, #28a745, #00c6ff);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    z-index: 9999;
+    box-shadow: 0 0 20px rgba(0, 198, 255, 0.6);
+    animation: fadeInToast 0.5s ease;
+}
+
+/* 🔹 ANIMACIÓN TOAST */
+@keyframes fadeInToast {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 900px) {
+    .perfil-container {
+        margin: 140px 20px 50px;
+        padding: 30px 20px;
     }
-    .nav_links { list-style-type: none; display: flex; justify-content: center; margin: 0; padding: 0; }
-    .nav_links li { margin: 0 15px; }
-    .nav_links a { text-decoration: none; color: white; font-weight: bold; font-size: 18px; transition: color 0.3s ease; }
-    .nav_links a:hover { color: #ffd700; }
+
+    .perfil-container h2 {
+        font-size: 28px;
+    }
+
+    .perfil-container p {
+        font-size: 16px;
+    }
+}

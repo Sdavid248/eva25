@@ -11,8 +11,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
+import com.example.eva.Security.UserDetailsServiceImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
@@ -29,61 +37,74 @@ public class SecurityConfig {
         http
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
-
-                // 🔓 Páginas públicas
                 .requestMatchers("/", "/index", "/acercade", "/info",
                         "/registro", "/login",
                         "/css/**", "/js/**", "/images/**")
                 .permitAll()
-
-                // 🔥 SOLO ADMIN puede crear centros deportivos
-                .requestMatchers(HttpMethod.POST, "/centrosdeportivos/nuevo")
-                .hasRole("ADMIN")
-
-                // Notificaciones
-                .requestMatchers(HttpMethod.GET, "/notificaciones", "/notificaciones/**")
-                .authenticated()
-
-                .requestMatchers(HttpMethod.POST, "/notificaciones/enviar")
-                .hasRole("ADMIN")
-
-                // Usuarios
-                .requestMatchers("/usuarios", "/usuarios/", "/usuarios/page/**")
-                .authenticated()
-
-                .requestMatchers(
-                        "/usuarios/nuevo",
-                        "/usuarios/editar/**",
-                        "/usuarios/eliminar/**"
-                ).hasRole("ADMIN")
-
-                // Correo
+                .requestMatchers("/perfil/**").authenticated()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/centrosdeportivos/nuevo").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/notificaciones/enviar").hasRole("ADMIN")
+                .requestMatchers("/usuarios/nuevo", "/usuarios/editar/**", "/usuarios/eliminar/**").hasRole("ADMIN")
                 .requestMatchers("/correo/**").hasRole("ADMIN")
-
-                // PDF
                 .requestMatchers("/pdf", "/pdf-filtros").hasRole("ADMIN")
-
-                // Todo lo demás requiere login
+                .requestMatchers("/centrosdeportivos/nuevo").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/notificaciones/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/centrosdeportivos/inscribirme/**").authenticated()
+                .requestMatchers("/usuarios", "/usuarios/", "/usuarios/page/**").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
                 .usernameParameter("correo")
                 .passwordParameter("contrasena")
-                .defaultSuccessUrl("/?loginExitoso", true)
+                // ⚡ Quitamos defaultSuccessUrl porque usamos successHandler
+                .successHandler(customAuthenticationSuccessHandler())
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutSuccessUrl("/login?logout")
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .permitAll()
             )
             .exceptionHandling(ex -> ex
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                .accessDeniedHandler((request, response, e) -> {
                     response.sendRedirect("/");
                 })
             );
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new AuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest request,
+                                                HttpServletResponse response,
+                                                Authentication authentication)
+                                                throws IOException, ServletException {
+
+                boolean isAdmin = false;
+                boolean isUser = false;
+
+                for (GrantedAuthority auth : authentication.getAuthorities()) {
+                    if (auth.getAuthority().equals("ROLE_ADMIN")) isAdmin = true;
+                    if (auth.getAuthority().equals("ROLE_USER")) isUser = true;
+                }
+
+                if (isAdmin) {
+                    response.sendRedirect("/admin/dashboard");
+                } else if (isUser) {
+                    // ✅ Aquí agregamos el parámetro para que aparezca el toast
+                    response.sendRedirect("/perfil?loginExitoso=true");
+                } else {
+                    response.sendRedirect("/"); // fallback
+                }
+            }
+        };
     }
 
     @Bean

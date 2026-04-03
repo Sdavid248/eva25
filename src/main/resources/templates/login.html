@@ -66,28 +66,26 @@
         </div>
 
     </div>
+<div id="toast" style="display:none; position:fixed; top:20px; right:20px; background:#28a745; color:white; padding:15px; border-radius:8px; z-index:9999;">
+    ✅ Usuario registrado con éxito. Ahora puedes iniciar sesión.
+</div>
 
-    <!-- 🔔 TOAST -->
-    <div id="toast" style="display:none; position:fixed; top:100px; right:20px; background:#000000; color:white; padding:15px; border-radius:8px; z-index:9999;">
-        El usuario registrado con éxito, inicia sesión para continuar.
-    </div>
+<script>
+window.onload = function () {
+    const url = new URL(window.location);
+    if (url.searchParams.has("registroExitoso") && url.searchParams.get("registroExitoso") === "true") {
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
 
-    <script>
-    window.onload = function () {
-        const url = new URL(window.location);
+        setTimeout(() => {
+            toast.style.display = "none";
+        }, 3000);
 
-        if (url.searchParams.has("registroExitoso")) {
-            const toast = document.getElementById("toast");
-            toast.style.display = "block";
-
-            setTimeout(() => {
-                toast.style.display = "none";
-            }, 3000);
-
-            window.history.replaceState({}, document.title, "/login");
-        }
-    };
-    </script>
+        // limpia la URL
+        window.history.replaceState({}, document.title, "/login");
+    }
+};
+</script>
 
 </body>
 </html>

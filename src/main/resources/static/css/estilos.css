@@ -17,6 +17,7 @@ body {
 }
 
 .hero {
+    padding-top: 40px;
     width: 100%;
     height: 100vh;
     min-height: 600px;
@@ -47,6 +48,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-top: 20px;
 }
 
 .nav__title{
@@ -469,4 +471,76 @@ body {
 button:hover {
     transform: scale(1.03);
     box-shadow: 0 0 15px #00c6ff;
+}
+
+/* Correcciones para nav perfil, título y Panel Admin */
+.nav img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    display: block;
+}
+
+.nav > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav__title {
+    white-space: nowrap;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.nav .btn.btn-dark,
+.nav__links[href="/admin"] {
+    background: none !important;
+    color: #f0f0f0 !important;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav .btn.btn-dark:hover,
+.nav__links[href="/admin"]:hover {
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(0, 198, 255, 0.7);
+    transform: translateY(-2px);
+}
+
+.nav__link--menu {
+    gap: 30px;
+}
+
+.nav__link--menu,
+.nav__link--menu li {
+    margin: 0;
+    padding: 0;
+}
+
+.nav__menu div a.btn.btn-dark {
+    all: unset; /* elimina todos los estilos heredados */
+    color: azure;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.nav__menu div a.btn.btn-dark:hover {
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(0, 198, 255, 0.7);
+    transform: translateY(-2px);
 }

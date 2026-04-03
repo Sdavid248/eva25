@@ -14,28 +14,67 @@
 <body>
     
     <header class="hero">
-        <nav class="nav container" aria-label="Menú principal de navegación"> 
-            <h2 class="nav__title">E.V.A Entrenamiento voluntario activo</h2>
-            
-            <ul class="nav__link nav__link--menu">  
-                <li class="nav__items"><a th:href="@{/registro}" href="/registro" class="nav__links">Registrate</a></li>
-                <li class="nav__items"><a th:href="@{/acercade}" href="/acercade" class="nav__links">Acerca de</a></li>
-                <li class="nav__items"><a th:href="@{/centrosdeportivos}" href="/centrosdeportivos" class="nav__links">Centros deportivos</a></li>
-                <li class="nav__items"><a th:href="@{/info}" href="/info" class="nav__links">Info</a></li>
-                <li class="nav__items"><a th:href="@{/login}" href="/login" class="nav__links">Login</a></li>
-              <li class="nav__items"><a th:href="@{/centrosdeportivos/mapa}" class="nav__links">Mapa</a></li>
+<nav class="nav container" aria-label="Menú principal de navegación"> 
 
-                <li class="nav__items"><a th:href="@{/graficos}" href="/graficos" class="nav__links">Gráfico</a></li>
+<!-- 🔥 IZQUIERDA: FOTO + TÍTULO -->
+<div style="display:flex; align-items:center; gap:12px;">
 
+    <!-- 👤 FOTO SI ESTÁ LOGUEADO -->
+    <a th:if="${usuarioLogueado != null}" th:href="@{/perfil}">
+        <img 
+            th:src="${usuarioLogueado.foto != null ? usuarioLogueado.foto : 'https://via.placeholder.com/40'}"
+            alt="Perfil"
+            style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid white;">
+    </a>
 
-                <li class="nav__items"><a th:href="@{/usuario}" href="/usuario" class="nav__links">Lista Usuarios</a></li>
-                <li class="nav__items"><a th:href="@{/usuario/nuevo}" href="/usuario/nuevo" class="nav__links">Nuevo Usuario</a></li>
-            </ul>
+    <!-- 🔒 SI NO ESTÁ LOGUEADO -->
+    <a th:if="${usuarioLogueado == null}" th:href="@{/login}">
+        <img 
+            src="https://via.placeholder.com/40"
+            alt="Login"
+            style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
+    </a>
 
-            <div class="nav__menu">
-                <img th:src="@{/images/menu.svg}" src="/images/menu.svg" alt="menu" class="nav__img">
-            </div>
-        </nav> 
+    <h2 class="nav__title" style="margin-top:5px; line-height:1.2;">
+        E.V.A Entrenamiento voluntario activo
+    </h2>
+</div>
+    
+
+    <!-- 🔥 MENÚ DERECHO -->
+    <ul class="nav__link nav__link--menu">  
+
+        <li class="nav__items"><a th:href="@{/acercade}" class="nav__links">Acerca de</a></li>
+        <li class="nav__items"><a th:href="@{/centrosdeportivos}" class="nav__links">Centros deportivos</a></li>
+        <li class="nav__items"><a th:href="@{/info}" class="nav__links">Info</a></li>
+        <li class="nav__items"><a th:href="@{/centrosdeportivos/mapa}" class="nav__links">Mapa</a></li>
+        <li class="nav__items" th:if="${esAdmin}">
+            <a href="/admin" class="nav__links" id="admin-link">Panel Admin</a>
+        </li>
+        <!-- 🔒 SI NO ESTÁ LOGUEADO -->
+        <li class="nav__items" th:if="${usuarioLogueado == null}">
+            <a th:href="@{/login}" class="nav__links">Login</a>
+        </li>
+        <sec:authorize access="hasRole('ADMIN')">
+    <li><a th:href="@{/admin}">Panel Admin</a></li>
+</sec:authorize>
+
+        <li class="nav__items" th:if="${usuarioLogueado == null}">
+            <a th:href="@{/registro}" class="nav__links">Registro</a>
+        </li>
+
+        <!-- 👤 SI ESTÁ LOGUEADO -->
+        <li class="nav__items" th:if="${usuarioLogueado != null}">
+            <a th:href="@{/perfil}" class="nav__links">Mi Perfil</a>
+        </li>
+
+    </ul>
+
+    <div class="nav__menu">
+        <img th:src="@{/images/menu.svg}" src="/images/menu.svg" alt="menu" class="nav__img">
+    </div>
+
+</nav>
 
         <section class="hero__container"> 
             <h1 class="hero__title">E.V.A</h1>
