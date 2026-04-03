@@ -44,10 +44,40 @@
                 <button type="submit">Inscribirme</button>
             </form>
 
+            <!-- 🔥 VALORACIONES -->
+            <button type="button" th:attr="onclick='verValoracionesCentro(' + ${centro.rut} + ')'">
+                Ver valoraciones
+            </button>
+
+            <div th:attr="id='val-' + ${centro.rut}"></div>
+
         </article>
     </section>
 
 </main>
+
+<script>
+function verValoracionesCentro(rut) {
+
+    fetch(`/centrosdeportivos/valoraciones/${rut}`)
+        .then(res => res.json())
+        .then(data => {
+
+            let html = "<h4>Opiniones:</h4>";
+
+            data.forEach(v => {
+                html += `
+                    <p>
+                        ⭐ ${v.valoracion} - ${v.usuario}<br>
+                        ${v.comentario}
+                    </p>
+                `;
+            });
+
+            document.getElementById("val-" + rut).innerHTML = html;
+        });
+}
+</script>
 
 </body>
 </html>

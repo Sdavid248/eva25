@@ -38,7 +38,7 @@ public class SecurityConfig {
 
                 // 🔓 PUBLICO
                 .requestMatchers("/centrosdeportivos/cercanos").authenticated()
-.requestMatchers("/centrosdeportivos/buscar").authenticated()
+                .requestMatchers("/centrosdeportivos/buscar").authenticated()
                 .requestMatchers("/", "/index", "/acercade", "/info",
                         "/registro", "/login",
                         "/css/**", "/js/**", "/images/**")
@@ -48,9 +48,10 @@ public class SecurityConfig {
                 .requestMatchers("/perfil/**").authenticated()
                 .requestMatchers("/usuario/crear-centro/**").authenticated()
 
-                // 🟣 ADMIN DE CENTRO (NUEVO)
+                // 🟣 ADMIN DE CENTRO
                 .requestMatchers("/usuario/ser-admin/**").authenticated()
                 .requestMatchers("/centro-admin/**").hasRole("ADMIN_CENTRO")
+                .requestMatchers(HttpMethod.POST, "/centrosdeportivos/guardar").hasRole("ADMIN")
 
                 // 🔴 ADMIN TOTAL
                 .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -69,6 +70,9 @@ public class SecurityConfig {
                 // 👤 ACCIONES USUARIO
                 .requestMatchers(HttpMethod.POST, "/centrosdeportivos/inscribirme/**").authenticated()
                 .requestMatchers("/centrosdeportivos/usuario/**").authenticated()
+
+                // 🔥 IMPORTANTE (VALORACIONES)
+                .requestMatchers(HttpMethod.POST, "/centrosdeportivos/valorar/**").authenticated()
 
                 // 🔒 TODO LO DEMÁS
                 .anyRequest().authenticated()
@@ -96,7 +100,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 🔥 LOGIN REDIRECT INTELIGENTE
     @Bean
     public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {

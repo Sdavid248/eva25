@@ -8,24 +8,21 @@ public class Valoracion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "codigo") 
     private Long codigo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", nullable = false)
     private Usuario usuario;
 
-    @Column(name = "valoracion")
     private int valoracion;
 
-    @Column(name = "fhvaloracion")
     private String fhValoracion;
 
-    private String cometario; 
+    private String cometario;
 
-    private String rut;
+    // 🔥 CORREGIDO: Integer (ANTES String)
+    private Integer rut;
 
-    
     public Long getCodigo() {
         return codigo;
     }
@@ -66,11 +63,11 @@ public class Valoracion {
         this.cometario = cometario;
     }
 
-    public String getRut() {
+    public Integer getRut() {
         return rut;
     }
 
-    public void setRut(String rut) {
+    public void setRut(Integer rut) {
         this.rut = rut;
     }
 }

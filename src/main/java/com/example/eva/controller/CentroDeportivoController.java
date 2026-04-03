@@ -3,6 +3,7 @@ package com.example.eva.controller;
 import com.example.eva.model.CentroDeportivo;
 import com.example.eva.model.Inscripcion;
 import com.example.eva.model.Usuario;
+import com.example.eva.model.Valoracion;
 import com.example.eva.repository.CentroDeportivoRepository;
 import com.example.eva.repository.UsuarioRepository;
 import com.example.eva.service.*;
@@ -42,7 +43,7 @@ public class CentroDeportivoController {
     @Autowired
     private NominatimService nominatim;
     @Autowired
-private CentroDeportivoService centroService;
+    private CentroDeportivoService centroService;
 
     // --- LISTAR CENTROS ---
     @GetMapping("")
@@ -91,8 +92,8 @@ private CentroDeportivoService centroService;
             return "centros_form";
         }
 
-        if (centro.getRut() == null &&
-                repo.existsByNombreAndDireccion(centro.getNombre(), centro.getDireccion())) {
+        if (centro.getRut() == null
+                && repo.existsByNombreAndDireccion(centro.getNombre(), centro.getDireccion())) {
 
             model.addAttribute("error", "Ya existe un centro con ese nombre y dirección");
             return "centros_form";
@@ -172,8 +173,8 @@ private CentroDeportivoService centroService;
     @GetMapping("/mapa")
     public String mapa(Model model, Authentication auth) {
 
-        boolean esAdmin = auth != null &&
-                auth.getAuthorities().stream()
+        boolean esAdmin = auth != null
+                && auth.getAuthorities().stream()
                         .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
         model.addAttribute("esAdmin", esAdmin);
@@ -182,7 +183,9 @@ private CentroDeportivoService centroService;
 
         for (CentroDeportivo c : repo.findAll()) {
 
-            if (c.getLat() == null || c.getLng() == null) continue;
+            if (c.getLat() == null || c.getLng() == null) {
+                continue;
+            }
 
             Map<String, Object> data = new HashMap<>();
             data.put("rut", c.getRut());
@@ -199,61 +202,65 @@ private CentroDeportivoService centroService;
     }
 
     // 🔥 HU-14
-   @GetMapping("/cercanos")
-@ResponseBody
-public List<Map<String, Object>> obtenerCercanos(
-        @RequestParam double lat,
-        @RequestParam double lng) {
+    @GetMapping("/cercanos")
+    @ResponseBody
+    public List<Map<String, Object>> obtenerCercanos(
+            @RequestParam double lat,
+            @RequestParam double lng) {
 
-    List<CentroDeportivo> centros = centroService.obtenerCercanos(lat, lng);
+        List<CentroDeportivo> centros = centroService.obtenerCercanos(lat, lng);
 
-    List<Map<String, Object>> response = new ArrayList<>();
+        List<Map<String, Object>> response = new ArrayList<>();
 
-    for (CentroDeportivo c : centros) {
+        for (CentroDeportivo c : centros) {
 
-        double distancia = centroService.calcularDistanciaPublica(
-                lat, lng, c.getLat(), c.getLng()
-        );
+            double distancia = centroService.calcularDistanciaPublica(
+                    lat, lng, c.getLat(), c.getLng()
+            );
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("rut", c.getRut());
-        data.put("nombre", c.getNombre());
-        data.put("direccion", c.getDireccion());
-        data.put("lat", c.getLat());
-        data.put("lng", c.getLng());
-        data.put("tipo", c.getTipo());
-        data.put("distancia", Math.round(distancia * 100.0) / 100.0);
+            double promedio = valoracionService.promedio(c.getRut()); // 🔥 NUEVO
 
-        response.add(data);
+            Map<String, Object> data = new HashMap<>();
+            data.put("rut", c.getRut());
+            data.put("nombre", c.getNombre());
+            data.put("direccion", c.getDireccion());
+            data.put("lat", c.getLat());
+            data.put("lng", c.getLng());
+            data.put("tipo", c.getTipo());
+            data.put("distancia", Math.round(distancia * 100.0) / 100.0);
+
+            data.put("promedio", Math.round(promedio * 10.0) / 10.0); // 🔥 NUEVO
+
+            response.add(data);
+        }
+
+        return response;
     }
-
-    return response;
-
-}
 
     // 🔥 HU-8
     @GetMapping("/buscar")
-@ResponseBody
-public List<Map<String, Object>> buscarCentro(@RequestParam String nombre) {
+    @ResponseBody
+    public List<Map<String, Object>> buscarCentro(@RequestParam String nombre) {
 
-    List<CentroDeportivo> centros = centroService.buscarPorNombre(nombre);
+        List<CentroDeportivo> centros = centroService.buscarPorNombre(nombre);
 
-    List<Map<String, Object>> response = new ArrayList<>();
+        List<Map<String, Object>> response = new ArrayList<>();
 
-    for (CentroDeportivo c : centros) {
+        for (CentroDeportivo c : centros) {
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("rut", c.getRut());
-        data.put("nombre", c.getNombre());
-        data.put("direccion", c.getDireccion());
-        data.put("lat", c.getLat());
-        data.put("lng", c.getLng());
+            Map<String, Object> data = new HashMap<>();
+            data.put("rut", c.getRut());
+            data.put("nombre", c.getNombre());
+            data.put("direccion", c.getDireccion());
+            data.put("lat", c.getLat());
+            data.put("lng", c.getLng());
 
-        response.add(data);
+            response.add(data);
+        }
+
+        return response;
     }
 
-    return response;
-}
     // --- INSCRIBIRSE USUARIO ---
     @PostMapping("/inscribirme/{rut}")
     public String inscribirme(@PathVariable Integer rut, Model model) {
@@ -282,10 +289,12 @@ public List<Map<String, Object>> buscarCentro(@RequestParam String nombre) {
 
         Usuario usuario = usuarioService.obtenerUsuarioLogueado();
 
-        if (usuario == null) return "redirect:/login";
+        if (usuario == null) {
+            return "redirect:/login";
+        }
 
-        List<Inscripcion> inscripciones =
-                inscripcionService.obtenerInscripcionesPorUsuario(usuario.getIdUser());
+        List<Inscripcion> inscripciones
+                = inscripcionService.obtenerInscripcionesPorUsuario(usuario.getIdUser());
 
         model.addAttribute("inscripciones", inscripciones);
 
@@ -311,5 +320,63 @@ public List<Map<String, Object>> buscarCentro(@RequestParam String nombre) {
         }
 
         return "redirect:/centrosdeportivos/usuario/mis-inscripciones";
+    }
+    @Autowired
+    private ValoracionService valoracionService;
+
+// 🔥 GUARDAR VALORACIÓN
+    // 🔥 GUARDAR VALORACIÓN
+    @PostMapping("/valorar/{rut}")
+    @ResponseBody // 🔥 IMPORTANTE PARA FETCH
+    public Map<String, Object> valorar(
+            @PathVariable Integer rut,
+            @RequestParam int estrellas,
+            @RequestParam String comentario) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        Usuario usuario = usuarioService.obtenerUsuarioLogueado();
+
+        if (usuario == null) {
+            response.put("error", "No autenticado");
+            return response;
+        }
+
+        try {
+            valoracionService.guardar(usuario, rut, estrellas, comentario);
+            response.put("ok", "Valoración guardada");
+
+        } catch (Exception e) {
+            response.put("error", e.getMessage());
+        }
+
+        return response;
+    }
+// 🔥 VER VALORACIONES (JSON)
+
+    @GetMapping("/valoraciones/{rut}")
+    @ResponseBody
+    public List<Map<String, Object>> verValoraciones(@PathVariable Integer rut) {
+
+        List<Valoracion> lista = valoracionService.obtenerPorCentro(rut);
+
+        List<Map<String, Object>> response = new ArrayList<>();
+
+        for (Valoracion v : lista) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("usuario", v.getUsuario().getNombre());
+            data.put("valoracion", v.getValoracion());
+            data.put("comentario", v.getCometario());
+            data.put("fecha", v.getFhValoracion());
+            response.add(data);
+        }
+
+        return response;
+    }
+
+    @GetMapping("/top")
+    @ResponseBody
+    public List<Map<String, Object>> topCentros() {
+        return valoracionService.topCentros();
     }
 }
