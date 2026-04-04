@@ -152,6 +152,24 @@ function mostrarCentros(data) {
 
     centrosGlobal = data;
 }
+// 🔥 CARGA AUTOMÁTICA DE CENTROS (FIX FINAL)
+document.addEventListener("DOMContentLoaded", function () {
+
+    fetch("/centrosdeportivos/api")
+        .then(res => res.json())
+        .then(data => {
+
+            if (!data || data.length === 0) {
+                console.log("No hay centros para mostrar");
+                return;
+            }
+
+            mostrarCentros(data);
+
+        })
+        .catch(err => console.error("Error cargando centros:", err));
+
+});
 </script>
 
 </body>

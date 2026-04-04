@@ -379,4 +379,31 @@ public class CentroDeportivoController {
     public List<Map<String, Object>> topCentros() {
         return valoracionService.topCentros();
     }
+    @GetMapping("/api")
+@ResponseBody
+public List<Map<String, Object>> obtenerCentrosJSON() {
+
+    List<CentroDeportivo> centros = repo.findAll();
+    List<Map<String, Object>> response = new ArrayList<>();
+
+    for (CentroDeportivo c : centros) {
+
+        if (c.getLat() == null || c.getLng() == null) continue;
+
+        double promedio = valoracionService.promedio(c.getRut());
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("rut", c.getRut());
+        data.put("nombre", c.getNombre());
+        data.put("direccion", c.getDireccion());
+        data.put("lat", c.getLat());
+        data.put("lng", c.getLng());
+        data.put("tipo", c.getTipo());
+        data.put("promedio", Math.round(promedio * 10.0) / 10.0);
+
+        response.add(data);
+    }
+
+    return response;
+}
 }
