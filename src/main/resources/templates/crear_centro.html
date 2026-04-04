@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Centro Deportivo</title>
+</head>
+<body>
+
+<h2>Crear Centro Deportivo</h2>
+
+<form action="/usuario/crear-centro" method="post">
+
+    <input type="text" name="nombre" placeholder="Nombre" required><br><br>
+
+    <input type="text" name="direccion" placeholder="Dirección" required><br><br>
+
+    <input type="text" name="telefono" placeholder="Teléfono" required><br><br>
+
+    <input type="email" name="correo" placeholder="Correo" required><br><br>
+
+    <input type="text" name="apertura" placeholder="Hora apertura" required><br><br>
+
+    <input type="text" name="cierre" placeholder="Hora cierre" required><br><br>
+
+    <input type="number" name="capacidad" placeholder="Capacidad" required><br><br>
+
+    <input type="text" name="estado" placeholder="Estado" required><br><br>
+
+    <input type="text" name="tipo" placeholder="Tipo (Gym, Cancha, etc)"><br><br>
+
+    <input type="number" step="any" name="lat" placeholder="Latitud"><br><br>
+    <input type="number" step="any" name="lng" placeholder="Longitud"><br><br>
+
+    <button type="submit">Crear y ser administrador</button>
+
+</form>
+
+</body>
+</html>

@@ -16,7 +16,11 @@
 
     <form action="/centrosdeportivos/guardar" method="post" class="card p-4 bg-secondary shadow">
 
-        <input type="hidden" name="rut" th:value="${centro.rut}"/>
+        <!-- 🔥 CSRF -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <!-- 🔥 SOLO PARA EDITAR -->
+        <input type="hidden" name="rut" th:if="${centro.rut != null}" th:value="${centro.rut}"/>
 
         <!-- NOMBRE -->
         <div class="mb-3">
@@ -37,47 +41,64 @@
 
         <!-- TELÉFONO -->
         <div class="mb-3">
-            <label for="telefono" class="form-label">Teléfono</label>
+            <label for="telefono" class="form-label">Teléfono *</label>
             <input id="telefono" type="text" name="telefono" class="form-control"
                    th:value="${centro.telefono}" placeholder="Ej: 3001234567"
-                   pattern="[0-9]+">
+                   pattern="[0-9]+" required>
         </div>
 
         <!-- CORREO -->
         <div class="mb-3">
-            <label for="correo" class="form-label">Correo</label>
+            <label for="correo" class="form-label">Correo *</label>
             <input id="correo" type="email" name="correo" class="form-control"
-                   th:value="${centro.correo}" placeholder="correo@ejemplo.com">
+                   th:value="${centro.correo}" placeholder="correo@ejemplo.com"
+                   required>
         </div>
 
         <!-- APERTURA -->
         <div class="mb-3">
-            <label for="apertura" class="form-label">Hora Apertura</label>
+            <label for="apertura" class="form-label">Hora Apertura *</label>
             <input id="apertura" type="time" name="apertura" class="form-control"
-                   th:value="${centro.apertura}">
+                   th:value="${centro.apertura}" required>
         </div>
 
         <!-- CIERRE -->
         <div class="mb-3">
-            <label for="cierre" class="form-label">Hora Cierre</label>
+            <label for="cierre" class="form-label">Hora Cierre *</label>
             <input id="cierre" type="time" name="cierre" class="form-control"
-                   th:value="${centro.cierre}">
+                   th:value="${centro.cierre}" required>
         </div>
 
         <!-- CAPACIDAD -->
         <div class="mb-3">
-            <label for="capacidad" class="form-label">Capacidad</label>
+            <label for="capacidad" class="form-label">Capacidad *</label>
             <input id="capacidad" type="number" name="capacidad" class="form-control"
-                   th:value="${centro.capacidad}" min="0" placeholder="Ej: 100">
+                   th:value="${centro.capacidad}" min="1" required placeholder="Ej: 100">
+        </div>
+
+        <!-- 🔥 TIPO (NUEVO PARA EL MAPA) -->
+        <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo de Centro *</label>
+            <select id="tipo" name="tipo" class="form-control" required>
+                <option value="">Seleccione tipo</option>
+                <option value="gym" th:selected="${centro.tipo == 'gym'}">Gym</option>
+                <option value="piscina" th:selected="${centro.tipo == 'piscina'}">Piscina</option>
+                <option value="cancha" th:selected="${centro.tipo == 'cancha'}">Cancha</option>
+            </select>
         </div>
 
         <!-- ESTADO -->
         <div class="mb-3">
-            <label for="estado" class="form-label">Estado</label>
-            <select id="estado" name="estado" class="form-control">
+            <label for="estado" class="form-label">Estado *</label>
+            <select id="estado" name="estado" class="form-control" required>
                 <option value="activo" th:selected="${centro.estado == 'activo'}">Activo</option>
                 <option value="inactivo" th:selected="${centro.estado == 'inactivo'}">Inactivo</option>
             </select>
+        </div>
+
+        <!-- MENSAJE ERROR -->
+        <div th:if="${error}" class="alert alert-danger">
+            <span th:text="${error}"></span>
         </div>
 
         <!-- BOTONES -->
@@ -91,7 +112,7 @@
 </div>
 
 <script>
-    // VALIDACIÓN BONITA DE BOOTSTRAP
+    // VALIDACIÓN BOOTSTRAP
     (() => {
         'use strict'
         const forms = document.querySelectorAll('form')

@@ -1,33 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<meta name="_csrf" th:content="${_csrf.token}" />
-<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <link rel="stylesheet" th:href="@{/css/mapa.css}" />
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <!-- 🔥 CSRF -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 
-<style>
-#mi_mapa { width:100%; height:800px; }
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 
-#formCentro {
-display:none;
-position:fixed;
-top:20%;
-left:50%;
-transform:translateX(-50%);
-width:350px;
-background:white;
-padding:20px;
-}
-</style>
+    <!-- Routing -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #121212;
+            font-family: Arial, sans-serif;
+        }
+
+        #mi_mapa {
+            height: 600px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
 <body>
+
+<!-- 🔝 NAV -->
 <nav class="nav_menu">
     <ul class="nav_links">
         <li><a th:href="@{/}">Inicio</a></li>
@@ -38,81 +48,110 @@ padding:20px;
         <li><a th:href="@{/registro}">Registro</a></li>
     </ul>
 </nav>
-<div id="mi_mapa"></div>
 
-<div id="formCentro">
-<h3>Agregar Centro Deportivo</h3>
-<input id="nombre" type="text" placeholder="Nombre del centro">
-<input id="direccion" type="text" placeholder="Dirección real">
-<input id="telefono" type="text" placeholder="Teléfono">
-<input id="apertura" type="text" placeholder="Hora apertura">
-<input id="cierre" type="text" placeholder="Hora cierre">
-<button onclick="guardarCentro()">Guardar</button>
-<button onclick="cerrarFormulario()">Cancelar</button>
+<h2 style="text-align:center; color:white; margin-top:100px;">
+    Mapa de Centros Deportivos
+</h2>
+
+<!-- 🔥 PANEL -->
+<div class="panel">
+
+    <div id="topPanel">
+        <h4>🔥 Top Centros</h4>
+        <div id="topLista"></div>
+    </div>
+
+    <input type="text" id="busqueda" placeholder="Buscar centro" />
+    <button onclick="buscarCentro()">Buscar</button>
+    <button onclick="verTop()">🔥 Top centros</button>
+
+    
+    <select id="filtroTipo" onchange="filtrarTipo()">
+        <option value="">Todos</option>
+        <option value="gym">Gym</option>
+        <option value="piscina">Piscina</option>
+        <option value="cancha">Cancha</option>
+    </select>
+
+    <button onclick="buscarCercanos()">Cercanos</button>
+
 </div>
 
-<script th:inline="javascript">
+<!-- 🔥 MAPA -->
+<div id="mi_mapa"></div>
 
-const centros = /*[[${centros}]]*/ [];
+<script>
+let map = L.map("mi_mapa").setView([4.711, -74.0721], 13);
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-let map = L.map('mi_mapa').setView([4.7110, -74.0721], 13);
+let marcadores = [];
+let rutaControl = null;
+let usuarioLatLng = null;
+let centrosGlobal = [];
+let marcadoresTop = [];
 
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+const iconoTop = L.icon({
+    iconUrl: "https://cdn-icons-png.flaticon.com/512/1828/1828884.png",
+    iconSize: [35, 35],
+});
 
-// 🔥 POPUP CON INFO + INSCRIPCIÓN
-const popup = `
-    <b>${c.nombre}</b><br>
-    ${c.direccion}<br>
-    📞 ${c.telefono ?? 'No disponible'}<br><br>
+function limpiarMapa() {
+    marcadores.forEach(m => map.removeLayer(m));
+    marcadores = [];
 
-    <form method="POST" action="/centrosdeportivos/inscribirme/${c.rut}">
-        <button type="submit">Inscribirme</button>
-    </form>
-`;
-
-const esAdmin = /*[[${esAdmin}]]*/ false;
-
-if (esAdmin) {
-    map.on('click', () => {
-        document.getElementById("formCentro").style.display = "block";
-    });
-}
-
-function cerrarFormulario() {
-    document.getElementById("formCentro").style.display = "none";
-}
-
-async function guardarCentro() {
-
-    const data = {
-        nombre: document.getElementById("nombre").value,
-        direccion: document.getElementById("direccion").value,
-        telefono: document.getElementById("telefono").value,
-        apertura: document.getElementById("apertura").value,
-        cierre: document.getElementById("cierre").value
-    };
-
-    const token = document.querySelector('meta[name="_csrf"]').content;
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-
-    const resp = await fetch("/centrosdeportivos/nuevo", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            [header]: token
-        },
-        body: JSON.stringify(data)
-    });
-
-    if (resp.ok) {
-        alert("Centro guardado correctamente");
-        location.reload();
-    } else {
-        const error = await resp.text();
-        alert("Error: " + error);
+    if (rutaControl) {
+        map.removeControl(rutaControl);
+        rutaControl = null;
     }
 }
 
+function limpiarTop() {
+    marcadoresTop.forEach(m => map.removeLayer(m));
+    marcadoresTop = [];
+}
+
+function mostrarCentros(data) {
+    limpiarMapa();
+
+    data.sort((a, b) => (a.distancia || 0) - (b.distancia || 0));
+
+    data.forEach(c => {
+        const marker = L.marker([c.lat, c.lng]).addTo(map);
+
+        marker.bindPopup(`
+            <b>${c.nombre}</b><br>
+            ${c.direccion}<br>
+            🏷️ ${c.tipo || "N/A"}<br>
+            📏 ${c.distancia ?? "N/A"} km<br>
+            ⭐ ${estrellasHTML(Math.round(c.promedio || 0))} (${c.promedio || 0})<br><br>
+
+            <button onclick="crearRuta(${c.lat}, ${c.lng})">Ir</button>
+            <button onclick="verValoraciones(${c.rut})">Ver valoraciones</button>
+
+            <hr>
+
+            <form onsubmit="guardarValoracion(event, ${c.rut})">
+                ⭐ 
+                <select id="estrellas-${c.rut}">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select><br>
+
+                <input type="text" id="comentario-${c.rut}" placeholder="Comentario"><br>
+                <button type="submit">Enviar</button>
+            </form>
+
+            <div id="valoraciones-${c.rut}"></div>
+        `);
+
+        marcadores.push(marker);
+    });
+
+    centrosGlobal = data;
+}
 </script>
 
 </body>

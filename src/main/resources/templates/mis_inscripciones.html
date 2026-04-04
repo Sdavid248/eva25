@@ -1,20 +1,49 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/mis-inscripciones.css}" />
     <title>Mis Inscripciones</title>
 </head>
 <body>
-    <h1>Mis Inscripciones</h1>
-    <ul>
-        <li th:each="ins : ${inscripciones}">
-            Centro: <span th:text="${ins.centroDeportivo.nombre}"></span> - 
-            Estado: <span th:text="${ins.estado}"></span>
-        </li>
-    </ul>
-    <a th:href="@{/centrosdeportivos}">Volver a la lista de centros</a>
+
+<h1>Mis Inscripciones</h1>
+
+<!-- ✅ MENSAJES -->
+<div th:if="${ok}" style="color:green;">
+    <p th:text="${ok}"></p>
+</div>
+
+<div th:if="${error}" style="color:red;">
+    <p th:text="${error}"></p>
+</div>
+
+<div th:if="${#lists.isEmpty(inscripciones)}" class="empty">
+    <p>No tienes inscripciones aún.</p>
+</div>
+
+<ul>
+    <li th:each="ins : ${inscripciones}">
+
+        <b th:text="${ins.centroDeportivo != null ? ins.centroDeportivo.nombre : 'Centro eliminado'}"></b> -
+
+        Estado: <span th:text="${ins.estado}"></span>
+
+        <!-- 🔥 CANCELAR -->
+        <form th:action="@{'/centrosdeportivos/cancelar/' + ${ins.numero}}"
+                method="post"
+                style="display:inline;">
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <button type="submit">Cancelar</button>
+        </form>
+
+    </li>
+</ul>
+
+<a th:href="@{/centrosdeportivos}">Volver</a>
+
 </body>
 </html>

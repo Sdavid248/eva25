@@ -1,10 +1,6 @@
 package com.example.eva.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -31,16 +27,9 @@ public class Inscripcion {
     @Column(nullable = false)
     private String estado;
 
-    @Column(nullable = false)
-    private Integer rut;
-
+    // 🔥 RELACIÓN FINAL (SIN campo duplicado rut)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "rut",
-        referencedColumnName = "rut",
-        insertable = false,
-        updatable = false
-    )
+    @JoinColumn(name = "rut", nullable = false)
     private CentroDeportivo centroDeportivo;
 
     @PrePersist
@@ -94,14 +83,6 @@ public class Inscripcion {
 
     public void setEstado(String estado) {
         this.estado = estado;
-    }
-
-    public Integer getRut() {
-        return rut;
-    }
-
-    public void setRut(Integer rut) {
-        this.rut = rut;
     }
 
     public CentroDeportivo getCentroDeportivo() {

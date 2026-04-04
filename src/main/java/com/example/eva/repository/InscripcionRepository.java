@@ -10,10 +10,12 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> 
 
     void deleteByUsuarioIdUser(Long idUser);
 
-    boolean existsByUsuarioIdUserAndRut(Long idUser, Integer rut);
+    // 🔥 CORRECTO (USA RELACIÓN)
+    boolean existsByUsuarioIdUserAndCentroDeportivoRut(Long idUser, Integer rut);
 
     List<Inscripcion> findByUsuarioIdUser(Long idUser);
 
+    // 📊 MÉTRICAS
     @Query("SELECT i.usuario.nombre, COUNT(i) FROM Inscripcion i GROUP BY i.usuario.nombre")
     List<Object[]> countInscripcionesPorUsuario();
 

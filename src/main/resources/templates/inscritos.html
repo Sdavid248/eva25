@@ -1,0 +1,13 @@
+<h2>Usuarios inscritos</h2>
+
+<table border="1">
+    <tr>
+        <th>Nombre</th>
+        <th>Correo</th>
+    </tr>
+
+    <tr th:each="i : ${inscripciones}">
+        <td th:text="${i.usuario.nombre}"></td>
+        <td th:text="${i.usuario.correo}"></td>
+    </tr>
+</table>

@@ -13,12 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 import com.example.eva.Security.UserDetailsServiceImpl;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -37,28 +33,59 @@ public class SecurityConfig {
         http
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
+
+                // 🔓 PÚBLICO
                 .requestMatchers("/", "/index", "/acercade", "/info",
                         "/registro", "/login",
                         "/css/**", "/js/**", "/images/**")
                 .permitAll()
+
+                // 🔥 ESTA ES LA LÍNEA QUE FALTABA
+                .requestMatchers("/inscripciones/**").authenticated()
+
+                // 🔐 ENDPOINTS PROTEGIDOS
+                .requestMatchers("/centrosdeportivos/cercanos").authenticated()
+                .requestMatchers("/centrosdeportivos/buscar").authenticated()
+
+                // 👤 PERFIL
                 .requestMatchers("/perfil/**").authenticated()
+                .requestMatchers("/usuario/crear-centro/**").authenticated()
+
+                // 🟣 ADMIN DE CENTRO
+                .requestMatchers("/usuario/ser-admin/**").authenticated()
+                .requestMatchers("/centro-admin/**").hasRole("ADMIN_CENTRO")
+                .requestMatchers(HttpMethod.POST, "/centrosdeportivos/guardar").hasRole("ADMIN")
+
+                // 🔴 ADMIN TOTAL
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/centrosdeportivos/nuevo").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/notificaciones/enviar").hasRole("ADMIN")
-                .requestMatchers("/usuarios/nuevo", "/usuarios/editar/**", "/usuarios/eliminar/**").hasRole("ADMIN")
                 .requestMatchers("/correo/**").hasRole("ADMIN")
                 .requestMatchers("/pdf", "/pdf-filtros").hasRole("ADMIN")
                 .requestMatchers("/centrosdeportivos/nuevo").hasRole("ADMIN")
+
                 .requestMatchers(HttpMethod.GET, "/notificaciones/**").authenticated()
                 .requestMatchers(HttpMethod.POST, "/centrosdeportivos/inscribirme/**").authenticated()
-                .requestMatchers("/usuarios", "/usuarios/", "/usuarios/page/**").authenticated()
+
+                // 👥 USUARIOS
+                .requestMatchers("/usuarios/**").hasRole("ADMIN")
+
+                // 🏟️ CENTROS
+                .requestMatchers(HttpMethod.POST, "/centrosdeportivos/nuevo").hasRole("ADMIN")
+                .requestMatchers("/centrosdeportivos/eliminar/**").hasRole("ADMIN")
+                .requestMatchers("/centrosdeportivos/editar/**").hasRole("ADMIN")
+
+                // 👤 ACCIONES USUARIO
+                .requestMatchers("/centrosdeportivos/usuario/**").authenticated()
+
+                // ⭐ VALORACIONES
+                .requestMatchers(HttpMethod.POST, "/centrosdeportivos/valorar/**").authenticated()
+
+                // 🔒 TODO LO DEMÁS
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
                 .usernameParameter("correo")
                 .passwordParameter("contrasena")
-                // ⚡ Quitamos defaultSuccessUrl porque usamos successHandler
                 .successHandler(customAuthenticationSuccessHandler())
                 .permitAll()
             )
@@ -80,29 +107,27 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-        return new AuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request,
-                                                HttpServletResponse response,
-                                                Authentication authentication)
-                                                throws IOException, ServletException {
+        return (request, response, authentication) -> {
 
-                boolean isAdmin = false;
-                boolean isUser = false;
+            boolean isAdmin = false;
+            boolean isUser = false;
+            boolean isAdminCentro = false;
 
-                for (GrantedAuthority auth : authentication.getAuthorities()) {
-                    if (auth.getAuthority().equals("ROLE_ADMIN")) isAdmin = true;
-                    if (auth.getAuthority().equals("ROLE_USER")) isUser = true;
-                }
+            for (GrantedAuthority auth : authentication.getAuthorities()) {
+                if (auth.getAuthority().equals("ROLE_ADMIN")) isAdmin = true;
+                if (auth.getAuthority().equals("ROLE_USER")) isUser = true;
+                if (auth.getAuthority().equals("ROLE_ADMIN_CENTRO")) isAdminCentro = true;
+            }
 
-                if (isAdmin) {
-                    response.sendRedirect("/admin/dashboard");
-                } else if (isUser) {
-                    // ✅ Aquí agregamos el parámetro para que aparezca el toast
-                    response.sendRedirect("/perfil?loginExitoso=true");
-                } else {
-                    response.sendRedirect("/"); // fallback
-                }
+            // 🔥 REDIRECCIÓN LIMPIA
+            if (isAdmin) {
+                response.sendRedirect("/admin/dashboard");
+            } else if (isAdminCentro) {
+                response.sendRedirect("/centro-admin/dashboard");
+            } else if (isUser) {
+                response.sendRedirect("/perfil?loginExitoso=true");
+            } else {
+                response.sendRedirect("/");
             }
         };
     }
